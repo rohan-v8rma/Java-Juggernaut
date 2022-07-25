@@ -1,3 +1,9 @@
+# Classes in Java
+
+If a single source file contains multiple Classes, all of the classes have separate class files.
+![](./images/class_files.png)
+
+
 # How Java code executes
 
 ![](./images/how_java_executes.png)
@@ -37,10 +43,21 @@ JDK provides an environment to develop and run the Java program.
 It is a package that includes:
 - development tools - to provide an environment to develop your program.
 - [JRE](#jre-java-runtime-environment) - to execute your program.
-- a compiler - `javac`
+- a compiler, `javac` that converts `.java` files (source code) to `.class` files (byte code).
 - archiver - `jar`
-- docs generator - `javadoc`
+- a documentation generator [`javadoc`](#more-about-javadoc)
 - interpreter/loader
+
+### More about `javadoc`
+
+`javadoc` is the official way of writing API documentation. 
+
+We must follow a certain syntax and structure for writing comments in `.java` source files. 
+
+The `javadoc` tool which is included in the JDK, parses a source file and generates HTML documentation from it.
+
+#### Where should we put comments for `javadoc`?
+![](./images/where-to-put-javadoc.png)
 
 ## JRE (Java Runtime Environment)
 
@@ -58,5 +75,11 @@ After we obtain the `.class` file, the processes that take place at runtime are:
 - JVM sends code to Byte code verifier to check the format of the code.
 
 ## JVM (Java Virtual Machine)
+
+JVM (Java Virtual Machine) is an abstract machine. It is called a virtual machine because it doesn't physically exist. 
+
+It is a specification that provides a runtime environment in which Java bytecode can be executed. It can also run those programs which are written in other languages and compiled to Java bytecode.
+
+![](./images/source-to-executable.png)
 
 
