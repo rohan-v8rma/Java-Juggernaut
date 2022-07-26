@@ -3,6 +3,7 @@
 
 - [INDEX](#index)
 - [Differences between Java and C++](#differences-between-java-and-c)
+- [Naming Conventions in Java](#naming-conventions-in-java)
 - [Classes in Java](#classes-in-java)
 - [How Java code executes](#how-java-code-executes)
 - [Platform independence of Java and difference from C++](#platform-independence-of-java-and-difference-from-c)
@@ -38,6 +39,65 @@ For instance, pointers and multiple inheritance often make programming complicat
 Java uses automatic memory allocation and [garbage collection](#garbage-collector), whereas C++ requires the programmer to allocate memory and collect garbage. 
 
 Also, the number of language constructs is small for such a powerful language. The clean syntax makes Java programs easy to write and read. Some people refer to Java as "C++--" because it is like C++ but with more functionality and fewer negative aspects
+
+
+# Naming Conventions in Java
+
+The below list outlines the standard Java naming conventions for each identifier type:
+
+- `Classes`: Names should be in `PascalCase`. Try to use nouns because a class is normally representing something in the real world:
+  ```java
+  class Customer 
+  class Account 
+  ```
+  We should also keep the file names of the `.java` files same as the classes.
+
+  For example, the `Main` class should be written in `Main.java`.
+
+- Projects: Every Java program, also referred to as a 'Project' consists of one or more `.java` files, enclosed in a folder. 
+  
+  ![](./images/java-files-in-project.png)
+  
+  Project names should be in `PascalCase` as well. 
+  <!-- In IDEs like NetBeans, we can choose  -->
+
+- `Interfaces`: Names should be in `PascalCase`. They tend to have a name that describes an operation that a class can do:
+  ```java
+  interface Comparable 
+  interface Enumerable 
+  ```
+  Note that some programmers like to distinguish interfaces by beginning the name with an "I":
+  ```java
+  interface IComparable 
+  interface IEnumerable
+  ```
+- `Methods`: Names should be in `camelCase`. Use verbs to describe what the method does:
+  ```java
+  void calculateTax()
+  string getSurname() 
+  ```
+- `Variables`: Names should be in `camelCase`. The names should represent what the value of the variable represents:
+  ```java 
+  string firstName 
+  int orderNumber 
+  ```
+- `Constants`: Names should be in `UPPER_SNAKE_CASE`.
+  ```java
+  static final int DEFAULT_WIDTH 
+  static final int MAX_HEIGHT
+- `Packages`: Names should be in lowercase. With small projects that only have a few packages it's okay to just give them simple (but meaningful!) names:
+  ```java
+  package pokeranalyzer
+  package mycalculator 
+  ```
+  In software companies and large projects where the packages might be imported into other classes, the names will normally be subdivided. 
+  
+  Typically this will start with the company domain before being split into layers or features:
+  ```java
+  package com.mycompany.utilities 
+  package org.bobscompany.application.userinterface 
+  ```
+
 
 # Classes in Java
 
@@ -115,15 +175,19 @@ It consists of:
 - Base libraries
 - [JVM](#jvm-java-virtual-machine)
 
+In simple words, JRE is JVM along with a collection of extra files.
+
 After we obtain the `.class` file, the processes that take place at runtime are:
 - Class loader loads all classes needed to execute the program.
 - JVM sends code to Byte code verifier to check the format of the code.
 
 ## JVM (Java Virtual Machine)
 
-JVM (Java Virtual Machine) is an abstract machine. It is called a virtual machine because it doesn't physically exist. 
+JVM (Java Virtual Machine) is an abstract machine. It is called a virtual machine because it doesn't physically exist.
 
 It loads, verifies and executes Java bytecode. It is known as the interpreter or the core of Java programming language because it executes Java programming.
+
+JRE provides whatever files/resources JVM needs.
 
 JVM consists of three main components or subsystems:
 
@@ -133,17 +197,20 @@ It is responsible for [loading](#loading), [linking](#linking) and initializing 
 
 #### Loading
 
-Byte code class file is read and binary data is generated, in order to create an object of this 'class' in heap (**loading** into memory).
+- Byte code class file is read and binary data is generated, in order to create an object of this 'class' in heap.
+- JRE libraries that are being used are also loaded into memory.
+
+Both these processes comprise **loading** into memory.
 
 #### Linking 
 
-- `.class` file is verified.
+- `.class` file is verified (for errors or illegal practices).
 - Memory is allocated for class variable and default values.
 - Symbolic references are replaced with direct references (**linking** takes place).
 
 #### Initialization
 
-- All static variables are assigned with their values and defined in the code & stack block.
+All static variables (variables that have only one value for a particular class, instead of a different value for each instance of said class) are assigned with their values and defined in the code & stack block.
   
 
 ### Execution Engine
@@ -172,7 +239,7 @@ This basically frees up the heap memory by destroying objects that have no refer
 
 ### Runtime Data Areas
 
-Contain method **areas**, PC registers, stack areas and threads.
+Contain method areas, PC registers, stack areas and threads.
 
 
 
