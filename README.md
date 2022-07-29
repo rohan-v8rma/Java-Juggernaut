@@ -4,7 +4,6 @@
 - [INDEX](#index)
 - [Differences between Java and C++](#differences-between-java-and-c)
 - [Naming Conventions in Java](#naming-conventions-in-java)
-- [Classes in Java](#classes-in-java)
 - [How Java code executes](#how-java-code-executes)
 - [Platform independence of Java and difference from C++](#platform-independence-of-java-and-difference-from-c)
   - [Byte code vs. Source code](#byte-code-vs-source-code)
@@ -23,6 +22,22 @@
       - [`JIT` (Just-In-Time) compiler](#jit-just-in-time-compiler)
       - [Garbage Collector](#garbage-collector)
     - [Runtime Data Areas](#runtime-data-areas)
+- [Basic Java program](#basic-java-program)
+  - [Packages in Java](#packages-in-java)
+    - [Some existing packages...](#some-existing-packages)
+      - [`java.lang`](#javalang)
+      - [`java.io`](#javaio)
+      - [`java.util`](#javautil)
+    - [`package packagename`](#package-packagename)
+  - [Access Modifiers in Java](#access-modifiers-in-java)
+  - [Classes in Java](#classes-in-java)
+    - [Creating an Object of a Class](#creating-an-object-of-a-class)
+- [Taking Input in Java](#taking-input-in-java)
+  - [Taking input of `int`](#taking-input-of-int)
+  - [Taking input of `String`](#taking-input-of-string)
+    - [Taking input of one word](#taking-input-of-one-word)
+    - [Taking input of multiple words](#taking-input-of-multiple-words)
+  - [Taking input of one character (`char`)](#taking-input-of-one-character-char)
 
 <!-- TOC -->
 
@@ -45,7 +60,7 @@ Also, the number of language constructs is small for such a powerful language. T
 
 The below list outlines the standard Java naming conventions for each identifier type:
 
-- `Classes`: Names should be in `PascalCase`. Try to use nouns because a class is normally representing something in the real world:
+- [`Classes`](#classes-in-java): Names should be in `PascalCase`. Try to use nouns because a class is normally representing something in the real world:
   ```java
   class Customer 
   class Account 
@@ -85,7 +100,7 @@ The below list outlines the standard Java naming conventions for each identifier
   ```java
   static final int DEFAULT_WIDTH 
   static final int MAX_HEIGHT
-- `Packages`: Names should be in lowercase. With small projects that only have a few packages it's okay to just give them simple (but meaningful!) names:
+- [`Packages`](#packages-in-java): Names should be in lowercase. With small projects that only have a few packages it's okay to just give them simple (but meaningful!) names:
   ```java
   package pokeranalyzer
   package mycalculator 
@@ -97,13 +112,6 @@ The below list outlines the standard Java naming conventions for each identifier
   package com.mycompany.utilities 
   package org.bobscompany.application.userinterface 
   ```
-
-
-# Classes in Java
-
-If a single source file contains multiple Classes, all of the classes have separate class files.
-![](./images/class_files.png)
-
 
 # How Java code executes
 
@@ -241,9 +249,186 @@ This basically frees up the heap memory by destroying objects that have no refer
 
 Contain method areas, PC registers, stack areas and threads.
 
-
-
-
 ![](./images/source-to-executable.png)
+
+# Basic Java program
+
+```java
+1 package examplepackage;
+2
+3 public class Main {
+4   public static void main(String[] args) {
+5     System.out.println("Hello World");
+6   };
+7 };
+```
+ Now, at first glance this may look like a lot of code for just printing `Hello World`. But lets look at the lines one by one.
+
+- The reasoning for the first line is given under [Packages in Java](#packages-in-java). 
+
+  In simple words, it is for including the contents of our program under the namespace of a particular package.
+
+- The access modifiers used can be read about [below](#access-modifiers-in-java).
+
+- The reasoning for keeping the `main()` method as `static` is quite practical.
+
+  If a method or data member is static, that data member/method can be called directly using class name without creating an instance of the class. 
+ 
+  So, JVM need not instantiate the class `Main` and can directly call the method.
+- `String[] args` is the syntax for declaring an array in Java. 
+
+  It is kept as an argument for the `main()` method for taking the input of arguments of the type `String` when running the executable of the source file as shown:
+  ```console
+  java ClassName argumentOne argumentTwo argumentThree
+  ```
+
+  Indices along with the array name can be used for accessing the arguments we give as shown:
+  ```java
+  System.out.println(args[0]);
+  System.out.println(args[1]);
+  ```
+  Since the `main()` method is the entry point of the Java program, whenever we execute a class file, the JVM searches for a `main()` method, which is `public`, `static`, with return type `void`, and a `String` array as an argument. If anything is missing the JVM raises an error.
+  
+## Packages in Java
+
+Packages are used in Java in order to prevent naming conflicts, to control access, to make searching/locating and usage of classes, interfaces, enumerations and annotations easier, etc.
+
+### Some existing packages...
+
+#### `java.lang` 
+
+Bundles the fundamental classes such as:
+
+It is included by default, which is why we need not explicitly include it everytime we need to use a class in this package.
+
+#### `java.io` 
+
+Contains classes for input , output functions are bundled in this package.
+
+#### `java.util` 
+
+It contains the collections framework, legacy collection classes, event model, date and time facilities, internationalization, and miscellaneous utility classes (a string tokenizer, a random-number generator, and a bit array).
+
+### `package packagename`
+
+While creating a package, we  should choose a name for the package and include a `package` statement along with that name at the top of every source file that contains the classes, interfaces, enumerations, and annotation types that you want to include in the package.
+
+it should look like this: 
+```java
+package packagename
+```
+with the name of the package in lowercase.
+
+## Access Modifiers in Java
+
+- `Private`: The access level of a private modifier is only within the class. It cannot be accessed from outside the class.
+
+  - `Default`: The access level of a default modifier is only within the package. It cannot be accessed from outside the package. If you do not specify any access level, it will be the default.
+  - `Protected`: The access level of a protected modifier is within the package and outside the package through child class. 
+  
+    If you do not make a child class, it cannot be accessed from outside the package.
+  - `Public`: The access level of a public modifier is everywhere. It can be accessed from within the class, outside the class, within the package and outside the package.
+
+    This has the widest scope amongst all access modifiers.
+
+    There can be only one public class in a single java file. 
+
+    Let's take an example to understand this. A and B are public classes defined in the same file, and the file name say `A.java`.
+
+    When we compile this file and compiler wants to create `.class` file then compiler gets confused to decide which name to take while creating `.class` file since both are public and public modifier has highest precedence among all modifiers, so in this case it creates ambiguity. 
+   
+    So, in order to avoid this kind of scenario Java specification does not allow 2 public classes in a single file.
+
+## Classes in Java
+
+If a single source file contains multiple Classes, all of the classes have separate class files. SURE?
+![](./images/class_files.png)
+
+### Creating an Object of a Class
+
+- In C++, creating an object was simple as we just had to specify the class type followed by the name of the object to be created and parentheses, either containing no arguments (Default Constructor) or a specific number of arguments (Parameterized Constructor).
+  ```cpp
+  class className {
+    // Body
+  };
+  className objectName();
+  ```
+
+- In Java, it is somewhat similar where we specify the class name, followed by the object name and then we use the assignment operator (`=`) along with the constructor of the class.
+  ```java
+  ClassName {
+    // Body
+  }
+  
+  ClassName ObjectName = new ClassName();
+  ```
+
+# Taking Input in Java
+
+We can make use of the `Scanner` class present in the `java.util` package.
+
+The `Scanner` class reads an entire line and divides the line into tokens. **Tokens** are small elements that have some meaning to the Java compiler. 
+
+For example, Suppose there is an input string: How are you.
+In this case, the scanner object will read the entire line and divides the string into tokens: `“How”`, `“are”` and `“you”`. 
+
+The object then iterates over each token and reads each token using its different methods.
+
+Note that taking input using a method of the `Scanner` class automatically adds a new line after getting the input.
+
+Since these methods aren't `static`, we need to create an object of the `Scanner` class in order to use them. 
+```java
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+      Scanner scannerObject = new Scanner(System.in);
+    }
+}
+```
+The method we used here to create the object `scannerObject` can be read about [above](#creating-an-object-of-a-class).
+
+In a sense, we are creating an object the class `Scanner` and passing the `System.in` stream to it for scanning/reading input. 
+
+So when we use methods on the created object, it will take a look at the standard input stream.
+
+We may pass an object of class `File` if we want to read input from a file.
+
+## Taking input of `int`
+
+```java
+int integer = scannerObject.nextInt();
+```
+The `java.util.Scanner.nextInt()` method is used to scan the next token of the input as an `int`.
+
+## Taking input of `String`
+
+### Taking input of one word
+
+```java
+String oneWord = scannerObject.next();
+```
+The `java.util.Scanner.next()` method finds and returns the next complete token from the current scanner. 
+
+A complete token is preceded and followed by input that matches the delimiter pattern.
+
+### Taking input of multiple words
+
+```java
+String multiWord = scannerObject.nextLine();
+```
+The `java.util.Scanner.nextLine()` method scans from the current position until it finds a line separator delimiter (for example, `\n`). 
+
+The method returns the String from the current position to the end of the line.
+
+## Taking input of one character (`char`)
+```java
+char character = scannerObject.next().charAt(0);
+```
+
+This helps us take input of a character as:
+- next() takes the next word.
+- charAt() is a method the String class present in `java.lang.String`. It takes the character at a specific index of a string.
+
 
 
