@@ -22,6 +22,7 @@
       - [`JIT` (Just-In-Time) compiler](#jit-just-in-time-compiler)
       - [Garbage Collector](#garbage-collector)
     - [Runtime Data Areas](#runtime-data-areas)
+- [What is a Specification?](#what-is-a-specification)
 - [Basic Java program](#basic-java-program)
   - [Packages in Java](#packages-in-java)
     - [Some existing packages...](#some-existing-packages)
@@ -38,12 +39,13 @@
     - [Taking input of one word](#taking-input-of-one-word)
     - [Taking input of multiple words](#taking-input-of-multiple-words)
   - [Taking input of one character (`char`)](#taking-input-of-one-character-char)
+- [TODO](#todo)
 
 <!-- TOC -->
 
 
-Application runs directly on computer
-Applet runs on browser
+<!-- Application runs directly on computer
+Applet runs on browser -->
 
 # Differences between Java and C++
 
@@ -191,6 +193,10 @@ After we obtain the `.class` file, the processes that take place at runtime are:
 
 ## JVM (Java Virtual Machine)
 
+TODO : Understand java bytecode is evaluated on virtual stack based processor
+
+JVM is a [specification](#what-is-a-specification) that provides a runtime environment in which Java bytecode can be executed. 
+
 JVM (Java Virtual Machine) is an abstract machine. It is called a virtual machine because it doesn't physically exist.
 
 It loads, verifies and executes Java bytecode. It is known as the interpreter or the core of Java programming language because it executes Java programming.
@@ -250,6 +256,18 @@ This basically frees up the heap memory by destroying objects that have no refer
 Contain method areas, PC registers, stack areas and threads.
 
 ![](./images/source-to-executable.png)
+
+# What is a Specification?
+
+Specification means you describe how something should work, not what one has to do in order to let it work (which is the implementation).
+
+As mentioned in the preface to the Java SE 8 Edition by Oracle:
+
+**... An implementation of the Java Virtual Machine must embody this specification, but is constrained by it only where absolutely necessary.**
+
+This meant that Oracle SPECIFIED how a JVM should work and left the implementation to the organization building the JVM.
+
+This explanation of what a specification is, is universal in the domain of computing.
 
 # Basic Java program
 
@@ -341,8 +359,12 @@ with the name of the package in lowercase.
 
 ## Classes in Java
 
-If a single source file contains multiple Classes, all of the classes have separate class files. SURE?
+If a single source file contains multiple Classes, all of the classes have separate class files. 
 ![](./images/class_files.png)
+
+In most IDEs, only the `.class` file of the public class would be displayed. 
+
+Navigating to the folder where that `.class` file is present using the terminal or file manager would lead to the discovery of the other `.class` files as well.
 
 ### Creating an Object of a Class
 
@@ -432,3 +454,6 @@ This helps us take input of a character as:
 
 
 
+# TODO 
+
+Forcing Lossy Conversions in Java
