@@ -61,7 +61,8 @@
     - [Taking input of one word](#taking-input-of-one-word)
     - [Taking input of multiple words](#taking-input-of-multiple-words)
   - [Taking input of one character (`char`)](#taking-input-of-one-character-char)
-  - [Checking if input stream](#checking-if-input-stream)
+  - [Checking if input stream still has data left](#checking-if-input-stream-still-has-data-left)
+  - [Special cases while taking input shown practically](#special-cases-while-taking-input-shown-practically)
 - [Functions in Java](#functions-in-java)
   - [Return values](#return-values)
   - [No pass-by-reference](#no-pass-by-reference)
@@ -100,7 +101,7 @@ The below list outlines the standard Java naming conventions for each identifier
 
 - Projects: Every Java program, also referred to as a 'Project' consists of one or more `.java` files, enclosed in a folder. 
   
-  ![](./images/java-files-in-project.png)
+  ![](../images/java-files-in-project.png)
   
   Project names should be in `PascalCase` as well. 
   <!-- In IDEs like NetBeans, we can choose  -->
@@ -144,7 +145,7 @@ The below list outlines the standard Java naming conventions for each identifier
 
 # How Java code executes
 
-![](./images/how_java_executes.png)
+![](../images/how_java_executes.png)
 
 The Java compiler compiles source code contained within a `.java` file into a `.class` file containing byte code, which is some intermediate language of java, that needs a JVM (Java Virtual Machine) to run.
 
@@ -176,7 +177,7 @@ This is because byte code occupies more than 6 times less memory than java sourc
 
 # JDK vs. JRE vs. JVM vs. JIT
 
-![](./images/JDK_JRE_JVM_JIT.png)
+![](../images/JDK_JRE_JVM_JIT.png)
 
 ## JDK (Java Development Kit)
 
@@ -199,7 +200,7 @@ We must follow a certain syntax and structure for writing comments in `.java` so
 The `javadoc` tool which is included in the JDK, parses a source file and generates HTML documentation from it.
 
 #### Where should we put comments for `javadoc`?
-![](./images/where-to-put-javadoc.png)
+![](../images/where-to-put-javadoc.png)
 
 ## JRE (Java Runtime Environment)
 
@@ -282,7 +283,7 @@ This basically frees up the heap memory by destroying objects that have no refer
 
 Contain method areas, PC registers, stack areas and threads.
 
-![](./images/source-to-executable.png)
+![](../images/source-to-executable.png)
 
 # What is a Specification?
 
@@ -315,11 +316,14 @@ This explanation of what a specification is, is universal in the domain of compu
 
 - The access modifiers used can be read about [below](#access-modifiers-in-java).
 
+- By default, JVM invokes the `main()` method of `public` class within a `.java` file. JVM always looks for the `main()` method with a `String` type Array as a parameter.
+
 - The reasoning for keeping the `main()` method as `static` is quite practical.
 
-  If a method or data member is static, that data member/method can be called directly using class name without creating an instance of the class. 
+  If a method or data member is `static`, that data member/method can be called directly using class name without creating an instance of the class. Note that `static` members can be accessed using instances AS WELL.
  
-  So, JVM need not instantiate the class `Main` and can directly call the method.
+  So, JVM need NOT instantiate the class `Main` and can directly call the method.
+  
 - `String[] args` is the syntax for declaring an array in Java. 
 
   It is kept as an argument for the `main()` method for taking the input of arguments of the type `String` when running the executable of the source file as shown:
@@ -398,7 +402,7 @@ It contains the collections framework, legacy collection classes, event model, d
 ## Classes in Java
 
 If a single source file contains multiple Classes, all of the classes have separate class files. 
-![](./images/class_files.png)
+![](../images/class_files.png)
 
 In most IDEs, only the `.class` file of the public class would be displayed. 
 
@@ -737,13 +741,15 @@ This helps us take input of a character as:
 - next() takes the next word.
 - charAt() is a method the String class present in `java.lang.String`. It takes the character at a specific index of a string.
 
-## Checking if input stream 
+## Checking if input stream still has data left
 
 ```java
 Scanner scannerObject = new Scanner(System.in);
 scannerObject.hasNext(); 
 ```
 This returns a boolean value of true if this scanner has more data to be read.
+
+## [Special cases while taking input shown practically](./MasterProject/src/com/basics/TakingInput.java)
 
 # Functions in Java
 
