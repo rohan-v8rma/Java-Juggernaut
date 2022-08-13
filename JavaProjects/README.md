@@ -25,12 +25,12 @@
 - [What is a Specification?](#what-is-a-specification)
 - [Basic Java program](#basic-java-program)
   - [Packages in Java](#packages-in-java)
-    - [Some existing packages...](#some-existing-packages)
+    - [Creating a Package](#creating-a-package)
+    - [Dynamically importing classes from packages in Java](#dynamically-importing-classes-from-packages-in-java)
+    - [Some in-built packages...](#some-in-built-packages)
       - [`java.lang`](#javalang)
       - [`java.io`](#javaio)
       - [`java.util`](#javautil)
-    - [`package packagename`](#package-packagename)
-    - [Dynamically importing classes from packages in Java](#dynamically-importing-classes-from-packages-in-java)
   - [Access Modifiers in Java](#access-modifiers-in-java)
   - [Classes in Java](#classes-in-java)
     - [`java.lang.Object` class](#javalangobject-class)
@@ -46,12 +46,14 @@
     - [`String`](#string)
     - [`Character`](#character)
     - [Arrays](#arrays)
+      - [Declaring, Creating & Initializing an Array](#declaring-creating--initializing-an-array)
+      - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
       - [Printing an Array `java.util.Arrays.toString(Object[] a)`](#printing-an-array-javautilarraystostringobject-a)
   - [Typecasting in Java](#typecasting-in-java)
   - [Automatic Type Conversion in Expressions in Java](#automatic-type-conversion-in-expressions-in-java)
 - [Conditional and Looping Statements](#conditional-and-looping-statements)
   - [if-else statements](#if-else-statements)
-  - [`for-each` loop](#for-each-loop)
+  - [`for-each` loop (looping through Array elements)](#for-each-loop-looping-through-array-elements)
   - [switch-case](#switch-case)
 - [Taking Input in Java](#taking-input-in-java)
   - [Taking input of `int`](#taking-input-of-int)
@@ -336,23 +338,7 @@ This explanation of what a specification is, is universal in the domain of compu
 
 Packages are used in Java in order to prevent naming conflicts, to control access, to make searching/locating and usage of classes, interfaces, enumerations and annotations easier, etc.
 
-### Some existing packages...
-
-#### `java.lang` 
-
-Bundles the fundamental classes such as: `System`, `String`, etc.
-
-It is included by default, which is why we need not explicitly include it everytime we need to use a class in this package.
-
-#### `java.io` 
-
-Contains classes for input , output functions are bundled in this package.
-
-#### `java.util` 
-
-It contains the collections framework, legacy collection classes, event model, date and time facilities, internationalization, and miscellaneous utility classes (a string tokenizer, a random-number generator, and a bit array).
-
-### `package packagename`
+### Creating a Package
 
 While creating a package, we  should choose a name for the package and include a `package` statement along with that name at the top of every source file that contains the classes, interfaces, enumerations, and annotation types that you want to include in the package.
 
@@ -372,6 +358,22 @@ import java.util.*;
 Only the classes we use from the `util` package will be imported.
 
 There is no performance difference if we just import the a specific class like `Scanner` or use the universal selector.
+
+### Some in-built packages...
+
+#### `java.lang` 
+
+Bundles the fundamental classes such as: `System`, `String`, etc.
+
+It is included by default, which is why we need not explicitly include it everytime we need to use a class in this package.
+
+#### `java.io` 
+
+Contains classes for input , output functions are bundled in this package.
+
+#### `java.util` 
+
+It contains the collections framework, legacy collection classes, event model, date and time facilities, internationalization, and miscellaneous utility classes (a string tokenizer, a random-number generator, and a bit array).
 
 ## Access Modifiers in Java
 
@@ -524,6 +526,32 @@ dataType[size] arrayName;
   In the case where we declare and initialize the array at the same time, we should NOT specify a size for the array. For example
 - `arrayName` - it is an identifier
 
+#### Declaring, Creating & Initializing an Array
+
+- DECLARING the Array reference variable.
+
+  ```java
+  int[] intArray; 
+  ```
+
+- CREATING the array OBJECT and assigning it to the reference variable `intArray`. All elements are **intialized** with value '0'.
+
+  ```java
+  intArray = new int[5]; 
+  ```
+
+  Notice how the format for object creation is similar to other classes like `Scanner` and `Random` in Java.
+
+- INITIALIZING the array indices.
+
+  ```java
+  for(int index = 0; index < 2; index++) { 
+      intArray[index] = (int)(Math.random() * 100);
+  }
+  ```
+
+#### Specifying the number of elements in an Array
+
 In order to define the number of elements that an array can hold, we have to allocate memory for the array in Java. For example,
 ```java
 // declare an array
@@ -596,7 +624,7 @@ else {
 }
 ```
 
-## `for-each` loop
+## `for-each` loop (looping through Array elements)
 
 This is also known as an enhanced for loop.
 
