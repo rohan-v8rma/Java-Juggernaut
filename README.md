@@ -101,7 +101,7 @@ The below list outlines the standard Java naming conventions for each identifier
 
 - Projects: Every Java program, also referred to as a 'Project' consists of one or more `.java` files, enclosed in a folder. 
   
-  ![](../images/java-files-in-project.png)
+  ![](./images/java-files-in-project.png)
   
   Project names should be in `PascalCase` as well. 
   <!-- In IDEs like NetBeans, we can choose  -->
@@ -145,7 +145,7 @@ The below list outlines the standard Java naming conventions for each identifier
 
 # How Java code executes
 
-![](../images/how_java_executes.png)
+![](./images/how_java_executes.png)
 
 The Java compiler compiles source code contained within a `.java` file into a `.class` file containing byte code, which is some intermediate language of java, that needs a JVM (Java Virtual Machine) to run.
 
@@ -177,7 +177,7 @@ This is because byte code occupies more than 6 times less memory than java sourc
 
 # JDK vs. JRE vs. JVM vs. JIT
 
-![](../images/JDK_JRE_JVM_JIT.png)
+![](./images/JDK_JRE_JVM_JIT.png)
 
 ## JDK (Java Development Kit)
 
@@ -200,7 +200,7 @@ We must follow a certain syntax and structure for writing comments in `.java` so
 The `javadoc` tool which is included in the JDK, parses a source file and generates HTML documentation from it.
 
 #### Where should we put comments for `javadoc`?
-![](../images/where-to-put-javadoc.png)
+![](./images/where-to-put-javadoc.png)
 
 ## JRE (Java Runtime Environment)
 
@@ -283,7 +283,7 @@ This basically frees up the heap memory by destroying objects that have no refer
 
 Contain method areas, PC registers, stack areas and threads.
 
-![](../images/source-to-executable.png)
+![](./images/source-to-executable.png)
 
 # What is a Specification?
 
@@ -402,7 +402,7 @@ It contains the collections framework, legacy collection classes, event model, d
 ## Classes in Java
 
 If a single source file contains multiple Classes, all of the classes have separate class files. 
-![](../images/class_files.png)
+![](./images/class_files.png)
 
 In most IDEs, only the `.class` file of the public class would be displayed. 
 
@@ -749,7 +749,7 @@ scannerObject.hasNext();
 ```
 This returns a boolean value of true if this scanner has more data to be read.
 
-## [Special cases while taking input shown practically](./MasterProject/src/com/basics/TakingInput.java)
+## [Special cases while taking input shown practically](./JavaProjects/MasterProject/src/com/basics/TakingInput.java)
 
 # Functions in Java
 
