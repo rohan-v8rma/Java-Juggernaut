@@ -30,15 +30,40 @@
       - [`java.io`](#javaio)
       - [`java.util`](#javautil)
     - [`package packagename`](#package-packagename)
+    - [Dynamically importing classes from packages in Java](#dynamically-importing-classes-from-packages-in-java)
   - [Access Modifiers in Java](#access-modifiers-in-java)
   - [Classes in Java](#classes-in-java)
+    - [`java.lang.Object` class](#javalangobject-class)
     - [Creating an Object of a Class](#creating-an-object-of-a-class)
+    - [`java.lang.String` class](#javalangstring-class)
+    - [`java.util.Random` class](#javautilrandom-class)
+- [Data Types in Java](#data-types-in-java)
+  - [Primitive Data Types in Java](#primitive-data-types-in-java)
+    - [`int`](#int)
+    - [`byte`](#byte)
+    - [`char`](#char)
+  - [Non-Primitive data types in Java](#non-primitive-data-types-in-java)
+    - [`String`](#string)
+    - [`Character`](#character)
+    - [Arrays](#arrays)
+      - [Printing an Array `java.util.Arrays.toString(Object[] a)`](#printing-an-array-javautilarraystostringobject-a)
+  - [Typecasting in Java](#typecasting-in-java)
+  - [Automatic Type Conversion in Expressions in Java](#automatic-type-conversion-in-expressions-in-java)
+- [Conditional and Looping Statements](#conditional-and-looping-statements)
+  - [if-else statements](#if-else-statements)
+  - [`for-each` loop](#for-each-loop)
+  - [switch-case](#switch-case)
 - [Taking Input in Java](#taking-input-in-java)
   - [Taking input of `int`](#taking-input-of-int)
   - [Taking input of `String`](#taking-input-of-string)
     - [Taking input of one word](#taking-input-of-one-word)
     - [Taking input of multiple words](#taking-input-of-multiple-words)
   - [Taking input of one character (`char`)](#taking-input-of-one-character-char)
+  - [Checking if input stream](#checking-if-input-stream)
+- [Functions in Java](#functions-in-java)
+  - [Return values](#return-values)
+  - [No pass-by-reference](#no-pass-by-reference)
+  - [References in Modern Languages](#references-in-modern-languages)
 - [TODO](#todo)
 
 <!-- TOC -->
@@ -315,7 +340,7 @@ Packages are used in Java in order to prevent naming conflicts, to control acces
 
 #### `java.lang` 
 
-Bundles the fundamental classes such as:
+Bundles the fundamental classes such as: `System`, `String`, etc.
 
 It is included by default, which is why we need not explicitly include it everytime we need to use a class in this package.
 
@@ -337,15 +362,26 @@ package packagename
 ```
 with the name of the package in lowercase.
 
+### Dynamically importing classes from packages in Java
+
+We can dynamically import classes from Java's in-built pre-existing packages using the universal selector `*`.
+
+```java
+import java.util.*;
+```
+Only the classes we use from the `util` package will be imported.
+
+There is no performance difference if we just import the a specific class like `Scanner` or use the universal selector.
+
 ## Access Modifiers in Java
 
 - `Private`: The access level of a private modifier is only within the class. It cannot be accessed from outside the class.
 
-  - `Default`: The access level of a default modifier is only within the package. It cannot be accessed from outside the package. If you do not specify any access level, it will be the default.
-  - `Protected`: The access level of a protected modifier is within the package and outside the package through child class. 
-  
-    If you do not make a child class, it cannot be accessed from outside the package.
-  - `Public`: The access level of a public modifier is everywhere. It can be accessed from within the class, outside the class, within the package and outside the package.
+- `Default`: The access level of a default modifier is only within the package. It cannot be accessed from outside the package. If you do not specify any access level, it will be the default.
+- `Protected`: The access level of a protected modifier is within the package and outside the package through child class. 
+
+  If you do not make a child class, it cannot be accessed from outside the package.
+- `Public`: The access level of a public modifier is everywhere. It can be accessed from within the class, outside the class, within the package and outside the package.
 
     This has the widest scope amongst all access modifiers.
 
@@ -366,6 +402,16 @@ In most IDEs, only the `.class` file of the public class would be displayed.
 
 Navigating to the folder where that `.class` file is present using the terminal or file manager would lead to the discovery of the other `.class` files as well.
 
+### `java.lang.Object` class
+
+Every class in Java is directly or indirectly derived from the `Object` class, henceforth it is a child of the `Object` class. 
+
+If a class does not extend any other class then it is a direct child class of `Object` and if extends another class then it is indirectly derived. 
+
+Therefore the `Object` class methods are available to all Java classes.
+
+Note: `Object` class acts as a root of inheritance hierarchy in any java program.
+
 ### Creating an Object of a Class
 
 - In C++, creating an object was simple as we just had to specify the class type followed by the name of the object to be created and parentheses, either containing no arguments (Default Constructor) or a specific number of arguments (Parameterized Constructor).
@@ -384,6 +430,217 @@ Navigating to the folder where that `.class` file is present using the terminal 
   
   ClassName ObjectName = new ClassName();
   ```
+
+### `java.lang.String` class
+
+- `charAt()`
+- `trim()`
+
+### `java.util.Random` class
+
+```java
+Random randomObject = new Random();
+        
+System.out.println(randomObject.nextInt()); 
+// gives ANY random integer
+
+System.out.println(randomObject.nextInt(20));
+//gives random integer from 0 upto but not including 20.
+
+int[] integer = randomObject.ints(2, 56, 74).toArray();
+// When we are doing array declaration and initialization at a single step, we need not specify the size of the array. If we had done initialization as a single step, we would have to specify a size in between the square brackets.    
+// The toArray() method converts the IntStream, LongStream, DoubleStream to arrays
+// The first parameter gives the stream size, the second one the start of the range, and the third one the upper bound
+```
+
+# Data Types in Java
+
+## Primitive Data Types in Java
+
+### `int`
+
+For improved readability, we can add underscores to represent commas in larger integer values. The underscores can be placed as required since there is no format for these.`
+```java
+int integer1 = 234_000_000;
+int integer2 = 2_3__4
+```
+
+### `byte`
+
+byte datatype can store values from -128 to 127.
+
+If we try to store a value out of that string, for example 128, we will get a warning about "possible lossy conversion" unless we [typecast](#typecasting-in-java) it.
+
+If we try to perform the following type casting:
+```java
+byte byteValue = (byte)(128);
+byte byteValue = (byte)(129);
+byte byteValue = (byte)(130);
+```
+It will start from the bottom of the range of the byte data type, which is `-128`, then `-127`, then `-126` etc.
+
+### `char`
+
+`char` is a primitive type that represents a single 16 bit Unicode character.
+
+## Non-Primitive data types in Java
+
+Non-primitive types are created by the programmer and is not defined by Java (except for String). 
+
+Non-primitive types can be used to call methods to perform certain operations, while primitive types cannot. 
+
+A primitive type always has a value, while non-primitive types can be **null**.
+
+### `String`
+
+In java, strings are immutable, which saves memory. Once created in memory, it will be available forever.
+
+Even if its reference variable is made to point to a different string, the string will stay in memory. 
+
+When another reference variable is assigned the same string value during the same runtime, it will point to the same string object.
+
+### `Character`
+
+`Character` is a wrapper class that allows us to use `char` primitive concept in OOP.
+
+It has some built-in methods that the `char` primitive data type doesn't have. 
+
+Example is given below.
+
+```java
+Character charInstance = 'a'; 
+System.out.println(Character.isDigit(charInstance));
+```
+
+### Arrays
+
+We can create an array in Java using the following syntax:
+```java
+dataType[size] arrayName;
+```
+- `dataType` - it can be primitive data types like `int`, `char`, `double`, `byte`, etc. or Java objects.
+- `size` - We need to specify a size for the array when if we are just declaring the array.
+
+  In the case where we declare and initialize the array at the same time, we should NOT specify a size for the array. For example
+- `arrayName` - it is an identifier
+
+In order to define the number of elements that an array can hold, we have to allocate memory for the array in Java. For example,
+```java
+// declare an array
+double[] data;
+
+// allocate memory
+data = new double[10];
+```
+
+Or instead of explicitly allocating memory for an array, we can also assign the array a value.
+```java
+double[] data = {1, 2, 3, 4};
+```
+
+#### Printing an Array `java.util.Arrays.toString(Object[] a)`
+
+This method returns a string representation of the contents of the specified Object array. 
+
+If the array contains other arrays as elements, they are converted to strings by the `Object.toString()` method inherited from Object, which describes their identities rather than their contents.
+
+```java
+int[] arr = {1, 2, 3};
+System.out.println(Arrays.toString(arr))
+```
+
+We use the `toString` method of `Array` class to convert the array into a `String` to print an array because `prinln` method doesn't take arrays as arguments.
+
+## Typecasting in Java
+
+Java is quite persistent with warnings regarding "possible lossy conversions" in the case of IMPLICIT type conversion. 
+
+In order to force conversions that might be lossy, we can use EXPLICIT type conversion or Type Casting.
+
+Note that some conversions are not possible even using typecasting, such as `int` to `boolean`.
+
+See [TypeCasting.java](JavaProjects/MasterProject/src/com/rohan/TypeCasting.java) for examples.
+
+## Automatic Type Conversion in Expressions in Java
+
+While evaluating expressions, the intermediate value may exceed the range of operands and hence the expression value will be promoted. Some conditions for type promotion are:
+- Java automatically promotes each `byte`, `short` or `char` to `int` when evaluating an expression. 
+  
+  This is the bare minimum since it is possible that the multiplication of two bytes is out of the range of `byte` datatype.   
+
+  Note that for division, there is no automatic type conversion to a floating point value if no operand is a floating point number. This will result in truncation of values after the decimal. 
+- If one operand is `long`, `float` or `double`, the whole expression is promoted to `long`, `float` or `double` respectively.
+
+It is import to understand that brackets and operator also matter in expression evaluation. 
+
+If suppose we have 2 expressiona with datatypes like this:
+```java
+1 float + int / int
+2 float + (int + int)
+```
+- In the first operation, since the precedence of division is higher, `int`/`int` will be performed before the upgradation to `float` so some part of the result of the division operation may be lost.
+- In the second operation, even though the precedence of operators is same, brackets are around the two `int` values so they will be added without upgradation to `float`.
+
+# Conditional and Looping Statements
+
+## if-else statements
+
+`int` to `boolean` type conversion is not possible in Java.
+So, we can't use the following syntax:
+```java
+if(1) {
+  //...
+}
+else {
+  //...
+}
+```
+
+## `for-each` loop
+
+This is also known as an enhanced for loop.
+
+The syntax of the Java for-each loop is:
+```java
+for(dataType item : array) {
+    ...
+}
+```
+Here,
+
+- `dataType` - the data type of the array/collection
+- `item` - each item of array/collection is assigned to this variable
+- `array` - an array or a collection
+
+## switch-case
+
+Switch statements in Java can take case values in numerical values (`byte`, `short`, `int` etc, where `char` datatype comes under `int` as well) and `String` as well.
+    
+It also has a `default` case for an invalid input.
+    
+The datatype of the input of the switch expression and the cases should be same.
+
+Example of a switch-case statement:
+```java
+public static void main(String[] args) {
+    String month = "jan";
+    
+    switch(month) {
+        case "jan":
+            System.out.println("This is January");
+            break;
+        case "feb":
+            System.out.println("This is February");
+            break;
+        case "mar":
+            System.out.println("This is March");
+            break;
+        default:
+            System.out.println("No valid month string");
+            break;
+    }
+}
+```
 
 # Taking Input in Java
 
@@ -452,7 +709,102 @@ This helps us take input of a character as:
 - next() takes the next word.
 - charAt() is a method the String class present in `java.lang.String`. It takes the character at a specific index of a string.
 
+## Checking if input stream 
 
+```java
+Scanner scannerObject = new Scanner(System.in);
+scannerObject.hasNext(); 
+```
+This returns a boolean value of true if this scanner has more data to be read.
+
+# Functions in Java
+
+## Return values
+
+- Any method declared `void` doesn't return a value. It does not need to contain a return statement, but it may do so. 
+
+  In such a case, a return statement can be used to branch out of a control flow block and exit the method and is simply used like this:
+  ```java
+  return;
+  ```
+
+  If you try to return a value from a method that is declared void, you will get a compiler error.
+
+- On the other hand, any method that is NOT declared `void` must contain a return statement with a corresponding return value, like this:
+
+  ```java
+  return returnValue;
+  ```
+
+  The data type of the return value must match the method's declared return type; you can't return an integer value from a method declared to return a boolean.
+
+## No pass-by-reference
+
+There is no pass-by-reference in Java, only pass-by-value.
+```java
+public class Main {
+  public static void main(String[] args) {
+    String name = "Rohan";
+    changename(name);
+  }
+
+  public void changename(String naam) {
+    naam = "Rahul";
+  }
+}
+```
+In this code, the first reference variable is `name` which points to the object "Rohan". 
+
+When the `changename()` method is called, another reference variable `naam` is created, which points to the same object.
+
+When we make the `naam` reference variable point to "Rahul", it doesn't change the value of what the original reference variable `name` is pointing to.
+
+Meaning the object was passed by value to the function, and not by reference.
+
+This is not pass-by-reference, this is pass-by-copy-of-the-value-of-the-reference
+
+## References in Modern Languages
+
+In modern languages, variables tend to be of "reference types" (another concept invented later than "pass by reference" and inspired by it), i.e. the actual object data is stored separately somewhere (usually, on the heap), and only "references" to it are ever held in variables and passed as parameters.
+
+Passing such a reference (technically SAME as passing the address, like in C, where we passed the value held by a pointer) falls under pass-by-value because a variable's value is technically the reference itself, not the referred object.
+
+However, the net effect on the program can be the same as either pass-by-value or pass-by-reference:
+
+- If a reference is just taken from a caller's variable and passed as an argument, this has the same effect as pass-by-reference: if the referred object is mutated in the callee, the caller will see the change.
+  
+  This is what happens with `Array` variables in Java.
+
+- However, if a variable holding this reference is reassigned, it will stop pointing to that object, so any further operations on this variable will instead affect whatever it is pointing to now.
+- To have the same effect as pass-by-value, a copy of the object is made at some point. Options include:
+  - The caller can just make a private copy before the call and give the callee a reference to that instead.
+  - In some languages, some object types are "immutable": any operation on them that seems to alter the value actually creates a completely new object without affecting the original one. 
+   
+    So, passing an object of such a type as an argument always has the effect of pass-by-value: a copy for the callee will be made automatically if and when it needs a change, and the caller's object will never be affected.
+
+    This is what happens with `String` variables in Java.
+
+##
+
+C/CPP have plenty of issues relating to pointers and storing addresses directly in variables which can be read about [here](https://stackoverflow.com/questions/2629357/does-java-have-pointers).
+
+Java side steps all of these issues by returning a reference. 
+
+A reference does not refer to any location in memory; Java maintains an internal **"reference to pointer"** table (in some implementations of JVM). This table takes the reference and returns the data associated with it, wherever that data may reside in memory. 
+
+This slows down code execution, because two lookups are done for each "dereferencing", one lookup in the reference table, one in the machine's memory.
+
+A big advantage of Java using references is that the memory can be moved around without breaking the would-be pointer addresses. 
+
+In a C program, if you move data into a new memory location, it is very difficult to know whether some other part of the program has a pointer to the data. Should a stale pointer be dereferenced after the memory is moved, the program will be accessing corrupt data, and typically a crash will be shortcoming.
+
+Ability to move the memory around in a running program allows programs to easily recycle memory. Any program which doesn't need chunks of memory can release the unused memory, but this creates memory holes of unused memory in between chunks of used memory. 
+
+Internally computers use pages of memory, which are quite large. If a sparsely used page of memory could have the few used bits moved into another page, then a page of memory can be freed. 
+
+This increases the density of data to memory, improving cache performance. Sometimes this translates into performance improvements that can be quite dramatic.
+
+Java's Garbage Collector takes advantage of the use of references by temporarily blocking access to the data for a set of references. During that blockage of access, it moves the data around (to compact it). After the blockage, the reference to address table has the new memory addresses. Since the "functional" layer of the code never knew the addresses in the first place, this operation will not break a running Java program.
 
 # TODO 
 
