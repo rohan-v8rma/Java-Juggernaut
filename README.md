@@ -42,6 +42,9 @@
     - [`int`](#int)
     - [`byte`](#byte)
     - [`char`](#char)
+      - [Default Initialization Value for `char`](#default-initialization-value-for-char)
+      - [What is Unicode?](#what-is-unicode)
+      - [Difference between ASCII and Unicode](#difference-between-ascii-and-unicode)
   - [Non-Primitive data types in Java](#non-primitive-data-types-in-java)
     - [`String`](#string)
     - [`Character`](#character)
@@ -49,8 +52,9 @@
       - [Declaring, Creating & Initializing an Array](#declaring-creating--initializing-an-array)
       - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
       - [Printing an Array `java.util.Arrays.toString(Object[] a)`](#printing-an-array-javautilarraystostringobject-a)
-  - [Typecasting in Java](#typecasting-in-java)
+  - [Type-casting in Java (Forcing Lossy Conversions)](#type-casting-in-java-forcing-lossy-conversions)
   - [Automatic Type Conversion in Expressions in Java](#automatic-type-conversion-in-expressions-in-java)
+  - [Brackets & Operator Precedence](#brackets--operator-precedence)
 - [Conditional and Looping Statements](#conditional-and-looping-statements)
   - [if-else statements](#if-else-statements)
   - [`for-each` loop (looping through Array elements)](#for-each-loop-looping-through-array-elements)
@@ -67,6 +71,7 @@
   - [Return values](#return-values)
   - [No pass-by-reference](#no-pass-by-reference)
   - [References in Modern Languages](#references-in-modern-languages)
+  - [Java NOT having pointers](#java-not-having-pointers)
 - [TODO](#todo)
 
 <!-- TOC -->
@@ -487,7 +492,48 @@ It will start from the bottom of the range of the byte data type, which is `-128
 
 ### `char`
 
-`char` is a primitive type that represents a single 16 bit Unicode character.
+`char` is a primitive type that represents a single 16 bit [Unicode](#what-is-unicode) character.
+
+Although using [ASCII](#difference-between-ascii-and-unicode) logic works in same cases like:
+```java
+int integer = 65; // This is 41 in hexadecimal.
+char character = (char)(integer);
+System.out.println(character);
+```
+
+Output:
+```
+A
+```
+
+But, internally Java uses [Unicode](#what-is-unicode), which uses hexadecimal numbers to represent characters. 
+
+So, `A` would be written as `\u0041` in [Unicode](#what-is-unicode), where `\u` is the Escape Sequence for [Unicode](#what-is-unicode).
+
+#### Default Initialization Value for `char`
+
+If suppose we create a reference variable which is an array of characters and then we assign an object to it in the following manner:
+
+```java
+char[] charArray;
+charArray = new char[3];
+```
+
+And then we try to print one of the characters of the array, we will be shown an unknown character, which will have a value of `\u0000`, which is the **null** character in [Unicode](#what-is-unicode).
+
+#### What is Unicode?
+
+Unicode is an encoding for textual characters which is able to represent characters from many different languages from around the world.
+
+#### Difference between ASCII and Unicode
+
+The main difference between ASCII and Unicode is that: 
+- ASCII represents lowercase letters (a-z), uppercase letters (A-Z), digits (0-9) and symbols such as punctuation marks. 
+  
+  It supports only 128 characters and uses 7 bits to represent a character.
+- Unicode represents letters of English, Arabic, Greek etc., mathematical symbols, historical scripts, and emoji covering a wide range of characters than ASCII.
+  
+  It uses 8, 16 or 32 bits to represent a character depending on the encoding type.
 
 ## Non-Primitive data types in Java
 
@@ -507,7 +553,7 @@ When another reference variable is assigned the same string value during the sam
 
 ### `Character`
 
-`Character` is a wrapper class that allows us to use `char` primitive concept in OOP.
+`Character` is a wrapper class that allows us to use [`char`](#char) primitive concept in OOP.
 
 It has some built-in methods that the `char` primitive data type doesn't have. 
 
@@ -583,7 +629,7 @@ System.out.println(Arrays.toString(arr))
 
 We use the `toString` method of `Array` class to convert the array into a `String` to print an array because `prinln` method doesn't take arrays as arguments.
 
-## Typecasting in Java
+## Type-casting in Java (Forcing Lossy Conversions)
 
 Java is quite persistent with warnings regarding "possible lossy conversions" in the case of IMPLICIT type conversion. 
 
@@ -603,9 +649,21 @@ While evaluating expressions, the intermediate value may exceed the range of ope
   Note that for division, there is no automatic type conversion to a floating point value if no operand is a floating point number. This will result in truncation of values after the decimal. 
 - If one operand is `long`, `float` or `double`, the whole expression is promoted to `long`, `float` or `double` respectively.
 
-It is import to understand that brackets and operator also matter in expression evaluation. 
+Let us take a short example to understand **this**:
+```java
+byte a = 40;
+byte b = 50;
+double c = 10.0 + a / b; 
+```
+Here, each `byte` is automatically promoted to `int` during the evaluation of this expression. 
 
-If suppose we have 2 expressiona with datatypes like this:
+If we had tried a similar operation in C/CPP, we would have to type-cast each value into an `int` before performing the operation.
+
+## Brackets & Operator Precedence
+
+It is import to understand that brackets and operator precedence also matter in expression evaluation. 
+
+If suppose we have 2 expressions with datatypes like this:
 ```java
 1 float + int / int
 2 float + (int + int)
@@ -818,7 +876,7 @@ However, the net effect on the program can be the same as either pass-by-value o
 
     This is what happens with `String` variables in Java.
 
-##
+## Java NOT having pointers
 
 C/CPP have plenty of issues relating to pointers and storing addresses directly in variables which can be read about [here](https://stackoverflow.com/questions/2629357/does-java-have-pointers).
 
@@ -841,5 +899,3 @@ This increases the density of data to memory, improving cache performance. Somet
 Java's Garbage Collector takes advantage of the use of references by temporarily blocking access to the data for a set of references. During that blockage of access, it moves the data around (to compact it). After the blockage, the reference to address table has the new memory addresses. Since the "functional" layer of the code never knew the addresses in the first place, this operation will not break a running Java program.
 
 # TODO 
-
-Forcing Lossy Conversions in Java
