@@ -37,6 +37,12 @@
     - [Creating an Object of a Class](#creating-an-object-of-a-class)
     - [`java.lang.String` class](#javalangstring-class)
     - [`java.util.Random` class](#javautilrandom-class)
+      - [`nextInt()` method](#nextint-method)
+      - [`doubles()`, `ints()` and `longs()`  method](#doubles-ints-and-longs--method)
+    - [`java.lang.Math` class](#javalangmath-class)
+      - [`Math.random()`](#mathrandom)
+      - [Getting a random floating-point number between 2 bounds using `Math`](#getting-a-random-floating-point-number-between-2-bounds-using-math)
+      - [Getting a random integer between 2 bounds using `Math`](#getting-a-random-integer-between-2-bounds-using-math)
 - [Data Types in Java](#data-types-in-java)
   - [Primitive Data Types in Java](#primitive-data-types-in-java)
     - [`int`](#int)
@@ -52,6 +58,8 @@
       - [Declaring, Creating & Initializing an Array](#declaring-creating--initializing-an-array)
       - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
       - [Printing an Array `java.util.Arrays.toString(Object[] a)`](#printing-an-array-javautilarraystostringobject-a)
+  - [Streams (`java.util.stream`)](#streams-javautilstream)
+    - [Converting Streams to Arrays : `toArray()`](#converting-streams-to-arrays--toarray)
   - [Type-casting in Java (Forcing Lossy Conversions)](#type-casting-in-java-forcing-lossy-conversions)
   - [Automatic Type Conversion in Expressions in Java](#automatic-type-conversion-in-expressions-in-java)
   - [Brackets & Operator Precedence](#brackets--operator-precedence)
@@ -451,18 +459,75 @@ Note: `Object` class acts as a root of inheritance hierarchy in any java program
 
 ```java
 Random randomObject = new Random();
-        
-System.out.println(randomObject.nextInt()); 
-// gives ANY random integer
-
-System.out.println(randomObject.nextInt(20));
-//gives random integer from 0 upto but not including 20.
-
-int[] integer = randomObject.ints(2, 56, 74).toArray();
-// When we are doing array declaration and initialization at a single step, we need not specify the size of the array. If we had done initialization as a single step, we would have to specify a size in between the square brackets.    
-// The toArray() method converts the IntStream, LongStream, DoubleStream to arrays
-// The first parameter gives the stream size, the second one the start of the range, and the third one the upper bound
 ```
+#### `nextInt()` method
+
+This method gives ANY random integer.
+
+```java
+System.out.println(randomObject.nextInt()); 
+```
+
+We can limit the upper bound of the range for selecting the random integer like so:
+
+```java
+System.out.println(randomObject.nextInt(20));
+```
+
+This gives a random integer from 0 upto but not including 20.
+
+#### `doubles()`, `ints()` and `longs()`  method
+
+These method return [Streams](#streams-javautilstream) of different data-types.
+
+```java
+int[] integer = randomObject.ints(2, 56, 74).toArray();
+double[] integer = randomObject.doubles(2, 2.5, 7.0).toArray();
+long[] integer = randomObject.longs(2, 3123156, 4566474).toArray();
+```
+
+- The first parameter gives the stream size
+- The second one the start of the range
+- The third one the upper bound
+
+The [`toArray()`](#converting-streams-to-arrays--toarray) method converts the `IntStream`, `LongStream`, `DoubleStream` to arrays.
+
+### `java.lang.Math` class
+
+Note that `java.lang` package is imported by-default. 
+
+
+- `ceil` : x is rounded up to its nearest integer. This integer is returned as a double value.
+  ```java
+  System.out.println(Math.ceil(7.5));
+  ```
+- `floor` :  x is rounded down to its nearest integer. This integer is returned as a double value.
+  ```java
+  System.out.println(Math.floor(7.5));
+  ```
+
+#### `Math.random()`
+
+The `java.lang.Math.random()` method returns a pseudorandom double type number greater than or equal to 0.0 and less than 1.0 
+
+#### Getting a random floating-point number between 2 bounds using `Math`
+
+```java
+int a = 10;
+int b = 10;
+double randomFloat =  a + Math.random() * b;
+```
+This gives us ANY random number between 10 (a) and 20 (a+b), excluding 20 (a+b).
+
+#### Getting a random integer between 2 bounds using `Math`
+
+```java
+int randomInt = Math.ceil(Math.random() * 20);
+```
+
+As we know `Math.random()` gives a random floating-point number between 0 and 1, excluding 1. Multiplying that by 20 increases that range to 0-20. excluding 20.
+
+`Math.ceil()` rounds numbers upto the nearest integer. So numbers from 0-19.99... will be rounded up to the nearest integer, effectively taking our random range from 0-20 (only integers).
 
 # Data Types in Java
 
@@ -628,6 +693,29 @@ System.out.println(Arrays.toString(arr))
 ```
 
 We use the `toString` method of `Array` class to convert the array into a `String` to print an array because `prinln` method doesn't take arrays as arguments.
+
+## Streams (`java.util.stream`)
+
+A stream is a sequence of objects that supports various methods which can be pipelined to produce the desired result.
+
+The features of Java stream are –
+
+- A stream is not a data structure instead it takes input from the Collections, Arrays or I/O channels.
+- Streams don’t change the original data structure, they only provide the result as per the pipelined methods.
+- Each intermediate operation is lazily executed and returns a stream as a result, hence various intermediate operations can be pipelined. Terminal operations mark the end of the stream and return the result.
+
+### Converting Streams to Arrays : `toArray()`
+
+`Stream` provides `toArray()` method that returns an array containing the elements of the stream in the form of Object array.
+
+Syntax:
+```java
+
+int[] integer = randomObject.ints(2, 56, 74).toArray();
+
+```
+
+The [`ints()`](#doubles-ints-and-longs--method) method returns an `IntStream` containing a stream of random integers, depending upon the arguments provided to [`ints()`](#doubles-ints-and-longs--method).
 
 ## Type-casting in Java (Forcing Lossy Conversions)
 
