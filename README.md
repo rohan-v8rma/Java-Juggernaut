@@ -35,6 +35,8 @@
   - [Classes in Java](#classes-in-java)
     - [`java.lang.Object` class](#javalangobject-class)
     - [Creating an Object of a Class](#creating-an-object-of-a-class)
+    - [Wrapper Classes in Java](#wrapper-classes-in-java)
+      - [Need of Wrapper Classes](#need-of-wrapper-classes)
     - [`java.lang.String` class](#javalangstring-class)
     - [`java.util.Random` class](#javautilrandom-class)
       - [`nextInt()` method](#nextint-method)
@@ -52,8 +54,10 @@
       - [What is Unicode?](#what-is-unicode)
       - [Difference between ASCII and Unicode](#difference-between-ascii-and-unicode)
   - [Non-Primitive data types in Java](#non-primitive-data-types-in-java)
-    - [`String`](#string)
-    - [`Character`](#character)
+    - [`java.lang.String`](#javalangstring)
+    - [`java.lang.Character`](#javalangcharacter)
+    - [`java.lang.Double`](#javalangdouble)
+      - [Infinity in Java](#infinity-in-java)
     - [Arrays](#arrays)
       - [Declaring, Creating & Initializing an Array](#declaring-creating--initializing-an-array)
       - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
@@ -423,6 +427,8 @@ Navigating to the folder where that `.class` file is present using the terminal 
 
 ### `java.lang.Object` class
 
+Here, `java` is the root package, `lang` is the sub-package and `Object` is the .java `file`/`class`.
+
 Every class in Java is directly or indirectly derived from the `Object` class, henceforth it is a child of the `Object` class. 
 
 If a class does not extend any other class then it is a direct child class of `Object` and if extends another class then it is indirectly derived. 
@@ -449,6 +455,22 @@ Note: `Object` class acts as a root of inheritance hierarchy in any java program
   
   ClassName ObjectName = new ClassName();
   ```
+
+### Wrapper Classes in Java
+
+A Wrapper class is a class whose object wraps or contains primitive data types. 
+
+When we create an object of a wrapper class, it contains a field and in this field, we can store primitive data types. 
+
+In other words, we can wrap a primitive value using a wrapper class object built for that specific primitive data type.
+
+#### Need of Wrapper Classes
+
+- They convert primitive data types into objects.   
+  
+  Objects are needed if we wish to modify the arguments passed into a method. This is because primitive types are passed by value in Java.
+
+- The classes in `java.util` package handles only objects and hence wrapper classes help in this case also.
 
 ### `java.lang.String` class
 
@@ -504,6 +526,10 @@ Note that `java.lang` package is imported by-default.
 - `floor` :  x is rounded down to its nearest integer. This integer is returned as a double value.
   ```java
   System.out.println(Math.floor(7.5));
+  ```
+- `PI` : Gives us the value for Pi.
+  ```java
+  System.out.println(Math.PI);
   ```
 
 #### `Math.random()`
@@ -608,7 +634,7 @@ Non-primitive types can be used to call methods to perform certain operations, w
 
 A primitive type always has a value, while non-primitive types can be **null**.
 
-### `String`
+### `java.lang.String`
 
 In java, strings are immutable, which saves memory. Once created in memory, it will be available forever.
 
@@ -616,9 +642,9 @@ Even if its reference variable is made to point to a different string, the strin
 
 When another reference variable is assigned the same string value during the same runtime, it will point to the same string object.
 
-### `Character`
+### `java.lang.Character`
 
-`Character` is a wrapper class that allows us to use [`char`](#char) primitive concept in OOP.
+`Character` is a [wrapper class](#wrapper-classes-in-java) that allows us to use [`char`](#char) primitive concept in OOP.
 
 It has some built-in methods that the `char` primitive data type doesn't have. 
 
@@ -627,6 +653,22 @@ Example is given below.
 ```java
 Character charInstance = 'a'; 
 System.out.println(Character.isDigit(charInstance));
+```
+
+This method returns a boolean value depending on whether the given character is a digit or not.
+
+### `java.lang.Double`
+
+`Double` is a [wrapper class](#wrapper-classes-in-java) for the primitive type **double** which contains several methods to effectively deal with a double value like converting it to a string representation, and vice-versa.
+
+#### Infinity in Java
+
+The Double class in Java supports infinity. You can implement positive infinity or negative infinity.
+
+The syntax for it is the following:
+```java
+double posInf = Double.POSITIVE_INFINITY;
+double negInf = Double.NEGATIVE_INFINITY;
 ```
 
 ### Arrays
@@ -987,3 +1029,41 @@ This increases the density of data to memory, improving cache performance. Somet
 Java's Garbage Collector takes advantage of the use of references by temporarily blocking access to the data for a set of references. During that blockage of access, it moves the data around (to compact it). After the blockage, the reference to address table has the new memory addresses. Since the "functional" layer of the code never knew the addresses in the first place, this operation will not break a running Java program.
 
 # TODO 
+
+- Cancellation Errors
+
+(Demonstrate cancellation errors) A cancellation error occurs when you are manipulating a very large number with a very small number. 
+
+The large number may cancel out the smaller number. For example, the result of 100000000.0 + 0.000000001 is equal to 100000000.0. To avoid cancellation errors and obtain more accurate results, carefully select the order of computation. 
+
+For example, in computing the following series, you will obtain more accurate results by computing from right to left rather than from left to right:
+
+1 + 1/2 + 1/3 + ... + 1/
+
+
+- String to Integer & Integer to String conversion 
+
+```java
+  int intValue = Integer.parseInt("23"); 
+        // string to integer conversion
+  String stringValue = String.valueOf(1); 
+        // integer to string conversion
+```
+- Equality of string objects and primitive strings in java
+
+```java
+public static void main(String[] args) {
+  String string1 = "vit"; //primitive data type
+  String string2 = "vit"; // primitive data type
+  String string3 = new String("vit"); // string object
+
+  if(string1 == string2) {
+      System.out.println("string1 equal to string2");
+  };
+
+  if(string1 != string3) {
+  // string primitive data types and objects can be compared using the equals method
+      System.out.println("string1 not equal to string3");
+  };
+}
+```
