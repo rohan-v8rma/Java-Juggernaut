@@ -50,7 +50,6 @@
     - [`int`](#int)
     - [`byte`](#byte)
     - [`char`](#char)
-      - [Default Initialization Value for `char`](#default-initialization-value-for-char)
       - [What is Unicode?](#what-is-unicode)
       - [Difference between ASCII and Unicode](#difference-between-ascii-and-unicode)
   - [Non-Primitive data types in Java](#non-primitive-data-types-in-java)
@@ -60,8 +59,13 @@
       - [Infinity in Java](#infinity-in-java)
     - [Arrays](#arrays)
       - [Declaring, Creating & Initializing an Array](#declaring-creating--initializing-an-array)
+      - [Default Initialization Value for `int` arrays](#default-initialization-value-for-int-arrays)
+      - [Default Initialization Value for `char` Arrays](#default-initialization-value-for-char-arrays)
       - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
       - [Printing an Array `java.util.Arrays.toString(Object[] a)`](#printing-an-array-javautilarraystostringobject-a)
+      - [Creating a copy of an Array](#creating-a-copy-of-an-array)
+        - [Assigning the SAME object to a different reference variable](#assigning-the-same-object-to-a-different-reference-variable)
+        - [Creating a NEW object using `clone()` method of `Array` class and assigning it to a different reference variable](#creating-a-new-object-using-clone-method-of-array-class-and-assigning-it-to-a-different-reference-variable)
   - [Streams (`java.util.stream`)](#streams-javautilstream)
     - [Converting Streams to Arrays : `toArray()`](#converting-streams-to-arrays--toarray)
   - [Type-casting in Java (Forcing Lossy Conversions)](#type-casting-in-java-forcing-lossy-conversions)
@@ -601,17 +605,6 @@ But, internally Java uses [Unicode](#what-is-unicode), which uses hexadecimal nu
 
 So, `A` would be written as `\u0041` in [Unicode](#what-is-unicode), where `\u` is the Escape Sequence for [Unicode](#what-is-unicode).
 
-#### Default Initialization Value for `char`
-
-If suppose we create a reference variable which is an array of characters and then we assign an object to it in the following manner:
-
-```java
-char[] charArray;
-charArray = new char[3];
-```
-
-And then we try to print one of the characters of the array, we will be shown an unknown character, which will have a value of `\u0000`, which is the **null** character in [Unicode](#what-is-unicode).
-
 #### What is Unicode?
 
 Unicode is an encoding for textual characters which is able to represent characters from many different languages from around the world.
@@ -691,7 +684,7 @@ dataType[size] arrayName;
   int[] intArray; 
   ```
 
-- CREATING the array OBJECT and assigning it to the reference variable `intArray`. All elements are **intialized** with value '0'.
+- CREATING the array OBJECT and assigning it to the reference variable `intArray`. All elements are [initialized](#default-initialization-value-for-int-arrays) with value `0`.
 
   ```java
   intArray = new int[5]; 
@@ -699,13 +692,47 @@ dataType[size] arrayName;
 
   Notice how the format for object creation is similar to other classes like `Scanner` and `Random` in Java.
 
-- INITIALIZING the array indices.
+- ASSIGNING values to the array indices.
 
   ```java
   for(int index = 0; index < 2; index++) { 
       intArray[index] = (int)(Math.random() * 100);
   }
   ```
+
+#### Default Initialization Value for `int` arrays
+
+If suppose we create a reference variable which is an array of integers (`int`) and then we assign an object to it in the following manner:
+
+```java
+int[] intArray;
+intArray = new int[3];
+```
+
+And then we try to print the array using:
+
+```java
+System.out.println(Arrays.toString(intArray));
+```
+
+We will be shown an array of `O`s.
+
+#### Default Initialization Value for `char` Arrays
+
+If suppose we create a reference variable which is an array of characters and then we assign an object to it in the following manner:
+
+```java
+char[] charArray;
+charArray = new char[3];
+```
+
+And then we try to print the array using:
+
+```java
+System.out.println(Arrays.toString(charArray));
+```
+
+We will be shown an array of unknown characters, each of which will have a value of `\u0000`, which is the **null** character in [Unicode](#what-is-unicode).
 
 #### Specifying the number of elements in an Array
 
@@ -735,6 +762,40 @@ System.out.println(Arrays.toString(arr))
 ```
 
 We use the `toString` method of `Array` class to convert the array into a `String` to print an array because `prinln` method doesn't take arrays as arguments.
+
+#### Creating a copy of an Array
+
+##### Assigning the SAME object to a different reference variable
+
+```java
+int[] arr1 = {1, 2, 3, 4, 5};
+int[] arr2 = arr1;
+arr2[0] = 23;
+System.out.println(arr1[0]);
+```
+
+The output of this code snippet is 23.
+
+This is because here, we are creating another reference variable `arr2` and making it point to the same object as `arr1`.
+
+So, when we change the object using `arr2`, it gets changed for both reference variables.
+
+
+##### Creating a NEW object using `clone()` method of `Array` class and assigning it to a different reference variable
+
+```java
+int[] arr1 = {1, 2, 3, 4, 5};
+int[] arr2 = arr1.clone();
+arr2[0] = 23;
+System.out.println(arr1[0]);
+```
+The output of this code snippet is 1.
+
+This is because here, we are using the `clone()` of `Array` class to create a duplicate object, and assigning it to the reference variable `arr2`.
+
+So now, the changes we make to `arr2` are independent of the `arr1`.
+
+
 
 ## Streams (`java.util.stream`)
 
