@@ -62,10 +62,14 @@
       - [Default Initialization Value for `int` arrays](#default-initialization-value-for-int-arrays)
       - [Default Initialization Value for `char` Arrays](#default-initialization-value-for-char-arrays)
       - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
-      - [Printing an Array `java.util.Arrays.toString(Object[] a)`](#printing-an-array-javautilarraystostringobject-a)
       - [Creating a copy of an Array](#creating-a-copy-of-an-array)
         - [Assigning the SAME object to a different reference variable](#assigning-the-same-object-to-a-different-reference-variable)
-        - [Creating a NEW object using `clone()` method of `Array` class and assigning it to a different reference variable](#creating-a-new-object-using-clone-method-of-array-class-and-assigning-it-to-a-different-reference-variable)
+        - [Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different referen ce variable](#creating-a-new-object-using-clone-non-static-method-and-assigning-it-to-a-different-referen-ce-variable)
+    - [`java.lang.reflect.Array` vs. `java.util.Arrays`](#javalangreflectarray-vs-javautilarrays)
+      - [`java.lang.reflect.Array`:](#javalangreflectarray)
+      - [`java.util.Arrays`:](#javautilarrays)
+        - [Printing an Array `java.util.Arrays.toString(Object[] arr)`](#printing-an-array-javautilarraystostringobject-arr)
+        - [Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`](#copying-a-portion-of-an-array-javautilarrayscopyofrangeobject-arr-int-from-int-to)
   - [Streams (`java.util.stream`)](#streams-javautilstream)
     - [Converting Streams to Arrays : `toArray()`](#converting-streams-to-arrays--toarray)
   - [Type-casting in Java (Forcing Lossy Conversions)](#type-casting-in-java-forcing-lossy-conversions)
@@ -750,19 +754,6 @@ Or instead of explicitly allocating memory for an array, we can also assign the 
 double[] data = {1, 2, 3, 4};
 ```
 
-#### Printing an Array `java.util.Arrays.toString(Object[] a)`
-
-This method returns a string representation of the contents of the specified Object array. 
-
-If the array contains other arrays as elements, they are converted to strings by the `Object.toString()` method inherited from Object, which describes their identities rather than their contents.
-
-```java
-int[] arr = {1, 2, 3};
-System.out.println(Arrays.toString(arr))
-```
-
-We use the `toString` method of `Array` class to convert the array into a `String` to print an array because `prinln` method doesn't take arrays as arguments.
-
 #### Creating a copy of an Array
 
 ##### Assigning the SAME object to a different reference variable
@@ -781,7 +772,7 @@ This is because here, we are creating another reference variable `arr2` and maki
 So, when we change the object using `arr2`, it gets changed for both reference variables.
 
 
-##### Creating a NEW object using `clone()` method of `Array` class and assigning it to a different reference variable
+##### Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different referen ce variable
 
 ```java
 int[] arr1 = {1, 2, 3, 4, 5};
@@ -795,7 +786,49 @@ This is because here, we are using the `clone()` of `Array` class to create a du
 
 So now, the changes we make to `arr2` are independent of the `arr1`.
 
+### `java.lang.reflect.Array` vs. `java.util.Arrays` 
 
+They simply serve different purposes with a different set of methods:
+
+---
+
+#### `java.lang.reflect.Array`:
+ 
+The Array class provides static methods to dynamically create and access Java arrays.
+
+This class is essentially a utility class with static methods to manipulate arrays on a lower level. It is usually used for advanced techniques where access to arrays is required through the reflection API.
+
+---
+
+#### `java.util.Arrays`:
+ 
+This class contains various methods for manipulating arrays (such as sorting and searching). This class also contains a static factory that allows arrays to be viewed as lists.
+
+This class is essentially a utility class with static methods to work on raw arrays and to provide a bridge from raw arrays to Collection based arrays (List).
+
+##### Printing an Array `java.util.Arrays.toString(Object[] arr)`
+
+This STATIC method returns a string representation of the contents of the specified `Object`/primitive array. 
+
+If the array contains other arrays as elements, they are converted to strings by the `Object.toString()` method inherited from Object, which describes their identities rather than their contents.
+
+```java
+int[] arr = {1, 2, 3};
+System.out.println(Arrays.toString(arr))
+```
+
+We use the `toString` method of `Array` class to convert the array into a `String` to print an array because `prinln` method doesn't take arrays as arguments.
+
+##### Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`
+
+This STATIC method copies the specified range of the specified array into a new array.
+
+The parameters of this method are:
+- Original array (`Object[] arr`) from which a range is to be copied
+- Initial index (`int from`) of the range to be copied
+- Final index (`int to`) of the range to be copied, **EXCLUSIVE**.
+
+---
 
 ## Streams (`java.util.stream`)
 
