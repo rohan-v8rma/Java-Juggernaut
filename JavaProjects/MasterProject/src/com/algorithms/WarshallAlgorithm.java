@@ -10,28 +10,27 @@ public class WarshallAlgorithm {
     public static void main(String[] args) {
         // Value of 1 at (i, j) means there lies a path from i to j
 
-//        int[][] matrix = {
+//        int matrix[][] = {
 //                {1, 1, 0, 1},
 //                {0, 1, 1, 0},
 //                {0, 0, 1, 1},
 //                {0, 0, 0, 1}
 //        };
 
-
-        int[][] matrix = {
+        int matrix[][] = {
                 {0, 0, 0, 1},
                 {0, 0, 1, 1},
                 {0, 1, 1, 0},
                 {1, 1, 0, 1}
         };
         
-        warshallAlgorithm(matrix, copy2dMatrix(matrix));
+        warshallAlgorithm(matrix, countOnes(matrix));
 
         // Output
         printMatrix(matrix);
     }
 
-   static void warshallAlgorithm(int[][] resultMatrix, int[][] originalMatrix) {
+   static void warshallAlgorithm(int[][] resultMatrix, int originalOneCount) {
         for(int origin = 0; origin < resultMatrix.length; origin++) {
             for(int destination = 0; destination < (resultMatrix[origin]).length; destination++) {
                 if(resultMatrix[origin][destination] == 1) {
@@ -44,39 +43,25 @@ public class WarshallAlgorithm {
             }
         }
 
-        if(compare2dMatrix(resultMatrix, originalMatrix)) {
+        if(countOnes(resultMatrix) == originalOneCount) {
             return;
         }
         else {
-            warshallAlgorithm(resultMatrix, copy2dMatrix(resultMatrix)); // passing the result matrix into the original argument for the next call, as a copy to ensure it doesn't get modified.
+            warshallAlgorithm(resultMatrix, countOnes(resultMatrix)); // passing the result matrix into the original argument for the next call, as a copy to ensure it doesn't get modified.
         }
    }
 
-   static int[][] copy2dMatrix(int[][] originalArr) {
-
-        int[][] copyArr = new int[originalArr.length][originalArr[0].length];
-        for(int row = 0; row < copyArr.length; row++) {
-            for(int column = 0; column < copyArr[row].length; column++) {
-                copyArr[row][column] = originalArr[row][column];
-            }
-        }
-        return copyArr;
-   }
-
-   // We need to do this because if we use Arrays.equals(), although in the case of integer arrays, the arrays being different objects won't matter. In the case of 2d arrays, the nested array elements will be compared using equals(), returning false since they are two different objects.
-   // TODO : Understand more in-depth
-   static boolean compare2dMatrix(int[][] arr1, int[][] arr2) {
-        if (arr1.length != arr2.length) {
-            return false;
-        }
-
-        for(int index = 0; index < arr1.length; index++) {
-            if( !(Arrays.equals(arr1[index], arr2[index])) ) {
-                return false;
-            }
-        }
-
-        return true;
+   // Function which counts the 1s, to see whether any new paths were added upon running the loops once more.
+   static int countOnes(int[][] matrix) {
+        int ct = 0;
+       for(int row = 0; row < matrix.length; row++) {
+           for (int column = 0; column < matrix[row].length; column++) {
+                if(matrix[row][column] == 1) {
+                    ct++;
+                }
+           }
+       }
+       return ct;
    }
 
    // Function for printing the matrix
