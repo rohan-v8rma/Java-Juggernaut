@@ -64,7 +64,7 @@
       - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
       - [Creating a copy of an Array](#creating-a-copy-of-an-array)
         - [Assigning the SAME object to a different reference variable](#assigning-the-same-object-to-a-different-reference-variable)
-        - [Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different referen ce variable](#creating-a-new-object-using-clone-non-static-method-and-assigning-it-to-a-different-referen-ce-variable)
+        - [Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different reference variable](#creating-a-new-object-using-clone-non-static-method-and-assigning-it-to-a-different-reference-variable)
     - [`java.lang.reflect.Array` vs. `java.util.Arrays`](#javalangreflectarray-vs-javautilarrays)
       - [`java.lang.reflect.Array`:](#javalangreflectarray)
       - [`java.util.Arrays`:](#javautilarrays)
@@ -92,6 +92,8 @@
   - [No pass-by-reference](#no-pass-by-reference)
   - [References in Modern Languages](#references-in-modern-languages)
   - [Java NOT having pointers](#java-not-having-pointers)
+- [Important Useful Methods in Java](#important-useful-methods-in-java)
+  - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
 - [TODO](#todo)
 
 <!-- TOC -->
@@ -295,6 +297,7 @@ The problem with the interpreter is that it interprets every time, even the same
 - JIT compiler counterbalances the interpreter’s disadvantage of slow execution and improves the performance.
 - It aids in improving the performance of Java programs by compiling bytecode into native machine code at run time.
 - It is ENABLED throughout, while it gets ACTIVATED when a method is invoked. For a compiled method, the JVM directly calls the compiled code, instead of interpreting it.
+- Since the compilation takes place in run time, a JIT compiler has access to **dynamic runtime information**, enabling it to make better optimizations (such as inlining functions).
 
 #### Garbage Collector
 
@@ -398,7 +401,7 @@ It is included by default, which is why we need not explicitly include it everyt
 
 #### `java.io` 
 
-Contains classes for input , output functions are bundled in this package.
+Contains classes for input, output functions are bundled in this package.
 
 #### `java.util` 
 
@@ -772,7 +775,7 @@ This is because here, we are creating another reference variable `arr2` and maki
 So, when we change the object using `arr2`, it gets changed for both reference variables.
 
 
-##### Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different referen ce variable
+##### Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different reference variable
 
 ```java
 int[] arr1 = {1, 2, 3, 4, 5};
@@ -1121,6 +1124,41 @@ Internally computers use pages of memory, which are quite large. If a sparsely u
 This increases the density of data to memory, improving cache performance. Sometimes this translates into performance improvements that can be quite dramatic.
 
 Java's Garbage Collector takes advantage of the use of references by temporarily blocking access to the data for a set of references. During that blockage of access, it moves the data around (to compact it). After the blockage, the reference to address table has the new memory addresses. Since the "functional" layer of the code never knew the addresses in the first place, this operation will not break a running Java program.
+
+# Important Useful Methods in Java
+
+## `charAt()` NON-STATIC method for selecting a single character in a string
+
+Unlike C++, where we can use regular indexing to access a specific character in a variable of `std::string` type, like this: 
+
+```cpp
+std::string str = "hello";
+char char1 = str[0];
+printf("%c\n%d", char1, char1);
+```
+
+Output:
+```
+h
+104
+```
+
+In Java, we need to use a method of the [`java.lang.String`](#javalangstring-class) class.
+
+```java
+String str = "hello";
+char char1 = str.charAt(0);
+int ascii1 = (int)(char1);
+
+System.out.println(char1);
+System.out.println(ascii1);
+```
+
+Output:
+```
+h
+104
+```
 
 # TODO 
 
