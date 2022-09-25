@@ -37,41 +37,44 @@
     - [Creating an Object of a Class](#creating-an-object-of-a-class)
     - [Wrapper Classes in Java](#wrapper-classes-in-java)
       - [Need of Wrapper Classes](#need-of-wrapper-classes)
-    - [`java.lang.String` class](#javalangstring-class)
-    - [`java.util.Random` class](#javautilrandom-class)
+    - [`java.util.Random` class (Generating Random Numbers)](#javautilrandom-class-generating-random-numbers)
       - [`nextInt()` method](#nextint-method)
       - [`doubles()`, `ints()` and `longs()`  method](#doubles-ints-and-longs--method)
     - [`java.lang.Math` class](#javalangmath-class)
       - [`Math.random()`](#mathrandom)
       - [Getting a random floating-point number between 2 bounds using `Math`](#getting-a-random-floating-point-number-between-2-bounds-using-math)
       - [Getting a random integer between 2 bounds using `Math`](#getting-a-random-integer-between-2-bounds-using-math)
-- [Data Types in Java](#data-types-in-java)
-  - [Primitive Data Types in Java](#primitive-data-types-in-java)
-    - [`int`](#int)
-    - [`byte`](#byte)
-    - [`char`](#char)
-      - [What is Unicode?](#what-is-unicode)
-      - [Difference between ASCII and Unicode](#difference-between-ascii-and-unicode)
-  - [Non-Primitive data types in Java](#non-primitive-data-types-in-java)
-    - [`java.lang.String`](#javalangstring)
-    - [`java.lang.Character`](#javalangcharacter)
-    - [`java.lang.Double`](#javalangdouble)
-      - [Infinity in Java](#infinity-in-java)
-    - [Arrays](#arrays)
-      - [Declaring, Creating & Initializing an Array](#declaring-creating--initializing-an-array)
-      - [Default Initialization Value for `int` arrays](#default-initialization-value-for-int-arrays)
-      - [Default Initialization Value for `char` Arrays](#default-initialization-value-for-char-arrays)
-      - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
-      - [Creating a copy of an Array](#creating-a-copy-of-an-array)
-        - [Assigning the SAME object to a different reference variable](#assigning-the-same-object-to-a-different-reference-variable)
-        - [Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different reference variable](#creating-a-new-object-using-clone-non-static-method-and-assigning-it-to-a-different-reference-variable)
-    - [`java.lang.reflect.Array` vs. `java.util.Arrays`](#javalangreflectarray-vs-javautilarrays)
-      - [`java.lang.reflect.Array`:](#javalangreflectarray)
-      - [`java.util.Arrays`:](#javautilarrays)
-        - [Printing an Array `java.util.Arrays.toString(Object[] arr)`](#printing-an-array-javautilarraystostringobject-arr)
-        - [Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`](#copying-a-portion-of-an-array-javautilarrayscopyofrangeobject-arr-int-from-int-to)
+- [Primitive Data Types in Java](#primitive-data-types-in-java)
+  - [`int`](#int)
+  - [`byte`](#byte)
+  - [`char`](#char)
+    - [What is Unicode?](#what-is-unicode)
+    - [Difference between ASCII and Unicode](#difference-between-ascii-and-unicode)
+- [Non-Primitive data types in Java](#non-primitive-data-types-in-java)
+  - [`java.lang.String` (Strings in Java)](#javalangstring-strings-in-java)
+  - [`java.lang.Character` (Wrapper class for `char` primitive)](#javalangcharacter-wrapper-class-for-char-primitive)
+  - [`java.lang.Double`](#javalangdouble)
+    - [Infinity in Java](#infinity-in-java)
+  - [Arrays](#arrays)
+    - [Declaring, Creating & Initializing an Array of PRIMITIVES](#declaring-creating--initializing-an-array-of-primitives)
+    - [Default Initialization Value for `int` arrays](#default-initialization-value-for-int-arrays)
+    - [Default Initialization Value for `char` Arrays](#default-initialization-value-for-char-arrays)
+    - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
+    - [Creating a copy of an Array](#creating-a-copy-of-an-array)
+      - [**Assigning the SAME object to a different reference variable**](#assigning-the-same-object-to-a-different-reference-variable)
+      - [**Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different reference variable**](#creating-a-new-object-using-clone-non-static-method-and-assigning-it-to-a-different-reference-variable)
+    - [Declaring, Creating & Initializing an Array of NON-Primitives (`Objects`, other `Arrays`, etcetera)](#declaring-creating--initializing-an-array-of-non-primitives-objects-other-arrays-etcetera)
+  - [`java.lang.reflect.Array` vs. `java.util.Arrays`](#javalangreflectarray-vs-javautilarrays)
+    - [`java.lang.reflect.Array`:](#javalangreflectarray)
+    - [`java.util.Arrays`:](#javautilarrays)
+      - [Printing an Array `java.util.Arrays.toString(Object[] arr)`](#printing-an-array-javautilarraystostringobject-arr)
+      - [Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`](#copying-a-portion-of-an-array-javautilarrayscopyofrangeobject-arr-int-from-int-to)
+  - [Objects](#objects)
+    - [Hashcode of an Object](#hashcode-of-an-object)
+    - [Displaying an Object](#displaying-an-object)
   - [Streams (`java.util.stream`)](#streams-javautilstream)
     - [Converting Streams to Arrays : `toArray()`](#converting-streams-to-arrays--toarray)
+- [Information related to Data-types](#information-related-to-data-types)
   - [Type-casting in Java (Forcing Lossy Conversions)](#type-casting-in-java-forcing-lossy-conversions)
   - [Automatic Type Conversion in Expressions in Java](#automatic-type-conversion-in-expressions-in-java)
   - [Brackets & Operator Precedence](#brackets--operator-precedence)
@@ -483,12 +486,7 @@ In other words, we can wrap a primitive value using a wrapper class object built
 
 - The classes in `java.util` package handles only objects and hence wrapper classes help in this case also.
 
-### `java.lang.String` class
-
-- `charAt()`
-- `trim()`
-
-### `java.util.Random` class
+### `java.util.Random` class (Generating Random Numbers)
 
 ```java
 Random randomObject = new Random();
@@ -566,11 +564,10 @@ As we know `Math.random()` gives a random floating-point number between 0 and 1,
 
 `Math.ceil()` rounds numbers upto the nearest integer. So numbers from 0-19.99... will be rounded up to the nearest integer, effectively taking our random range from 0-20 (only integers).
 
-# Data Types in Java
 
-## Primitive Data Types in Java
+# Primitive Data Types in Java
 
-### `int`
+## `int`
 
 For improved readability, we can add underscores to represent commas in larger integer values. The underscores can be placed as required since there is no format for these.`
 ```java
@@ -578,7 +575,7 @@ int integer1 = 234_000_000;
 int integer2 = 2_3__4
 ```
 
-### `byte`
+## `byte`
 
 byte datatype can store values from -128 to 127.
 
@@ -592,7 +589,7 @@ byte byteValue = (byte)(130);
 ```
 It will start from the bottom of the range of the byte data type, which is `-128`, then `-127`, then `-126` etc.
 
-### `char`
+## `char`
 
 `char` is a primitive type that represents a single 16 bit [Unicode](#what-is-unicode) character.
 
@@ -612,11 +609,11 @@ But, internally Java uses [Unicode](#what-is-unicode), which uses hexadecimal nu
 
 So, `A` would be written as `\u0041` in [Unicode](#what-is-unicode), where `\u` is the Escape Sequence for [Unicode](#what-is-unicode).
 
-#### What is Unicode?
+### What is Unicode?
 
 Unicode is an encoding for textual characters which is able to represent characters from many different languages from around the world.
 
-#### Difference between ASCII and Unicode
+### Difference between ASCII and Unicode
 
 The main difference between ASCII and Unicode is that: 
 - ASCII represents lowercase letters (a-z), uppercase letters (A-Z), digits (0-9) and symbols such as punctuation marks. 
@@ -626,7 +623,7 @@ The main difference between ASCII and Unicode is that:
   
   It uses 8, 16 or 32 bits to represent a character depending on the encoding type.
 
-## Non-Primitive data types in Java
+# Non-Primitive data types in Java
 
 Non-primitive types are created by the programmer and is not defined by Java (except for String). 
 
@@ -634,15 +631,41 @@ Non-primitive types can be used to call methods to perform certain operations, w
 
 A primitive type always has a value, while non-primitive types can be **null**.
 
-### `java.lang.String`
+## `java.lang.String` (Strings in Java)
 
-In java, strings are immutable, which saves memory. Once created in memory, it will be available forever.
+In java, strings are also Objects (read the information on [Objects](#objects) below for better understanding), meaning they have a reference variable stored in stack and the actual `String` object is stored in heap.
 
-Even if its reference variable is made to point to a different string, the string will stay in memory. 
+Also here, strings are immutable, which saves memory. 
 
-When another reference variable is assigned the same string value during the same runtime, it will point to the same string object.
+When another reference variable is assigned the same string value during the same runtime, it will point to the same string object, which can be seen below.
 
-### `java.lang.Character`
+This is verified by doing equality comparison between the [hashcodes](#hashcode-of-an-object) of the strings below.
+
+> ***NOTE:*** As mentioned below, under [Hashcode of an Object](#hashcode-of-an-object), `Object`s are uniquely identified by hashcodes, pointed to by their reference variables. 
+> 
+> Two reference variables point to the same object only when they store the same hashcodes.
+
+```java
+String str1 = "hello";
+String str2 = "hello";
+String str3 = new String("hello");
+if(str1 == str2) {
+    System.out.println("foo");
+}
+if (str2 != str3) {
+    System.out.println("bar");
+}
+```
+
+Output:
+```
+foo
+bar
+```
+
+`str1` and `str2` store the same hashcodes, but `str3` is a different object (having a different hashcode) which is why the inequality check operation between `str2` and `str3` returns true.
+
+## `java.lang.Character` (Wrapper class for `char` primitive)
 
 `Character` is a [wrapper class](#wrapper-classes-in-java) that allows us to use [`char`](#char) primitive concept in OOP.
 
@@ -657,11 +680,11 @@ System.out.println(Character.isDigit(charInstance));
 
 This method returns a boolean value depending on whether the given character is a digit or not.
 
-### `java.lang.Double`
+## `java.lang.Double`
 
 `Double` is a [wrapper class](#wrapper-classes-in-java) for the primitive type **double** which contains several methods to effectively deal with a double value like converting it to a string representation, and vice-versa.
 
-#### Infinity in Java
+### Infinity in Java
 
 The Double class in Java supports infinity. You can implement positive infinity or negative infinity.
 
@@ -671,7 +694,7 @@ double posInf = Double.POSITIVE_INFINITY;
 double negInf = Double.NEGATIVE_INFINITY;
 ```
 
-### Arrays
+## Arrays
 
 We can create an array in Java using the following syntax:
 ```java
@@ -683,7 +706,7 @@ dataType[size] arrayName;
   In the case where we declare and initialize the array at the same time, we should NOT specify a size for the array. For example
 - `arrayName` - it is an identifier
 
-#### Declaring, Creating & Initializing an Array
+### Declaring, Creating & Initializing an Array of PRIMITIVES
 
 - DECLARING the Array reference variable.
 
@@ -694,7 +717,7 @@ dataType[size] arrayName;
 - CREATING the array OBJECT and assigning it to the reference variable `intArray`. All elements are [initialized](#default-initialization-value-for-int-arrays) with value `0`.
 
   ```java
-  intArray = new int[5]; 
+  intArray = new int[5] // `int[5]` is the entire array OBJECT
   ```
 
   Notice how the format for object creation is similar to other classes like `Scanner` and `Random` in Java.
@@ -707,7 +730,7 @@ dataType[size] arrayName;
   }
   ```
 
-#### Default Initialization Value for `int` arrays
+### Default Initialization Value for `int` arrays
 
 If suppose we create a reference variable which is an array of integers (`int`) and then we assign an object to it in the following manner:
 
@@ -724,7 +747,7 @@ System.out.println(Arrays.toString(intArray));
 
 We will be shown an array of `O`s.
 
-#### Default Initialization Value for `char` Arrays
+### Default Initialization Value for `char` Arrays
 
 If suppose we create a reference variable which is an array of characters and then we assign an object to it in the following manner:
 
@@ -741,7 +764,7 @@ System.out.println(Arrays.toString(charArray));
 
 We will be shown an array of unknown characters, each of which will have a value of `\u0000`, which is the **null** character in [Unicode](#what-is-unicode).
 
-#### Specifying the number of elements in an Array
+### Specifying the number of elements in an Array
 
 In order to define the number of elements that an array can hold, we have to allocate memory for the array in Java. For example,
 ```java
@@ -757,9 +780,9 @@ Or instead of explicitly allocating memory for an array, we can also assign the 
 double[] data = {1, 2, 3, 4};
 ```
 
-#### Creating a copy of an Array
+### Creating a copy of an Array
 
-##### Assigning the SAME object to a different reference variable
+#### **Assigning the SAME object to a different reference variable**
 
 ```java
 int[] arr1 = {1, 2, 3, 4, 5};
@@ -775,7 +798,7 @@ This is because here, we are creating another reference variable `arr2` and maki
 So, when we change the object using `arr2`, it gets changed for both reference variables.
 
 
-##### Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different reference variable
+#### **Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different reference variable**
 
 ```java
 int[] arr1 = {1, 2, 3, 4, 5};
@@ -789,13 +812,58 @@ This is because here, we are using the `clone()` of `Array` class to create a du
 
 So now, the changes we make to `arr2` are independent of the `arr1`.
 
-### `java.lang.reflect.Array` vs. `java.util.Arrays` 
+---
+
+### Declaring, Creating & Initializing an Array of NON-Primitives (`Objects`, other `Arrays`, etcetera)
+
+Suppose we have a user-defined class `Student`.
+
+- DECLARING the Array reference variable.
+
+  ```java
+  Student[] studentArray; 
+  ```
+
+- CREATING the array OBJECT and assigning it to the reference variable `intArray`. All elements are [initialized](#default-initialization-value-for-int-arrays) with value `0`.
+
+  ```java
+  studentArray = new Student[5]
+  // `Student[5]` is the entire array OBJECT, 
+  // where it signifies that it is an array of 5 `Student` reference variables.
+  ```
+
+  > ***Note***: This array OBJECT (`Student[5]`) contains a reference variable at its each index position, which can point to objects of `Student` class. 
+  >
+  > THESE reference variables don't point to any objects YET. 
+  >
+  > For that, we need to invoke constructors of any type, of the `Student` class, and individually assign these created objects to the reference variable at each index position of the created array OBJECT.
+
+- Making the reference variables of the Array OBJECT to point to `Student` objects.
+
+  ```java
+  for(int index = 0; index < 5; index++) { 
+      studentArray[index] = new Student(); 
+      // Default constructor used.
+  }
+  ```
+
+- After this, we can use some kind of ***user-defined*** member function (for example, `setData()` which asks for input from the user for the member values) to assign values to members of each of the objects.
+
+  ```java
+  for(int index = 0; index < 5; index++) { 
+      studentArray[index].setData();
+  }
+  ```
+
+---
+
+## `java.lang.reflect.Array` vs. `java.util.Arrays` 
 
 They simply serve different purposes with a different set of methods:
 
 ---
 
-#### `java.lang.reflect.Array`:
+### `java.lang.reflect.Array`:
  
 The Array class provides static methods to dynamically create and access Java arrays.
 
@@ -803,17 +871,17 @@ This class is essentially a utility class with static methods to manipulate arra
 
 ---
 
-#### `java.util.Arrays`:
+### `java.util.Arrays`:
  
 This class contains various methods for manipulating arrays (such as sorting and searching). This class also contains a static factory that allows arrays to be viewed as lists.
 
 This class is essentially a utility class with static methods to work on raw arrays and to provide a bridge from raw arrays to Collection based arrays (List).
 
-##### Printing an Array `java.util.Arrays.toString(Object[] arr)`
+#### Printing an Array `java.util.Arrays.toString(Object[] arr)`
 
 This STATIC method returns a string representation of the contents of the specified `Object`/primitive array. 
 
-If the array contains other arrays as elements, they are converted to strings by the `Object.toString()` method inherited from Object, which describes their identities rather than their contents.
+If the array contains other arrays as elements, the array is displayed with the [hashcodes](#hashcode-of-an-object) of the nested arrays as elements.
 
 ```java
 int[] arr = {1, 2, 3};
@@ -822,7 +890,7 @@ System.out.println(Arrays.toString(arr))
 
 We use the `toString` method of `Array` class to convert the array into a `String` to print an array because `prinln` method doesn't take arrays as arguments.
 
-##### Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`
+#### Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`
 
 This STATIC method copies the specified range of the specified array into a new array.
 
@@ -830,6 +898,44 @@ The parameters of this method are:
 - Original array (`Object[] arr`) from which a range is to be copied
 - Initial index (`int from`) of the range to be copied
 - Final index (`int to`) of the range to be copied, **EXCLUSIVE**.
+
+---
+
+## Objects
+
+Go through [Classes in Java](#classes-in-java) and
+the [`java.lang.Object` class](#javalangobject-class) explained above before reading this.
+
+Objects in Java are stored in Heap memory, and they exist throughout the entire run-time of the program.
+
+Even if its reference variable is made to point to a different Object, the Object will stay in memory. 
+
+### Hashcode of an Object
+
+Upon the creation of a new object, the java compiler gives it a unique code known as a **Hashcode**.
+
+It is a numeric representation of an object's contents so as to provide an alternate mechanism to loosely identify it.
+
+### Displaying an Object
+
+If suppose `bar` is a reference variable pointing to an object of an arbitrary class `foo`, and we pass `bar` as a parameter to `System.out.println()`, we would get the [hashcode](#hashcode-of-an-object) of the object pointed to by `bar` as output.
+
+> NOTE: This is because `System.out.println()` implicitly calls the `toString()` method. 
+> 
+> The default `toString()` method in Object prints `class name @ hash code`. 
+> 
+> We can override the `toString()` method in a user-defined class to print proper output.
+
+```java
+foo bar = new foo();
+
+System.out.println(bar);
+```
+
+Output would look something like:
+```
+<package-name>.<sub-package-name>.bar@2f92e0f4
+```
 
 ---
 
@@ -855,6 +961,8 @@ int[] integer = randomObject.ints(2, 56, 74).toArray();
 ```
 
 The [`ints()`](#doubles-ints-and-longs--method) method returns an `IntStream` containing a stream of random integers, depending upon the arguments provided to [`ints()`](#doubles-ints-and-longs--method).
+
+# Information related to Data-types
 
 ## Type-casting in Java (Forcing Lossy Conversions)
 
