@@ -3,6 +3,8 @@
 
 - [INDEX](#index)
 - [Differences between Java and C++](#differences-between-java-and-c)
+  - [Unlike C++, Java is NOT pass-by-reference](#unlike-c-java-is-not-pass-by-reference)
+  - [C++ has Destructors, Java has Finalization](#c-has-destructors-java-has-finalization)
 - [Naming Conventions in Java](#naming-conventions-in-java)
 - [How Java code executes](#how-java-code-executes)
 - [Platform independence of Java and difference from C++](#platform-independence-of-java-and-difference-from-c)
@@ -34,9 +36,14 @@
   - [Access Modifiers in Java](#access-modifiers-in-java)
   - [Classes in Java](#classes-in-java)
     - [`java.lang.Object` class](#javalangobject-class)
+    - [Multiple classes in one source file](#multiple-classes-in-one-source-file)
     - [Creating an Object of a Class](#creating-an-object-of-a-class)
+    - [`this` keyword](#this-keyword)
+      - [Real usage of the `this()` constructor call](#real-usage-of-the-this-constructor-call)
+    - [`new` keyword (Request for memory allocation at run-time)](#new-keyword-request-for-memory-allocation-at-run-time)
+    - [`super` keyword](#super-keyword)
     - [Wrapper Classes in Java](#wrapper-classes-in-java)
-      - [Need of Wrapper Classes](#need-of-wrapper-classes)
+      - [**Need of Wrapper Classes**](#need-of-wrapper-classes)
     - [`java.util.Random` class (Generating Random Numbers)](#javautilrandom-class-generating-random-numbers)
       - [`nextInt()` method](#nextint-method)
       - [`doubles()`, `ints()` and `longs()`  method](#doubles-ints-and-longs--method)
@@ -70,6 +77,7 @@
       - [Printing an Array `java.util.Arrays.toString(Object[] arr)`](#printing-an-array-javautilarraystostringobject-arr)
       - [Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`](#copying-a-portion-of-an-array-javautilarrayscopyofrangeobject-arr-int-from-int-to)
   - [Objects](#objects)
+    - [Default Initialization value of Objects or types that are Objects](#default-initialization-value-of-objects-or-types-that-are-objects)
     - [Hashcode of an Object](#hashcode-of-an-object)
     - [Displaying an Object](#displaying-an-object)
   - [Streams (`java.util.stream`)](#streams-javautilstream)
@@ -111,9 +119,110 @@ Java is partially modeled on C++, but greatly simplified and improved.
 
 For instance, pointers and multiple inheritance often make programming complicated. Java replaces the multiple inheritance in C++ with a simple language construct called an interface, and eliminates pointers. 
 
+> ***NOTE:*** Although Java doesn't provide the facility of pointer mutation to programmers, it does use pointer internally (in the form of [hashcodes](#hashcode-of-an-object)), as suggested by [this](https://www.javadude.com/articles/passbyvalue.htm) article.
+
 Java uses automatic memory allocation and [garbage collection](#garbage-collector), whereas C++ requires the programmer to allocate memory and collect garbage. 
 
 Also, the number of language constructs is small for such a powerful language. The clean syntax makes Java programs easy to write and read. Some people refer to Java as "C++--" because it is like C++ but with more functionality and fewer negative aspects
+
+## Unlike C++, Java is NOT pass-by-reference
+
+There’s a simple “litmus test” for whether a language supports pass-by-reference semantics:
+
+*Can you write a traditional swap(a,b) method/function in the language?*
+
+A traditional swap method or function takes two arguments and swaps them such that variables passed INTO the function are changed OUTSIDE the function. 
+
+Its basic structure looks like:
+```
+swap(Type arg1, Type arg2) {
+    Type temp = arg1;
+    arg1 = arg2;
+    arg2 = temp;
+}
+```
+
+In C++, we could write:
+
+```cpp
+void swap(SomeType& arg1, Sometype& arg2) {
+    SomeType temp = arg1;
+    arg1 = arg2;
+    arg2 = temp;
+}
+
+...
+
+SomeType var1 = ...; // value "A"
+SomeType var2 = ...; // value "B"
+swap(var1, var2); // swaps their values!
+// now var1 has value "B" and var2 has value "A"
+```
+
+But this cannot be done in Java.
+
+## C++ has Destructors, Java has Finalization
+
+- In C++, whenever local objects go out of scope, their destructors are automatically invoked by the compiler when they go out of scope.
+
+  We CANNOT explicitly call the destructor of an object, but we can override the default destructor provided to a class by the compiler, in order to define certain actions that should take place when an object of that class is destroyed.
+
+- In Java, just before destroying any object which is eligible for Garbage Collection, the garbage collector always calls `finalize()` method to perform clean-up activities on that object. 
+    
+  The `finalize()` method can't be implicitly called.
+
+  This process is known as Finalization in Java.
+  
+  > ***NOTE:*** Clean-up activity means closing the resources associated with that object like Database Connection, Network Connection, or we can say resource de-allocation. 
+  
+  Once the `finalize()` method completes, the Garbage Collector immediately destroys that object. 
+
+  The `finalize()` method, which is present in the [`java.lang.Object` class](#javalangobject-class), has an empty implementation. 
+  
+  We can override this method in user-defined classes to define the clean-up activities required for that particular class, although this is ~~DEPRECATED~~.
+
+  Take a look at this code-snippet:
+  ```java
+  public class Main {
+      public static void main(String args[]) {
+          wrapper obj;
+          for(int index = 0; index < 1000000; index++) {
+              obj = new wrapper();
+          }
+      }
+  }
+
+  class wrapper {
+      int num;
+
+      @Override
+      protected void finalize() throws Throwable {
+          System.out.println("Object destroyed");
+      }
+  }
+  ```
+
+  We know that a reference variable can only point to one object at a time. 
+  
+  So, in every iteration of the for-loop, we are making the reference variable point to a new object.
+
+  Once too much space gets occupied in the memory by objects that are not in use, the Garbage Collector runs and calls the `finalize()` method of the objects to be deleted.
+
+  The output of the above code-snippet looks something like this:
+  ```
+  ...
+  ...
+  Object destroyed
+  Object destroyed
+  Object destroyed
+  Object destroyed
+  Object destroyed
+  Object destroyed
+  Object destroyed
+  ...
+  ...
+  ```
+
 
 
 # Naming Conventions in Java
@@ -432,12 +541,14 @@ It contains the collections framework, legacy collection classes, event model, d
 
 ## Classes in Java
 
-If a single source file contains multiple Classes, all of the classes have separate class files. 
-![](./images/class_files.png)
+In Java, as in other object-oriented programming languages, classes can be derived from other classes. 
 
-In most IDEs, only the `.class` file of the public class would be displayed. 
+- The derived class (the class that is derived from another class) is called a ***subclass***. 
+- The class from which its derived is called the ***superclass***. 
+ 
+In fact, in Java, all classes must be derived from some class. 
 
-Navigating to the folder where that `.class` file is present using the terminal or file manager would lead to the discovery of the other `.class` files as well.
+> **NOTE:** If a class doesn't have a parent defined *explicitly*, [`java.lang.Object`](#javalangobject-class) class is implicitly defined as its superclass.
 
 ### `java.lang.Object` class
 
@@ -450,6 +561,15 @@ If a class does not extend any other class then it is a direct child class of `O
 Therefore the `Object` class methods are available to all Java classes.
 
 Note: `Object` class acts as a root of inheritance hierarchy in any java program.
+
+### Multiple classes in one source file
+
+If a single source file contains multiple Classes, all of the classes have separate class files. 
+![](./images/class_files.png)
+
+In most IDEs, only the `.class` file of the public class would be displayed. 
+
+Navigating to the folder where that `.class` file is present using the terminal or file manager would lead to the discovery of the other `.class` files as well.
 
 ### Creating an Object of a Class
 
@@ -470,6 +590,134 @@ Note: `Object` class acts as a root of inheritance hierarchy in any java program
   ClassName ObjectName = new ClassName();
   ```
 
+### `this` keyword
+
+In java, `this` is a reference variable that points to the current object. It can be used for a variety of purposes (for an exhaustive list, refer [this](https://www.javatpoint.com/this-keyword) tutorial from javatpoint):
+
+- To refer to the current class instance variable (like in CPP).
+- To invoke the current class method.
+
+  We can invoke the method of the current class by using the `this` keyword. 
+  
+  If we don't use the `this` keyword, the compiler automatically adds `this` keyword while invoking the method.
+  
+  Code written by us:
+  ```java
+  class A {
+    void m(){}
+
+    void n {
+      m();
+    }
+  }
+  ```
+
+  The compiler converts the above code to the following:
+  ```java
+  class A {
+    void m(){}
+
+    void n {
+      this.m(); // 'this' keyword implicitly added
+    }
+  }
+  ```
+  
+  - The `this()` constructor call can be used to invoke the current class constructor. It is used to reuse the constructor. In other words, it is used for ***constructor chaining***.
+
+    Calling default constructor from parameterized constructor:
+    ```java
+    class A {  
+      A() {
+        System.out.println("hello a");
+      }  
+      A(int x) {  
+        this(); // Calling the default constructor defined above.
+        System.out.println(x);  
+      }  
+    }  
+
+    class Main {  
+      public static void main(String args[]){  
+        A a = new A(10);  
+      }
+    }  
+    ```
+
+    Output:
+    ```
+    hello a
+    10
+    ```
+
+#### Real usage of the `this()` constructor call
+
+The `this()` constructor call should be used to reuse another constructor from the constructor. 
+  
+It maintains the chain between the constructors i.e. it is used for ***constructor chaining***. 
+
+Let's see the example given below that displays the actual use of this keyword.
+
+```java
+class Student {
+
+  int rollno;  
+  String name,course;  
+  float fee;  
+  
+  Student(int rollno,String name,String course) {  
+    this.rollno = rollno;  
+    this.name = name;  
+    this.course = course;  
+  }  
+  
+  Student(int rollno,String name,String course,float fee) {  
+    // reusing the above constructor
+    this(rollno, name, course);
+    this.fee = fee;  
+  }  
+}  
+```
+
+> NOTE: Call to `this()` must be the first statement in constructor.
+>
+> Otherwise, we would get the following error:
+> ```
+> Compile Time Error: Call to this must be first statement in constructor
+> ```
+
+---
+
+### `new` keyword (Request for memory allocation at run-time)
+
+The `new` keyword makes a request for memory allocation in heap, during run-time.
+
+We don't need to use the `new` keyword with primitive data types because, in java, they are not implemented as objects and are stored in the stack memory only.
+
+Uses of `new` keyword:
+
+- For Non-Primitive types, which are implemented as objects.
+- For Objects instantiated from [Wrapper Classes](#wrapper-classes-in-java) of Java (~~DEPRECATED~~). 
+  ```java
+  Integer intWrapper = new Integer(10);
+  ```
+  But this is now ~~DEPRECATED~~ and the following syntax is to be used:
+  ```java
+  Integer intWrapper = 10;
+  ```
+
+---
+
+### `super` keyword
+
+The super keyword in Java is used in subclasses to access superclass members (attributes, constructors and methods).
+
+- `super` can be used to refer ***immediate*** parent class instance variable.
+- `super` can be used to invoke ***immediate*** parent class method.
+- `super()` can be used to invoke ***immediate*** parent class constructor.
+
+---
+
 ### Wrapper Classes in Java
 
 A Wrapper class is a class whose object wraps or contains primitive data types. 
@@ -478,13 +726,23 @@ When we create an object of a wrapper class, it contains a field and in this fie
 
 In other words, we can wrap a primitive value using a wrapper class object built for that specific primitive data type.
 
-#### Need of Wrapper Classes
+> ***NOTE:*** All primitive wrapper classes (`Integer`, `Byte`, `Long`, `Float`, `Double`, `Character`, `Boolean` and `Short`) are **IMMUTABLE**, because they are [`final`](#final-keyword) classes. 
+>
+> They replicate the behaviour of primitives. 
+> 
+> - So, operations like addition and subtraction create a new object and not modify the old.
+>
+> - Even when passing objects of wrapper classes as arguments to functions, you need to return the latest value back to see the changes.
+
+#### **Need of Wrapper Classes**
 
 - They convert primitive data types into objects.   
   
   Objects are needed if we wish to modify the arguments passed into a method. This is because primitive types are passed by value in Java.
 
 - The classes in `java.util` package handles only objects and hence wrapper classes help in this case also.
+
+---
 
 ### `java.util.Random` class (Generating Random Numbers)
 
@@ -910,11 +1168,19 @@ Objects in Java are stored in Heap memory, and they exist throughout the entire 
 
 Even if its reference variable is made to point to a different Object, the Object will stay in memory. 
 
+### Default Initialization value of Objects or types that are Objects
+
+Objects, Arrays, Strings in Java have the value `null` when they are uninitialized.
+
 ### Hashcode of an Object
 
 Upon the creation of a new object, the java compiler gives it a unique code known as a **Hashcode**.
 
 It is a numeric representation of an object's contents so as to provide an alternate mechanism to loosely identify it.
+
+> ***NOTE:*** The object's values are not represented by the hashcode, only the storage location is.
+> 
+> What that means is when the values of the object's data members are changed, the hashcode remains the same.
 
 ### Displaying an Object
 
