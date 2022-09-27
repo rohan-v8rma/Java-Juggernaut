@@ -29,6 +29,7 @@
 - [Basic Java program](#basic-java-program)
   - [Packages in Java](#packages-in-java)
     - [Creating a Package](#creating-a-package)
+    - [Naming convention for packages](#naming-convention-for-packages)
     - [Dynamically importing classes from packages in Java](#dynamically-importing-classes-from-packages-in-java)
     - [Some in-built packages...](#some-in-built-packages)
       - [`java.lang`](#javalang)
@@ -38,6 +39,11 @@
     - [Reference Variable Controls Access](#reference-variable-controls-access)
     - [Upcasting in Java](#upcasting-in-java)
     - [Downcasting in Java (NOT possible directly)](#downcasting-in-java-not-possible-directly)
+  - [Non-Access Modifiers](#non-access-modifiers)
+    - [`final` keyword](#final-keyword)
+      - [**`final` variable**](#final-variable)
+      - [`final` method](#final-method)
+      - [`final` class](#final-class)
   - [Classes in Java](#classes-in-java)
     - [`java.lang.Object` class](#javalangobject-class)
     - [Multiple classes in one source file](#multiple-classes-in-one-source-file)
@@ -48,10 +54,6 @@
     - [`new` keyword (Request for memory allocation at run-time)](#new-keyword-request-for-memory-allocation-at-run-time)
     - [`super` keyword](#super-keyword)
       - [Real usage of the `super()` constructor call (*Constructor Chaining*)](#real-usage-of-the-super-constructor-call-constructor-chaining)
-    - [`final` keyword](#final-keyword)
-      - [**`final` variable**](#final-variable)
-      - [`final` method](#final-method)
-      - [`final` class](#final-class)
     - [Wrapper Classes in Java](#wrapper-classes-in-java)
       - [**Need of Wrapper Classes**](#need-of-wrapper-classes)
     - [`java.util.Random` class (Generating Random Numbers)](#javautilrandom-class-generating-random-numbers)
@@ -87,6 +89,7 @@
     - [`java.util.Arrays`:](#javautilarrays)
       - [Printing an Array `java.util.Arrays.toString(Object[] arr)`](#printing-an-array-javautilarraystostringobject-arr)
       - [Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`](#copying-a-portion-of-an-array-javautilarrayscopyofrangeobject-arr-int-from-int-to)
+  - [ArrayLists](#arraylists)
   - [Objects](#objects)
     - [Default Initialization value of Objects or types that are Objects](#default-initialization-value-of-objects-or-types-that-are-objects)
     - [Hashcode of an Object](#hashcode-of-an-object)
@@ -122,10 +125,16 @@
     - [Overriding Static Methods (NOT POSSIBLE)](#overriding-static-methods-not-possible)
     - [Run-time Polymorphism with Data Members (NOT POSSIBLE)](#run-time-polymorphism-with-data-members-not-possible)
   - [Abstraction in Java](#abstraction-in-java)
-    - [Abstract Classes](#abstract-classes)
-    - [Interfaces](#interfaces)
+    - [Abstract Classes (0-100% Abstraction)](#abstract-classes-0-100-abstraction)
+    - [Interfaces (100% Abstraction)](#interfaces-100-abstraction)
+    - [Multiple Inheritance using Interfaces](#multiple-inheritance-using-interfaces)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
+  - [`split()` NON-STATIC method for splitting a string using specific delimiters](#split-non-static-method-for-splitting-a-string-using-specific-delimiters)
+  - [`replace()` NON-STATIC method to replace characters OR sub-strings in a String](#replace-non-static-method-to-replace-characters-or-sub-strings-in-a-string)
+  - [`substring()` NON-STATIC method for obtaining sub-strings restricted by index position inside a String](#substring-non-static-method-for-obtaining-sub-strings-restricted-by-index-position-inside-a-string)
+  - [`indexOf()` NON-STATIC method for obtaining starting index positions of sub-strings OR characters in a String](#indexof-non-static-method-for-obtaining-starting-index-positions-of-sub-strings-or-characters-in-a-string)
+  - [`toCharArray()` NON-STATIC method for obtaining a character array containing all characters of a String](#tochararray-non-static-method-for-obtaining-a-character-array-containing-all-characters-of-a-string)
 - [TODO](#todo)
 
 <!-- TOC -->
@@ -523,6 +532,14 @@ package packagename
 ```
 with the name of the package in lowercase.
 
+### Naming convention for packages
+
+The convention for naming packages and subpackages is the URL of the web application in opposite order.
+
+For example, `google.com` has 2 sub-domains `meet.google.com` and `photos.google.com`.
+
+So the content of both these sub-domains would be stored in the sub-packages `com.google.meet` and `com.google.photos`, respectively.
+
 ### Dynamically importing classes from packages in Java
 
 We can dynamically import classes from Java's in-built pre-existing packages using the universal selector `*`.
@@ -554,27 +571,30 @@ It contains the collections framework, legacy collection classes, event model, d
 
 The access modifiers in Java are somewhat similar to those in C++.
 
-- `Private`: The access level of a private modifier is only within the class. It cannot be accessed from outside the class.
+For classes, you can use either `public` or *default*:
 
-- `Default`: The access level of a default modifier is only within the package. It cannot be accessed from outside the package. If you do not specify any access level, it will be the default.
+| Modifier |	Description |
+|----------|--------------|
+|`public`  |	The class is accessible by any other class.	|
+|*default* |	The class is only accessible by classes in the same package. This is used when you don't specify a modifier. |
 
-- `Protected`: The access level of a protected modifier is anywhere within the package or from inside sub-classes in different packages.
-  
-  The methods or data members declared as protected are accessible within the same package or subclasses in different packages.
+For attributes, methods and constructors, you can use the one of the following:
 
-  If you do not make a sub-class inside another package, it cannot be accessed from outside the package.
+| Modifier |	Description |
+|----------|--------------|
+| `public` | The code is accessible for all classes (from within the class, outside the class, within the package and outside the package). |	
+| `private` | The code is only accessible within the declared class.	|
+| *default*| The code is only accessible in the same package. This is used when you don't specify a modifier. |
+| `protected` |	The code is accessible in the same package and sub-classes (derived classes). If you do not make a sub-class inside another package, it cannot be accessed from outside the package. |
 
-- `Public`: The access level of a public modifier is everywhere. It can be accessed from within the class, outside the class, within the package and outside the package.
 
-    This has the widest scope amongst all access modifiers.
-
-    >NOTE: There can be only one public class in a single java file. 
-    >
-    > Let's take an example to understand this. A and B are public classes defined in the same file, and the file name say `A.java`.
-    >
-    > When we compile this file and compiler wants to create `.class` file then compiler gets confused to decide which name to take while creating `.class` file since both are public and public modifier has highest precedence among all modifiers, so in this case it creates ambiguity. 
-    >
-    > So, in order to avoid this kind of scenario Java specification does not allow 2 public classes in a single file.
+> NOTE: There can be only one public class in a single java file. 
+>
+> Let's take an example to understand this. A and B are public classes defined in the same file, and the file name say `A.java`.
+>
+> When we compile this file and compiler wants to create `.class` file then compiler gets confused to decide which name to take while creating `.class` file since both are public and public modifier has highest precedence among all modifiers, so in this case it creates ambiguity. 
+>
+> So, in order to avoid this kind of scenario Java specification does not allow 2 public classes in a single file.
 
 ### Reference Variable Controls Access
 
@@ -635,6 +655,80 @@ So, the data-members belonging to `Base` would remain unitialized.
 Now the point is if downcasting is not possible in Java, then why is it allowed by the compiler? In Java, some scenarios allow us to perform downcasting. Here, the subclass object is referred by the parent class.
 
 Read about them [here](https://www.javatpoint.com/upcasting-and-downcasting-in-java).
+
+---
+## Non-Access Modifiers
+
+These modifiers do not control access level, but provides other functionality.
+
+For classes, you can use one of the following:
+
+|Modifier  | 	Description                                    |
+|----------|-------------------------------------------------|
+|`final`   |	The class cannot be inherited by other classes. |
+|`abstract`|	The class cannot be used to create objects.    |
+
+For attributes and methods, you can use the one of the following:
+
+|Modifier  | 	Description                                                        |
+|----------|---------------------------------------------------------------------|
+|`final`   |	Attributes cannot be modified and methods cannot be overridden.               |
+|`static`  |	Attributes and methods belongs to the class, rather than an object. |
+|`abstract`|	Can only be used in an abstract class, and can only be used on methods. The method does not have a body, for example `abstract void run();`. The body is provided by the subclass. |
+
+
+### `final` keyword
+
+The `final` keyword in Java, has 3 purposes:
+- Stop Value Change, using [`final` variables](#final-variable)
+- Stop Method Overriding
+- Stop Inheritance
+
+#### **`final` variable**
+
+If you make any variable as `final`, you cannot change its value (It will be constant.
+
+A final variable that is not initialized at the time of declaration is known as ***blank final variable***.
+
+`final` variables can also be kept as data-members of classes, in which case, they can be initialized only in constructor.
+
+`final` variable ARE inherited.
+
+```java
+class Bike {  
+  final int speedlimit; //blank final variable  
+    
+  Bike() {  
+    speedlimit = 70; // initialized in constructor
+    system.out.println(speedlimit);  
+  }  
+  
+  public static void main(String args[]) {  
+    new Bike();  
+  }  
+}  
+```
+
+> ***NOTE:*** If a [non-primitive](#non-primitive-data-types-in-java) variable is kept as final, the [hashcode](#hashcode-of-an-object) stored in it will stay constant, but the value of the variable, stored in the heap may be changed.
+
+#### `final` method
+
+A method declared as `final` cannot be overridden.
+
+But `final` methods are inherited by subclasses.
+
+This gives a performance enhancement since the java compiler can straightaway inline the calls to `final` methods because it knows that these methods can't be overridden.
+
+So, ***early binding*** takes place over here, as opposed to methods that are overridden, which have ***late binding***.
+
+#### `final` class
+
+A class declared as `final` CANNOT be used to derive sub-classes.
+
+Also, all the methods of `final` classes are implicitly declared as `final`.
+
+---
+
 
 ---
 
@@ -870,58 +964,6 @@ class ThreeDimObject extends TwoDimObject {
     }
 }
 ```
-
----
-
-### `final` keyword
-
-The `final` keyword in Java, has 3 purposes:
-- Stop Value Change, using [`final` variables](#final-variable)
-- Stop Method Overriding
-- Stop Inheritance
-
-#### **`final` variable**
-
-If you make any variable as `final`, you cannot change its value (It will be constant.
-
-A final variable that is not initialized at the time of declaration is known as ***blank final variable***.
-
-`final` variables can also be kept as data-members of classes, in which case, they can be initialized only in constructor.
-
-`final` variable ARE inherited.
-
-```java
-class Bike {  
-  final int speedlimit; //blank final variable  
-    
-  Bike() {  
-    speedlimit = 70; // initialized in constructor
-    system.out.println(speedlimit);  
-  }  
-  
-  public static void main(String args[]) {  
-    new Bike();  
-  }  
-}  
-```
-
-> ***NOTE:*** If a [non-primitive](#non-primitive-data-types-in-java) variable is kept as final, the [hashcode](#hashcode-of-an-object) stored in it will stay constant, but the value of the variable, stored in the heap may be changed.
-
-#### `final` method
-
-A method declared as `final` cannot be overridden.
-
-But `final` methods are inherited by subclasses.
-
-This gives a performance enhancement since the java compiler can straightaway inline the calls to `final` methods because it knows that these methods can't be overridden.
-
-So, ***early binding*** takes place over here, as opposed to methods that are overridden, which have ***late binding***.
-
-#### `final` class
-
-A class declared as `final` CANNOT be used to derive sub-classes.
-
-Also, all the methods of `final` classes are implicitly declared as `final`.
 
 ---
 
@@ -1379,6 +1421,61 @@ The parameters of this method are:
 - Original array (`Object[] arr`) from which a range is to be copied
 - Initial index (`int from`) of the range to be copied
 - Final index (`int to`) of the range to be copied, **EXCLUSIVE**.
+
+---
+
+## ArrayLists
+
+Code-snippet demonstrating ArrayList methods:
+
+```java
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Integer> intArrayList = new ArrayList<Integer>();
+        ArrayList<String> stringArrayList = new ArrayList<String>();
+        ArrayList<Character> characterArrayList = new ArrayList<Character>();
+
+        System.out.println(intArrayList);
+
+        // Adding an element
+        intArrayList.add(13);
+        intArrayList.add(23);
+        intArrayList.add(33);
+        intArrayList.add(43);
+        System.out.println(intArrayList);
+
+        // Loop through an array list
+        for(int index = 0; index < intArrayList.size(); index++) {
+            System.out.println(intArrayList.get(index));
+        }
+
+        // Adding an element at a specific index
+        intArrayList.add(1, 5);
+        System.out.println(intArrayList);
+
+        // Getting the number at a specific index position
+        System.out.println(intArrayList.get(0));
+
+        // Setting the value of a specific index position (replacing, not adding)
+        intArrayList.set(0, 4);
+        System.out.println(intArrayList);
+
+        // Removing the value at a specific index position
+        intArrayList.remove(1);
+        System.out.println(intArrayList);
+
+        // Clearing the ArrayList
+        intArrayList.clear();
+        System.out.println(intArrayList);
+    
+    }
+
+}
+
+```
+
 
 ---
 
@@ -1889,19 +1986,112 @@ The output of this code is `10` (data-member of A), not `20` (data-member of B).
 
 ## Abstraction in Java
 
-### Abstract Classes
+### Abstract Classes (0-100% Abstraction)
 
 A class which is declared as `abstract` is known as an abstract class. 
-- It can have ***abstract*** and ***non-abstract*** methods.
-- It needs to be extended and its method implemented. 
-- It cannot be instantiated.
-- It can have constructors and static methods also.
+- It can have ***abstract*** (only declaration, no definition) and ***non-abstract*** (both declaration and definition) methods.
+- It needs to be extended and its methods implemented. 
+- It cannot be instantiated since there is no definition for certain methods, but it can have constructors, that can be called using `super()` by the sub-classes.
+- It can have static methods.
 - It can have `final` methods which will force the subclass not to change the body of the method.
 - If you are extending an abstract class that has an abstract method, you must either provide the implementation of the method or make this class `abstract`.
 
-### Interfaces
+### Interfaces (100% Abstraction)
 
-TODO
+- It can ONLY have ***abstract*** (only declaration, no definition) methods. 
+
+- The Java compiler adds `public` and `abstract` keywords before the methods in an interface. 
+  
+  Moreover, it adds `public`, `static` and `final` keywords before data members.
+  
+  ![](images/interface-compiler-addition.png)
+
+-  So, since all methods declared in Interfaces are by-default made `public`. So, when we override the methods of interfaces, we need to specify them as `public` EXPLICITLY, even if we didn't specify them as `public` EXPLICITLY in the interface.
+    ```java
+    interface Vehicle {
+        abstract void dispType();
+
+    }
+
+    public abstract class Car implements Vehicle {
+
+        @Override
+        public void dispType() {
+            System.out.println("Land Vehicle");
+        }
+    }
+    ```
+  
+    Otherwise, we would get this error:
+    
+    ```
+    attempting to assign weaker access privileges ('package-private'); was 'public'
+    ```
+
+- An interface cannot be instantiated using the `new` operator.
+
+- 
+
+### Multiple Inheritance using Interfaces
+
+Interfaces can be used to implement Multiple Inheritance, since there is no ambiguity in them, in the case of methods, since the definition anyways has to be provided in te sub-class. 
+
+- NO Ambiguity in methods in Multiple Inheritance:
+  ```java
+  interface A {
+      void commonMethod();
+  }
+  interface B {
+      void commonMethod();
+  }
+  class C implements A, B {
+      @Override
+      public void commonMethod() {
+          System.out.println("Common method of A & B.");
+      }
+      // Only one overridden definition
+  }
+  public class Main {
+      public static void main(String[] args) {
+          C c = new C();
+          System.out.println(C.x);
+      }
+  }
+  ```
+
+- Ambiguity in data members in Multiple Inheritance:
+  ```java
+  interface A {
+      int x = 10;
+      void methodA();
+  }
+  interface B {
+      int x = 2;
+      void methodB();
+  }
+  class C implements A, B {
+      @Override
+      public void methodA() {
+          System.out.println("Method of A.");
+      }
+      @Override
+      public void methodB() {
+          System.out.println("Method of B.");
+      }
+  }
+  public class Main {
+      public static void main(String[] args) {
+          C c = new C();
+          System.out.println(C.x);
+      }
+  }
+  ```
+
+  Output:
+  ```
+  java: reference to x is ambiguous
+  both variable x in com.abstractClasses.A and variable x in com.abstractClasses.B match
+  ```
 
 ---
 
@@ -1939,6 +2129,84 @@ Output:
 h
 104
 ```
+
+## `split()` NON-STATIC method for splitting a string using specific delimiters
+
+The declaration of the `split` method in the `java.lang.String` class looks like:
+```java
+public String [] split ( String regex, int limit)
+```
+Parameters:
+- regex – a delimiting regular expression
+- Limit – the resulting threshold
+
+Just keep the Limit as `-1` to get all sub-portions of the string.
+
+```java
+String str = "geekss@for@geekss";
+String[] arrOfStr = str.split("@", -1);
+System.out.println(Arrays.toString(arrOfStr));
+```
+
+Output:
+
+```
+[geekss, for, geekss]
+```
+
+## `replace()` NON-STATIC method to replace characters OR sub-strings in a String
+
+The declaration of the `replace()` method in the `java.lang.String` class has 2 overloads:
+
+```java
+public String replace(char oldChar, char newChar);   
+public String replace(String targetString, String replacementString);  
+```
+
+This method returns a new `String` object containing the replacements.
+
+Make sure to assign its output to original string to ensure changes in it.
+
+## `substring()` NON-STATIC method for obtaining sub-strings restricted by index position inside a String
+
+The declaration of the `substring()` method in the `java.lang.String` class has 2 overloads:
+
+```java
+public String substring(int startIndex);
+public String substring(int startIndex, int endIndex);
+```
+
+Parameters:
+- startIndex: inclusive
+- endIndex: exclusive
+
+## `indexOf()` NON-STATIC method for obtaining starting index positions of sub-strings OR characters in a String
+
+The declaration of the `indexOf()` method in the `java.lang.String` class has 4 overloads:
+
+```java
+public int indexOf(String str);
+public int indexOf(String str, int fromIndex);
+public int indexOf(int char);
+public int indexOf(int char, int fromIndex);
+```
+
+Parameters:
+- str:	A String value, representing the string to search for
+- fromIndex:	An int value, representing the index position to start the search from
+- char: An int value, representing a single character, e.g 'A', or a Unicode value
+
+This method returns an `int` value, representing the index of the first occurrence of the character in the string, or -1 if it never occurs.
+
+## `toCharArray()` NON-STATIC method for obtaining a character array containing all characters of a String
+
+There is one declaration of the `toCharArray()` method in the `java.lang.String` class:
+
+```java
+public char[] toCharArray();
+```
+
+This method returns a newly allocated character array.
 
 # TODO 
 
