@@ -5,6 +5,7 @@
 - [Differences between Java and C++](#differences-between-java-and-c)
   - [Unlike C++, Java is NOT pass-by-reference](#unlike-c-java-is-not-pass-by-reference)
   - [C++ has Destructors, Java has Finalization](#c-has-destructors-java-has-finalization)
+  - [Multiple Inheritance](#multiple-inheritance)
 - [Naming Conventions in Java](#naming-conventions-in-java)
 - [How Java code executes](#how-java-code-executes)
 - [Platform independence of Java and difference from C++](#platform-independence-of-java-and-difference-from-c)
@@ -34,14 +35,23 @@
       - [`java.io`](#javaio)
       - [`java.util`](#javautil)
   - [Access Modifiers in Java](#access-modifiers-in-java)
+    - [Reference Variable Controls Access](#reference-variable-controls-access)
+    - [Upcasting in Java](#upcasting-in-java)
+    - [Downcasting in Java (NOT possible directly)](#downcasting-in-java-not-possible-directly)
   - [Classes in Java](#classes-in-java)
     - [`java.lang.Object` class](#javalangobject-class)
     - [Multiple classes in one source file](#multiple-classes-in-one-source-file)
+    - [`public class` vs. `class`](#public-class-vs-class)
     - [Creating an Object of a Class](#creating-an-object-of-a-class)
     - [`this` keyword](#this-keyword)
-      - [Real usage of the `this()` constructor call](#real-usage-of-the-this-constructor-call)
+      - [Real usage of the `this()` constructor call (*Constructor Chaining*)](#real-usage-of-the-this-constructor-call-constructor-chaining)
     - [`new` keyword (Request for memory allocation at run-time)](#new-keyword-request-for-memory-allocation-at-run-time)
     - [`super` keyword](#super-keyword)
+      - [Real usage of the `super()` constructor call (*Constructor Chaining*)](#real-usage-of-the-super-constructor-call-constructor-chaining)
+    - [`final` keyword](#final-keyword)
+      - [**`final` variable**](#final-variable)
+      - [`final` method](#final-method)
+      - [`final` class](#final-class)
     - [Wrapper Classes in Java](#wrapper-classes-in-java)
       - [**Need of Wrapper Classes**](#need-of-wrapper-classes)
     - [`java.util.Random` class (Generating Random Numbers)](#javautilrandom-class-generating-random-numbers)
@@ -59,6 +69,7 @@
     - [Difference between ASCII and Unicode](#difference-between-ascii-and-unicode)
 - [Non-Primitive data types in Java](#non-primitive-data-types-in-java)
   - [`java.lang.String` (Strings in Java)](#javalangstring-strings-in-java)
+    - [Strings support concatenation](#strings-support-concatenation)
   - [`java.lang.Character` (Wrapper class for `char` primitive)](#javalangcharacter-wrapper-class-for-char-primitive)
   - [`java.lang.Double`](#javalangdouble)
     - [Infinity in Java](#infinity-in-java)
@@ -80,6 +91,7 @@
     - [Default Initialization value of Objects or types that are Objects](#default-initialization-value-of-objects-or-types-that-are-objects)
     - [Hashcode of an Object](#hashcode-of-an-object)
     - [Displaying an Object](#displaying-an-object)
+    - [Overriding the `toString()` method of global class `Object`](#overriding-the-tostring-method-of-global-class-object)
   - [Streams (`java.util.stream`)](#streams-javautilstream)
     - [Converting Streams to Arrays : `toArray()`](#converting-streams-to-arrays--toarray)
 - [Information related to Data-types](#information-related-to-data-types)
@@ -103,6 +115,15 @@
   - [No pass-by-reference](#no-pass-by-reference)
   - [References in Modern Languages](#references-in-modern-languages)
   - [Java NOT having pointers](#java-not-having-pointers)
+- [Types of Polymorphism in Java](#types-of-polymorphism-in-java)
+  - [Compile-time Polymorphism (Method & Operator Overloading)](#compile-time-polymorphism-method--operator-overloading)
+  - [Run-time Polymorphism (Method Overriding)](#run-time-polymorphism-method-overriding)
+    - [Dynamic Method Dispatch](#dynamic-method-dispatch)
+    - [Overriding Static Methods (NOT POSSIBLE)](#overriding-static-methods-not-possible)
+    - [Run-time Polymorphism with Data Members (NOT POSSIBLE)](#run-time-polymorphism-with-data-members-not-possible)
+  - [Abstraction in Java](#abstraction-in-java)
+    - [Abstract Classes](#abstract-classes)
+    - [Interfaces](#interfaces)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
 - [TODO](#todo)
@@ -223,7 +244,17 @@ But this cannot be done in Java.
   ...
   ```
 
+## Multiple Inheritance
 
+Multiple inheritance is the capability of creating a single class with multiple superclasses. 
+
+Unlike C++, java doesn't provide support for multiple inheritance in classes because it makes the rules about function overloads and virtual dispatch decidedly more tricky, as well as the language implementation around object layouts. 
+
+> NOTE: Multiple Inheritance would mean one class would extend one or more classes.
+
+These impact language designers/implementors quite a bit, and raise the already high bar to get a language done, stable and adopted.
+
+See [this](https://github.com/rohan-verma19/learning-C-with-classes#example-code-snippet-example-of-why-multiple-inheritance-is-bad) example for understanding the problem with multiple inheritance.
 
 # Naming Conventions in Java
 
@@ -521,23 +552,91 @@ It contains the collections framework, legacy collection classes, event model, d
 
 ## Access Modifiers in Java
 
+The access modifiers in Java are somewhat similar to those in C++.
+
 - `Private`: The access level of a private modifier is only within the class. It cannot be accessed from outside the class.
 
 - `Default`: The access level of a default modifier is only within the package. It cannot be accessed from outside the package. If you do not specify any access level, it will be the default.
-- `Protected`: The access level of a protected modifier is within the package and outside the package through child class. 
 
-  If you do not make a child class, it cannot be accessed from outside the package.
+- `Protected`: The access level of a protected modifier is anywhere within the package or from inside sub-classes in different packages.
+  
+  The methods or data members declared as protected are accessible within the same package or subclasses in different packages.
+
+  If you do not make a sub-class inside another package, it cannot be accessed from outside the package.
+
 - `Public`: The access level of a public modifier is everywhere. It can be accessed from within the class, outside the class, within the package and outside the package.
 
     This has the widest scope amongst all access modifiers.
 
-    There can be only one public class in a single java file. 
+    >NOTE: There can be only one public class in a single java file. 
+    >
+    > Let's take an example to understand this. A and B are public classes defined in the same file, and the file name say `A.java`.
+    >
+    > When we compile this file and compiler wants to create `.class` file then compiler gets confused to decide which name to take while creating `.class` file since both are public and public modifier has highest precedence among all modifiers, so in this case it creates ambiguity. 
+    >
+    > So, in order to avoid this kind of scenario Java specification does not allow 2 public classes in a single file.
 
-    Let's take an example to understand this. A and B are public classes defined in the same file, and the file name say `A.java`.
+### Reference Variable Controls Access
 
-    When we compile this file and compiler wants to create `.class` file then compiler gets confused to decide which name to take while creating `.class` file since both are public and public modifier has highest precedence among all modifiers, so in this case it creates ambiguity. 
-   
-    So, in order to avoid this kind of scenario Java specification does not allow 2 public classes in a single file.
+The members and methods we can access are determined by the type of our ***reference variable***.
+
+Suppose we have a class `Base` and a class `Sub` that derives from it. 
+
+- `Base` has a member `baseMember`. 
+- `Sub` has an additional member `subMember`.
+
+```java
+Base baseRefVar = new Sub();
+system.out.println(baseRefVar.subMember); //error
+```
+
+In the above case, even though we have assigned an object of the class `Sub` to the reference variable, we CANNOT access the data-members of `Sub` using this reference variable, since it is of type `Base`.
+
+---
+
+### Upcasting in Java
+
+Upcasting is a type of object typecasting in which a child object is typecasted to a parent class object. 
+
+- By using Upcasting, we can easily access the variables and methods of the parent class to the child class. 
+- Here, we don't access all the variables and methods. We access only some specified variables and methods of the child class. 
+- Upcasting is also known as ***Generalization*** and ***Widening***.
+- It is said to be a technique in which a superclass reference variable refers to the object of the subclass.
+
+Let us try to understand this with an example.
+
+Suppose we have a class `Base` and a class `Sub` that derives from it. 
+
+- `Base` has a member `baseMember`. 
+- `Sub` has an additional member `subMember`.
+
+As shown in the example under the previous heading, we can assign the object of a class to the reference variable of its ***superclass***.
+
+> NOTE: This can be done because the constructor of the class implicitly calls the constructor of its ***superclass***.
+
+### Downcasting in Java (NOT possible directly)
+
+Downcasting is another type of object typecasting. 
+
+In Downcasting, we assign a parent class reference object to the child class. 
+
+In Java, we cannot assign a parent class reference object to the child class, but if we perform downcasting, we will not get any compile-time error. 
+
+However, when we run it, it throws the `ClassCastException`. 
+
+```java
+Sub subRefVar = new Base(); // run-time error
+```
+
+Thinking logically, we cannot do this because the constructor of a particular class CANNOT call the constructor of its sub-class, because it doesn't have access to it.
+
+So, the data-members belonging to `Base` would remain unitialized.
+
+Now the point is if downcasting is not possible in Java, then why is it allowed by the compiler? In Java, some scenarios allow us to perform downcasting. Here, the subclass object is referred by the parent class.
+
+Read about them [here](https://www.javatpoint.com/upcasting-and-downcasting-in-java).
+
+---
 
 ## Classes in Java
 
@@ -554,13 +653,11 @@ In fact, in Java, all classes must be derived from some class.
 
 Here, `java` is the root package, `lang` is the sub-package and `Object` is the .java `file`/`class`.
 
-Every class in Java is directly or indirectly derived from the `Object` class, henceforth it is a child of the `Object` class. 
+The class `Object` is the root of the class hierarchy. Every class has `Object` as a superclass. 
+
+All objects, including arrays, implement the methods of this class.
 
 If a class does not extend any other class then it is a direct child class of `Object` and if extends another class then it is indirectly derived. 
-
-Therefore the `Object` class methods are available to all Java classes.
-
-Note: `Object` class acts as a root of inheritance hierarchy in any java program.
 
 ### Multiple classes in one source file
 
@@ -570,6 +667,12 @@ If a single source file contains multiple Classes, all of the classes have separ
 In most IDEs, only the `.class` file of the public class would be displayed. 
 
 Navigating to the folder where that `.class` file is present using the terminal or file manager would lead to the discovery of the other `.class` files as well.
+
+### `public class` vs. `class`
+
+A class NOT explicitly declared as `public` is only available to other classes in its package, without having to import it.
+
+A class declared as `public` has the above characteristics along with the ability to be imported for use from anywhere.
 
 ### Creating an Object of a Class
 
@@ -650,7 +753,7 @@ In java, `this` is a reference variable that points to the current object. It ca
     10
     ```
 
-#### Real usage of the `this()` constructor call
+#### Real usage of the `this()` constructor call (*Constructor Chaining*)
 
 The `this()` constructor call should be used to reuse another constructor from the constructor. 
   
@@ -714,7 +817,111 @@ The super keyword in Java is used in subclasses to access superclass members (at
 
 - `super` can be used to refer ***immediate*** parent class instance variable.
 - `super` can be used to invoke ***immediate*** parent class method.
-- `super()` can be used to invoke ***immediate*** parent class constructor.
+- `super()` can be used to invoke ***immediate*** parent class constructor, also referred to as ***Constructor Chaining***.
+
+#### Real usage of the `super()` constructor call (*Constructor Chaining*)
+
+```java
+// 2-D Object
+class TwoDimObject {
+    double length;
+    double breadth;
+
+    TwoDimObject() {
+        length = -1;
+        breadth = -1;
+    }
+
+    TwoDimObject(double side) {
+        length = side;
+        breadth = side;
+    }
+
+    TwoDimObject(double length, double breadth) {
+        this.length = length;
+        this.breadth = breadth;
+    }
+
+    TwoDimObject(TwoDimObject other2D) {
+        this.length = other2D.length;
+        this.breadth = other2D.breadth;
+    }
+}
+
+// 3-D Object has the properties of a 2-D Object
+class ThreeDimObject extends TwoDimObject {
+    double height;
+
+    ThreeDimObject() {
+        super();
+        height = -1;
+    }
+
+    ThreeDimObject(double length, double breadth, double height) {
+        super(length, breadth);
+        this.height = height;
+    }
+
+    ThreeDimObject(ThreeDimObject other) {
+        super(other);
+        // This is technically equivalent to (TwoDimObject other2D = other;)
+        // We can do this since reference variable of a class can point to object of its sub-class.
+        this.height = other.height;
+    }
+}
+```
+
+---
+
+### `final` keyword
+
+The `final` keyword in Java, has 3 purposes:
+- Stop Value Change, using [`final` variables](#final-variable)
+- Stop Method Overriding
+- Stop Inheritance
+
+#### **`final` variable**
+
+If you make any variable as `final`, you cannot change its value (It will be constant.
+
+A final variable that is not initialized at the time of declaration is known as ***blank final variable***.
+
+`final` variables can also be kept as data-members of classes, in which case, they can be initialized only in constructor.
+
+`final` variable ARE inherited.
+
+```java
+class Bike {  
+  final int speedlimit; //blank final variable  
+    
+  Bike() {  
+    speedlimit = 70; // initialized in constructor
+    system.out.println(speedlimit);  
+  }  
+  
+  public static void main(String args[]) {  
+    new Bike();  
+  }  
+}  
+```
+
+> ***NOTE:*** If a [non-primitive](#non-primitive-data-types-in-java) variable is kept as final, the [hashcode](#hashcode-of-an-object) stored in it will stay constant, but the value of the variable, stored in the heap may be changed.
+
+#### `final` method
+
+A method declared as `final` cannot be overridden.
+
+But `final` methods are inherited by subclasses.
+
+This gives a performance enhancement since the java compiler can straightaway inline the calls to `final` methods because it knows that these methods can't be overridden.
+
+So, ***early binding*** takes place over here, as opposed to methods that are overridden, which have ***late binding***.
+
+#### `final` class
+
+A class declared as `final` CANNOT be used to derive sub-classes.
+
+Also, all the methods of `final` classes are implicitly declared as `final`.
 
 ---
 
@@ -922,6 +1129,22 @@ bar
 ```
 
 `str1` and `str2` store the same hashcodes, but `str3` is a different object (having a different hashcode) which is why the inequality check operation between `str2` and `str3` returns true.
+
+### Strings support concatenation
+
+```java
+public static void main(String[] args) {
+        String a = "hello"
+        String b = "";
+        b += a.charAt(0);
+        System.out.println(b);
+    }
+```
+
+The output of this is:
+```
+h
+```
 
 ## `java.lang.Character` (Wrapper class for `char` primitive)
 
@@ -1190,7 +1413,7 @@ If suppose `bar` is a reference variable pointing to an object of an arbitrary c
 > 
 > The default `toString()` method in Object prints `class name @ hash code`. 
 > 
-> We can override the `toString()` method in a user-defined class to print proper output.
+> We can [override the `toString()` method]() in a user-defined class to print proper output.
 
 ```java
 foo bar = new foo();
@@ -1201,6 +1424,52 @@ System.out.println(bar);
 Output would look something like:
 ```
 <package-name>.<sub-package-name>.bar@2f92e0f4
+```
+
+### Overriding the `toString()` method of global class `Object`
+
+The `toString()` method of the global class [`Object`](#javalangobject-class), inherited by all classes, looks like this:
+
+```java
+public String toString() {
+  return getClass().getName() + "@" + Integer.toHexString(hashCode());
+}
+```
+
+If we were to override this in a subclass, without changing its behavior, it would look like this:
+
+```java
+@Override
+public String toString() {
+  return super.toString(); 
+}
+```
+
+Take a look at the following code-snippet, in which we have overridden the `toString()` method to print the details of the `Student` class.
+
+```java
+class Student {
+    String name;
+    int age;
+    double height;
+
+    Student() {
+        this.name = "";
+        this.age = -1;
+        this.height = -1;
+    }
+
+    Student(String name, int age, double height) {
+        this.name = name;
+        this.age = age;
+        this.height = height;
+    }
+
+    @Override
+    public String toString() {
+        return ("Name of student : " + name + "\nAge of student : " + age + "\nHeight of student : " + height + "\n");
+    }
+}
 ```
 
 ---
@@ -1498,6 +1767,143 @@ Internally computers use pages of memory, which are quite large. If a sparsely u
 This increases the density of data to memory, improving cache performance. Sometimes this translates into performance improvements that can be quite dramatic.
 
 Java's Garbage Collector takes advantage of the use of references by temporarily blocking access to the data for a set of references. During that blockage of access, it moves the data around (to compact it). After the blockage, the reference to address table has the new memory addresses. Since the "functional" layer of the code never knew the addresses in the first place, this operation will not break a running Java program.
+
+# Types of Polymorphism in Java
+
+Java has two types of Polymorphism.
+
+## Compile-time Polymorphism (Method & Operator Overloading)
+
+Compile-time polymorphism is achieved by method overloading and operator overloading.
+
+However, Java doesn't allow user-defined operator overloading.
+
+Read [this](https://www.geeksforgeeks.org/compile-time-polymorphism-in-java/#:~:text=Compile%2Dtime%20polymorphism%20is%20a,method%20overloading%20and%20operator%20overloading.) article to understand compile-time polymorphism in Java.
+
+## Run-time Polymorphism (Method Overriding)
+
+### Dynamic Method Dispatch
+
+Dynamic Method Dispatch is the process through which a call to an overridden method is resolved at runtime by compiler of JAVA.
+
+This technique is used to resolve a call to an overridden method at runtime rather than compile time.
+
+Dynamic Method Dispatch is based on the concept of [***upcasting***](#upcasting-in-java).
+
+When an overridden method is called through a superclass reference, Java determines which version(superclass/subclasses) of that method is to be executed based upon the type of the object being referred to (not the type of the reference variable) at the time the call occurs. 
+
+> ***NOTE:*** It is not possible to use Dynamic Method Dispatch without the superclass having a definition of the method.
+
+Thus, this determination is made at run-time.
+
+Take a look at this example code-snippet:
+
+```java
+class A {
+    void display() {
+        System.out.println("Inside A's display() method.");
+    }
+}
+
+class B extends A {
+
+    @Override
+    void display() {
+        System.out.println("Inside B's display() method.");
+    }
+}
+
+class C extends A {
+
+    @Override
+    void display() {
+        System.out.println("Inside C's display() method.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        A a = new A();
+        B b = new B();
+        C c = new C();
+
+        A ref;
+
+        ref = a;
+        ref.display();
+
+        ref = b;
+        ref.display();
+
+        ref = c;
+        ref.display();
+
+    }
+}
+```
+
+Output:
+```
+Inside A's display() method.
+Inside B's display() method.
+Inside C's display() method.
+```
+
+> ***NOTE:*** The `@Override` annotation assures that the subclass method is overriding the parent class method. 
+> 
+> If it is not so, compile time error occurs.
+>
+> Read more about Java Annotations [here](https://www.javatpoint.com/java-annotation).
+
+### Overriding Static Methods (NOT POSSIBLE)
+
+We can't override static methods because they anyways ONLY depend on the type of the reference variable because they can be called without instantiating the class they are placed in.
+
+Overriding depends on objects, Static doesn't depend on objects, hence we can't override static methods.
+
+### Run-time Polymorphism with Data Members (NOT POSSIBLE)
+
+In Java, we can override methods only, not the variables(data members), so runtime polymorphism cannot be achieved by data members. For example :
+
+```java
+class A {
+    int x = 10;
+}
+  
+class B extends A {
+    int x = 20;
+}
+  
+public class Test {
+    public static void main(String args[]) {
+        A a = new B(); // object of type B
+  
+        System.out.println(a.x);
+    }
+}
+```
+
+The output of this code is `10` (data-member of A), not `20` (data-member of B).
+
+---
+
+## Abstraction in Java
+
+### Abstract Classes
+
+A class which is declared as `abstract` is known as an abstract class. 
+- It can have ***abstract*** and ***non-abstract*** methods.
+- It needs to be extended and its method implemented. 
+- It cannot be instantiated.
+- It can have constructors and static methods also.
+- It can have `final` methods which will force the subclass not to change the body of the method.
+- If you are extending an abstract class that has an abstract method, you must either provide the implementation of the method or make this class `abstract`.
+
+### Interfaces
+
+TODO
+
+---
 
 # Important Useful Methods in Java
 
