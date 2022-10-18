@@ -56,6 +56,8 @@
       - [Real usage of the `super()` constructor call (*Constructor Chaining*)](#real-usage-of-the-super-constructor-call-constructor-chaining)
     - [Wrapper Classes in Java](#wrapper-classes-in-java)
       - [**Need of Wrapper Classes**](#need-of-wrapper-classes)
+      - [Autoboxing](#autoboxing)
+      - [Unboxing](#unboxing)
     - [`java.util.Random` class (Generating Random Numbers)](#javautilrandom-class-generating-random-numbers)
       - [`nextInt()` method](#nextint-method)
       - [`doubles()`, `ints()` and `longs()`  method](#doubles-ints-and-longs--method)
@@ -987,9 +989,66 @@ In other words, we can wrap a primitive value using a wrapper class object built
 
 - They convert primitive data types into objects.   
   
-  Objects are needed if we wish to modify the arguments passed into a method. This is because primitive types are passed by value in Java.
+  > ***NOTE:*** However, we cannot change the value of the primitive wrapped by the Wrapper Class object, once the Wrapper Class object has been created.
+  >
+  > This is unlike regular Objects, whose members can be modified after their creation.
 
 - The classes in `java.util` package handles only objects and hence wrapper classes help in this case also.
+
+#### Autoboxing
+
+The automatic conversion of primitive data type into its corresponding wrapper class is known as autoboxing, for example, byte to Byte, char to Character, int to Integer, long to Long, float to Float, boolean to Boolean, double to Double, and short to Short.
+
+Since Java 5, we do not need to use the valueOf() method of wrapper classes to convert the primitive into objects.
+
+Wrapper class Example: Primitive to Wrapper
+```java
+//Java program to convert primitive into objects  
+//Autoboxing example of int to Integer  
+public class WrapperExample1 {  
+  public static void main(String args[]){  
+    //Converting int into Integer  
+    int a = 20;  
+    Integer i = Integer.valueOf(a);//converting int into Integer explicitly  
+    Integer j = a;//autoboxing, now compiler will write Integer.valueOf(a) internally  
+      
+    System.out.println(a + " " + i + " " + j);  
+  }
+}  
+```
+
+Output:
+```
+20 20 20
+```
+
+#### Unboxing
+
+The automatic conversion of wrapper type into its corresponding primitive type is known as unboxing. 
+
+It is the reverse process of autoboxing. Since Java 5, we do not need to use the `intValue()` method of wrapper classes to convert the wrapper type into primitives.
+
+Wrapper class Example: Wrapper to Primitive
+
+```java
+//Java program to convert object into primitives  
+//Unboxing example of Integer to int  
+public class WrapperExample2{    
+  public static void main(String args[]){    
+    //Converting Integer to int    
+    Integer a = new Integer(3);    
+    int i = a.intValue();//converting Integer to int explicitly  
+    int j = a;//unboxing, now compiler will write a.intValue() internally    
+        
+    System.out.println(a + " " + i + " " + j);    
+  }
+}    
+```
+
+Output:
+```
+3 3 3
+```
 
 ---
 
@@ -1510,7 +1569,7 @@ If suppose `bar` is a reference variable pointing to an object of an arbitrary c
 > 
 > The default `toString()` method in Object prints `class name @ hash code`. 
 > 
-> We can [override the `toString()` method]() in a user-defined class to print proper output.
+> We can [override the `toString()` method](#overriding-the-tostring-method-of-global-class-object) in a user-defined class to print proper output.
 
 ```java
 foo bar = new foo();
@@ -1522,7 +1581,6 @@ Output would look something like:
 ```
 <package-name>.<sub-package-name>.bar@2f92e0f4
 ```
-
 ### Overriding the `toString()` method of global class `Object`
 
 The `toString()` method of the global class [`Object`](#javalangobject-class), inherited by all classes, looks like this:
@@ -2247,3 +2305,5 @@ public static void main(String[] args) {
   };
 }
 ```
+
+
