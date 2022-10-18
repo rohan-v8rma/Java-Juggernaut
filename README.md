@@ -688,28 +688,43 @@ The `final` keyword in Java, has 3 purposes:
 
 #### **`final` variable**
 
-If you make any variable as `final`, you cannot change its value (It will be constant.
+- If you make any variable as `final`, you cannot change its value (It will be constant.
+  ```java
+  class A {
+    final int x = 10;
+  }
+  ```
 
-A final variable that is not initialized at the time of declaration is known as ***blank final variable***.
+- `final` variables ARE inherited.
 
-`final` variables can also be kept as data-members of classes, in which case, they can be initialized only in constructor.
+- A final variable that is not initialized at the time of declaration is known as ***blank final variable***. 
 
-`final` variable ARE inherited.
-
-```java
-class Bike {  
-  final int speedlimit; //blank final variable  
-    
-  Bike() {  
-    speedlimit = 70; // initialized in constructor
-    system.out.println(speedlimit);  
-  }  
+  Note that it is necessary to initialize a ***blank final variable*** in the constructor of the class. 
+  >
+  If we do something like this:
+  ```java
+  class A {
+    final int x;
+  }
+  ```
   
-  public static void main(String args[]) {  
-    new Bike();  
-  }  
-}  
-```
+  We would be getting an error similar to this:
+  
+  ```
+  java: variable x not initialized in the default constructor
+  ```
+  
+  We should be doing something like this, for ***blank final variables***:
+  
+  ```java
+  class A {
+    final int x;
+  
+    A() {
+      x = 10;
+    }
+  }
+  ```
 
 > ***NOTE:*** If a [non-primitive](#non-primitive-data-types-in-java) variable is kept as final, the [hashcode](#hashcode-of-an-object) stored in it will stay constant, but the value of the variable, stored in the heap may be changed.
 
@@ -2052,7 +2067,7 @@ A class which is declared as `abstract` is known as an abstract class.
 - It cannot be instantiated since there is no definition for certain methods, but it can have constructors, that can be called using `super()` by the sub-classes.
 - It can have static methods.
 - It can have `final` methods which will force the subclass not to change the body of the method.
-- If you are extending an abstract class that has an abstract method, you must either provide the implementation of the method or make this class `abstract`.
+- If you are extending an abstract class that has an abstract method, you must either provide the implementation of the method or make the new class `abstract`, as well.
 
 ### Interfaces (100% Abstraction)
 
@@ -2087,8 +2102,6 @@ A class which is declared as `abstract` is known as an abstract class.
     ```
 
 - An interface cannot be instantiated using the `new` operator.
-
-- 
 
 ### Multiple Inheritance using Interfaces
 
