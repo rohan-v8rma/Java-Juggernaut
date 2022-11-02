@@ -48,7 +48,8 @@
     - [`java.lang.Object` class](#javalangobject-class)
     - [Multiple classes in one source file](#multiple-classes-in-one-source-file)
     - [`public class` vs. `class`](#public-class-vs-class)
-    - [Creating an Object of a Class](#creating-an-object-of-a-class)
+    - [Creating an Object of a Class (Using CONSTRUCTORS)](#creating-an-object-of-a-class-using-constructors)
+    - [Calling of Parent CONSTRUCTOR upon instantiating child class](#calling-of-parent-constructor-upon-instantiating-child-class)
     - [`this` keyword](#this-keyword)
       - [Real usage of the `this()` constructor call (*Constructor Chaining*)](#real-usage-of-the-this-constructor-call-constructor-chaining)
     - [`new` keyword (Request for memory allocation at run-time)](#new-keyword-request-for-memory-allocation-at-run-time)
@@ -130,6 +131,19 @@
     - [Abstract Classes (0-100% Abstraction)](#abstract-classes-0-100-abstraction)
     - [Interfaces (100% Abstraction)](#interfaces-100-abstraction)
     - [Multiple Inheritance using Interfaces](#multiple-inheritance-using-interfaces)
+- [Error Handling](#error-handling)
+  - [What does JVM do when an exception occurs?](#what-does-jvm-do-when-an-exception-occurs)
+  - [Integer division vs. Floating-point division](#integer-division-vs-floating-point-division)
+  - [Types of throwables](#types-of-throwables)
+    - [Compile-time `Throwable`s (Checked Exceptions)](#compile-time-throwables-checked-exceptions)
+    - [Runtime Throwables](#runtime-throwables)
+      - [Errors at run-time (external)](#errors-at-run-time-external)
+      - [Exceptions at run-time (internal)](#exceptions-at-run-time-internal)
+  - [`toString()` overloaded definition of `Throwable` class](#tostring-overloaded-definition-of-throwable-class)
+  - [More than one exception in `try` block](#more-than-one-exception-in-try-block)
+  - [Catching Exceptions](#catching-exceptions)
+  - [`throws` keyword](#throws-keyword)
+  - [Getting information from `Throwable`s](#getting-information-from-throwables)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
   - [`split()` NON-STATIC method for splitting a string using specific delimiters](#split-non-static-method-for-splitting-a-string-using-specific-delimiters)
@@ -785,7 +799,7 @@ A class NOT explicitly declared as `public` is only available to other classes i
 
 A class declared as `public` has the above characteristics along with the ability to be imported for use from anywhere.
 
-### Creating an Object of a Class
+### Creating an Object of a Class (Using CONSTRUCTORS)
 
 - In C++, creating an object was simple as we just had to specify the class type followed by the name of the object to be created and parentheses, either containing no arguments (Default Constructor) or a specific number of arguments (Parameterized Constructor).
   ```cpp
@@ -803,6 +817,88 @@ A class declared as `public` has the above characteristics along with the abilit
   
   ClassName ObjectName = new ClassName();
   ```
+
+### Calling of Parent CONSTRUCTOR upon instantiating child class
+
+Take a look at the following code-snippet, where the class `B` inherits from `A` and both of them have explicitly defined default constructors.
+
+```java
+class A {
+    A() {
+        System.out.println("Constructor of A.");
+    }
+
+    void display(int a) {
+        System.out.println(a);
+    }
+}
+
+class B extends A {
+    B() {
+        System.out.println("Constructor of B.");
+    }
+
+    void display(char a) {
+        System.out.println(a);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        B b = new B();
+    }
+}
+```
+
+
+Output:
+```
+Default constructor of A.
+Default constructor of B.
+```
+
+As we can see, the default constructor of `B`'s parent `A`, is called as well when `B` is instantiated.
+
+We can change this behavior by ***explicitly*** calling a specific constructor of the parent, inside the child's constructor.
+
+```java
+class A {
+    A() {
+        System.out.println("Constructor of A.");
+    }
+
+    A(String parameter) {
+        System.out.println(parameter);
+    }
+
+    void display(int a) {
+        System.out.println(a);
+    }
+}
+
+class B extends A {
+    B() {
+        super("Parameterized Constructor of A.");
+        System.out.println("Constructor of B.");
+    }
+
+    void display(char a) {
+        System.out.println(a);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        B b = new B();
+    }
+}
+```
+
+Output:
+```
+Parameterized constructor of A.
+Default constructor of B.
+```
 
 ### `this` keyword
 
@@ -2166,6 +2262,197 @@ Interfaces can be used to implement Multiple Inheritance, since there is no ambi
 
 ---
 
+# Error Handling
+
+Java’s exception-handling model is based on three operations: *declaring* an exception, *throwing* an exception, and *catching* an exception,
+
+![](./images/java-error-handling-model.png)
+
+In Java, Errors are THROWN as Exceptions.
+
+The execution of a `throw` statement is called throwing an exception. Take a look at the example below (a `try-throw-catch` block):
+```java
+try {
+    Scanner input = new Scanner(System.in);
+    // Prompt the user to enter two integers
+    System.out.print("Enter two integers: ");
+    int number1 = input.nextInt();
+    int number2 = input.nextInt();
+    if(number2 == 0) {
+        throw new ArithmeticException("Divisor cannot be zero.\n");
+    }
+    System.out.println(number1 + " / " + number2 + " is " + (number1 / number2));
+}
+catch (ArithmeticException xception) {
+    System.out.println(xception);
+}
+```
+
+The constructor `ArithmeticException(str)` is invoked to construct an exception object, where `str` is a message that describes the exception.
+
+When an exception is thrown, the normal execution flow is interrupted. As the name suggests, to “throw an exception” is to pass the exception from one place to another. The statement for invoking the method is contained in a try block and a catch block. The try block (lines 19–23) contains the code that is executed in normal circumstances. The exception is caught by the catch block. The code in the catch block is executed to handle the exception. Afterward, the statement (line 29) after the catch block is executed.
+
+The throw statement is analogous to a method call, but instead of calling a method, it calls a catch block. In this sense, a catch block is like a method definition with a parameter that matches the type of the value being thrown. Unlike a method, however, after the catch block is executed, the program control does not return to the throw statement; instead, it executes the next statement after the catch block.
+
+Now you can see the advantage of using exception handling: It enables a method to throw an exception to its caller, enabling the caller to handle the exception. Without this capability, the called method itself must handle the exception or terminate the program. Often the called method does not know what to do in case of error. This is typically the case for the library methods. The library method can detect the error, but only the caller knows what needs to be advantage done when an error occurs.
+
+The key benefit of exception handling is separating the detection of an error (done in a called method) from the handling of an error (done in the calling method).
+
+## What does JVM do when an exception occurs?
+
+The JVM is responsible for finding an exception handler to process the Exception object. It searches backward through the call stack until it finds a matching exception handler for that particular class of Exception object (in Java term, it is called `catch` the Exception ).
+
+## Integer division vs. Floating-point division
+
+```java
+System.out.println(1 / 0); // throw Arithmetic Exception
+System.out.println(1.0 / 0); // gives values equal to POSITIVE_INFINITY static member of Double class
+```
+
+The first statement will give an exception because integers CANNOT represent infinite values.
+
+The second statement won't because type upgradation takes place because of `1.0` being a double value. Floating-point numbers can represent infinite values
+
+Though it is impossible for a computer to literally represent the value of infinity in memory, the Java "double" and "float" data-type reserves two slots in its address range that are understood by the computer to refer to positive and negative infinity.
+
+The wrapper class `Double` also has the static members `POSITIVE_INFINITY` and `NEGATIVE_INFINITY` which also point to these addresses.
+
+## Types of throwables
+
+![](images/throwables-in-java.png)
+
+The class names `Error`, `Exception`, and `RuntimeException` are somewhat con-
+fusing. All three of these classes are exceptions, and all of the errors occur at runtime, except `Error` which has some sub-classes that represents exceptions *checked* at run-time.
+
+`RuntimeException`, `Error`, and their subclasses are known as *unchecked exceptions*.
+
+System errors are thrown by the JVM and are represented in the `Error` class. The `Error` class describes internal system errors, though such errors rarely occur. If one does, there is little you can do beyond notifying the user and trying to terminate the program gracefully.
+
+Java exceptions can be broken down into one of three categories:
+
+### Compile-time `Throwable`s (Checked Exceptions)
+
+These are exceptions that are checked by the compiler at compile time. These exceptions must be caught by a try/catch in the code or noted as thrown by the method. For instance, if a program attempts to access a file that is currently unavailable, the method to access the file must either catch or throw a FileNotFoundException.
+
+- `ArrayIndexOutOfBoundsException`
+
+- `ClassNotFoundException` : Attempt to use a class that does not exist. This exception would occur, for example, if you tried to run a nonexistent class using the java command, or if your program were composed of, say, three class files, only two of which could be found.
+- `IOException` : Related to input/output operations, such as invalid input, reading past the end of a file, and opening a nonexistent file. Examples of subclasses of `IOException` are `InterruptedIOException`, `EOFException` (EOF is short for End of File), and `FileNotFoundException`.
+- `Unchecked`
+
+### Runtime Throwables
+
+#### Errors at run-time (external)
+
+Errors are exceptions that happen externally to your Java program. One common example of the error is when the Java virtual machine (JVM) runs out of memory, which will throw an OutOfMemoryError.
+
+- `LinkageError` : A class has some dependency on another class, but the latter class has
+changed incompatibly after the compilation of the former class.
+- `VirtualMachineError` : The JVM is broken or has run out of the resources it needs in order to
+continue operating.
+
+#### Exceptions at run-time (internal)
+
+Run-time exceptions are internal to your application but are not typically recoverable. For example, an object that is expected to have a value but is actually null. In this case, a NullPointerException exception would be thrown.
+
+- `ArithmeticException` : Dividing an integer by zero. Note that floating-point arithmetic does not throw exceptions.
+- `NullPointerException` : Attempt to access an object through a null reference variable.
+- `IndexOutOfBoundsException` : Index to an iterable object is out of range.
+  - `ArrayIndexOutOfBoundsException`
+  - `StringIndexOutOfBoundsException`
+- `IllegalArgumentException` : An unchecked exception in Java that is thrown to indicate an illegal or unsuitable argument passed to a method. It is one of the most common exceptions that occur in Java
+- InputMismatchException
+
+> ***NOTE:*** Often, these three categories are broken down into checked and unchecked classifications—error and runtime exceptions are grouped together as unchecked, which, per their name, are not checked at compile time and can result in runtime errors.
+
+## `toString()` overloaded definition of `Throwable` class
+
+```java
+public String toString() {
+    String s = getClass().getName();
+    String message = getLocalizedMessage();
+    return (message != null) ? (s + ": " + message) : s;
+}
+```
+
+---
+
+## More than one exception in `try` block
+
+If more than one exception occurs in the `try` block, the rest of the statements in the `try` block does not get executed after the first exception.
+
+One should be more specific on what error it is, in the `catch` block parameter and alway mention more specific `catch` blocks compared to *less-specific*/*superclass* first.
+
+---
+
+## Catching Exceptions
+
+You now know how to declare an exception and how to throw an exception. When an exception is thrown, it can be caught and handled in a try-catch block, as follows: 
+
+```java
+try {
+ statements; // Statements that may throw exceptions
+}
+catch (Exception1 exVar1) {
+ handler for exception1;
+}
+catch (Exception2 exVar2) { 
+ handler for exception2;
+}
+...
+catch (ExceptionN exVarN) {
+ handler for exceptionN;
+}
+```
+
+If no exceptions arise during the execution of the `try` block, the catch blocks are skipped.
+
+If one of the statements inside the `try` block throws an exception, Java skips the remaining statements in the `try` block and starts the process of finding the code to handle the exception. 
+
+The code that handles the exception is called the *exception handler*; it is found by propagating the exception backward through a chain of method calls, starting from the current method. 
+
+Each `catch` block is examined in turn, from first to last, to see whether the type of the exception object is an instance of the exception class in the `catch` block. 
+
+If so, the exception object is assigned to the variable declared, and the code in the `catch` block is executed. 
+
+If no handler is found, Java exits this method, passes the exception to the method that invoked the method, and continues the same process to find a handler. 
+
+If no handler is found in the chain of methods being invoked, the program terminates and prints an error message on the console. The process of finding a handler is called *catching an exception*.
+
+> ***NOTE:*** 
+> 1. Various exception classes can be derived from a common superclass. If a `catch` block catches exception objects of a superclass, it can catch all the exception objects of the subclasses of that superclass
+>
+> 2. The order in which exceptions are specified in `catch` blocks is important. A ompile error will result if a `catch` block for a superclass type appears before a `catch` block for a subclass type.
+
+---
+
+## `throws` keyword
+
+The Java `throws` keyword is used to declare an exception. It gives an information to the programmer that there may occur an exception. So, it is better for the programmer to provide the exception handling code so that the normal flow of the program can be maintained.
+
+Exception Handling is mainly used to handle the checked exceptions. If there occurs any unchecked exception such as NullPointerException, it is programmers' fault that he is not checking the code before it being used.
+
+Syntax of Java `throws`
+```java
+return_type method_name() throws exception_class_name {  
+//method code  
+}
+```  
+- Which exception should be declared?
+  
+  Checked exception only, because:
+
+  unchecked exception: under our control so we can correct our code.
+  error: beyond our control. For example, we are unable to do anything if there occurs VirtualMachineError or StackOverflowError.
+
+---
+
+## Getting information from `Throwable`s
+
+![](images/getting-information-from-exceptions.png)
+
+---
+
 # Important Useful Methods in Java
 
 ## `charAt()` NON-STATIC method for selecting a single character in a string
@@ -2319,4 +2606,31 @@ public static void main(String[] args) {
 }
 ```
 
+package com.abstractClasses;
 
+import java.sql.SQLOutput;
+
+class A {
+//    public static final int y = 10;
+
+    public final int x;
+
+    A() {
+        x = 20;
+    }
+}
+
+class B extends A{
+    B() {
+        x = 100;
+    }
+}
+
+public class Car {
+    public static void main(String[] args) {
+        System.out.println(B.x);
+        B b = new B();
+        System.out.println(B.x);
+
+    }
+}
