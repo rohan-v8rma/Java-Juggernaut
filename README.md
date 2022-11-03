@@ -153,6 +153,9 @@
     - [Practical specialities of declaring an exception](#practical-specialities-of-declaring-an-exception)
   - [Contexts of Exceptions](#contexts-of-exceptions)
   - [Getting information from `Throwable`s](#getting-information-from-throwables)
+  - [Rethrowing Exceptions](#rethrowing-exceptions)
+  - [Chained Exceptions](#chained-exceptions)
+  - [User-defined exceptions](#user-defined-exceptions)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
   - [`split()` NON-STATIC method for splitting a string using specific delimiters](#split-non-static-method-for-splitting-a-string-using-specific-delimiters)
@@ -2649,6 +2652,72 @@ return_type method_name() throws exception_class_name {
 //method code  
 }
 ```  
+
+> ***NOTE:*** When we declare that a certain function throws an error, we CANNOT handle the error within the function body.
+>
+> Won't work:
+> ```java
+> public class Main {
+>     public static void throwsError() throws Exception {
+>         try {
+>           System.out.println("Hello");
+>         }
+>         except(Exception ex) {
+>           System.out.println(ex.getMessage());
+>         } 
+>     }
+> 
+>     public static void main(String[] args) {
+>        throwsError();
+>     }
+> ```
+>
+> Output:
+> ```
+> java: unreported exception java.lang.Exception; must be caught or declared to be thrown
+> ```
+
+> We need to handle the error whenever that function is called, even if doesn't actually throw that error.
+>
+> Code that doesn't work:
+> ```java
+> public class Main {
+>     public static void throwsError() throws Exception {
+>         System.out.println("Hello");
+>     }
+> 
+>     public static void main(String[] args) {
+>        throwsError();
+>     }
+> ```
+>
+> Output:
+> ```
+> java: unreported exception java.lang.Exception; must be caught or declared to be thrown
+> ```
+
+> WORKING CODE:
+> ```java
+> public class Main {
+>     public static void throwsError() throws Exception {
+>         System.out.println("Hello");
+>     }
+> 
+>     public static void main(String[] args) {
+>         try {
+>           throwsError();
+>         }
+>         except(Exception ex) {
+>           System.out.println(ex.getMessage());
+>         }
+>     }
+> ```
+>
+> Output:
+> ```
+> hello
+> ```
+
 ### Which exception should be declared?
   
 Checked exception only, because:
@@ -2694,7 +2763,7 @@ This is an ArithmeticException
 
 - *Built-in* exception and *built-in* handler: The type of error and the handler for the exxception is already defined.
 - *User-defined* exception and *built-in* handler.
-- *Built-in* exception and *user-defined* handler: This does not occur.
+- *Built-in* exception and *user-defined* handler: This does not occur. TODO: Why?
 - *User-defined* exception and *user-defined* handler.
 
 ---
@@ -2702,6 +2771,196 @@ This is an ArithmeticException
 ## Getting information from `Throwable`s
 
 ![](images/getting-information-from-exceptions.png)
+
+---
+
+## Rethrowing Exceptions
+
+Java allows an exception handler to rethrow the exception if the handler cannot process the exception or simply wants to let its caller be notified of the exception. The syntax for rethrowing an exception may look like this:
+
+```java
+try {
+ statements;
+}
+catch (TheException ex) {
+ perform operations before exits;
+throw ex;
+}
+```
+The statement `throw ex` rethrows the exception to the caller so that other handlers in the caller get a chance to process the exception `ex`.
+
+> NOTE: Rethrowing the exception doesn't mean that the next `catch` block, with the superclass of the current exception, would be executed.
+> 
+> ![](images/flow-of-try-catch.png)
+>
+
+Because of the flow specified above, in the following code, only the first matching `catch` block, followed by the `finally` block will run.
+
+```java
+public class rethrowingException {
+  public static void main(String[] args) {
+    try{
+      System.out.println(1/0);
+    }
+    catch(ArithmeticException ex){
+      System.out.println("Illegal argument specified");
+      throw ex;
+    }
+    catch(RuntimeException ex){
+      System.out.println(ex.getMessage());
+      System.out.println("hello");
+    }
+    finally{
+      System.out.println("finally block executed");
+    }
+  }
+}
+```  
+
+Output:
+```
+Illegal argument specified
+finally block executed
+```
+
+This is the code we would require for both the `catch` blocks to run.
+
+```java
+public class rethrowingException {
+  public static void main(String[] args) {
+    try {
+      try{
+        System.out.println(1/0);
+      }
+      catch(ArithmeticException ex){
+        System.out.println("Illegal argument specified");
+        throw ex;
+      }
+    }
+    catch(RuntimeException ex){
+      System.out.println(ex.getMessage());
+      System.out.println("hello");
+    }
+    finally{
+      System.out.println("finally block executed");
+    }
+  }
+}
+```
+
+Output:
+```
+Illegal argument specified
+/ by zero
+hello
+finally block executed
+```
+
+---
+
+## Chained Exceptions
+
+Throwing an exception along with another exception forms a chained exception.
+
+In the preceding section, the catch block rethrows the original exception. 
+
+Sometimes, one may need to throw a new exception (with additional information) along with the original exception. 
+
+This is called chained exceptions. 
+
+Constructor syntax for chaining exceptions is as follows. 
+```java
+public Exception(String message, Throwable cause) {
+    super(message, cause);
+}
+```
+
+> NOTE: This example shows `Exception` class but this type of constructor is defined for other `Throwable` sub-classes as well, like `RuntimeException`, `ArithmeticException`, etcetera.
+
+```java
+public class chainedException {
+
+  public static void method2() throws Exception {
+    throw new Exception("New info from method2.");
+  }
+
+  public static void method1() throws Exception {
+    try {
+      method2();
+    }
+    catch (Exception ex) {
+      throw new Exception("New info from method1.", ex);
+    }
+  }
+  
+  public static void main(String[] args) {
+    try {
+      method1();
+    }
+    catch(Exception ex) {
+      System.out.println(ex.getMessage());
+
+      // This returns the Throwable which caused the current exception
+      System.out.println(ex.getCause()); 
+
+      // The message of the cause Throwable
+      System.out.println(ex.getCause().getMessage()); 
+      
+      ex.printStackTrace();
+    }
+  }    
+}
+```
+
+Output:
+```
+New info from method1.
+java.lang.Exception: New info from method2.
+New info from method2.
+
+// Stack trace below
+java.lang.Exception: New info from method1.
+	at com.errorHandling.chainedException.method1(chainedException.java:14)
+	at com.errorHandling.chainedException.main(chainedException.java:20)
+Caused by: java.lang.Exception: New info from method2.
+	at com.errorHandling.chainedException.method2(chainedException.java:6)
+	at com.errorHandling.chainedException.method1(chainedException.java:11)
+	... 1 more
+```
+
+---
+
+## User-defined exceptions
+
+```java
+public class userDefinedException extends Exception {
+  private double radius;
+
+  public userDefinedException(double radius) {
+    super("Invalid radius " + radius);
+    this.radius = radius;
+  }
+
+  public userDefinedException(double radius, Throwable cause) {
+    super("Invalid radius " + radius, cause);
+  }
+
+  public static void main(String[] args) {
+    try {
+      try {
+        Exception cause = new Exception("YO wsssup, this is XCEPTTION.");
+        throw cause;
+      }
+      catch (Exception cause) {
+        throw new userDefinedException(-10, cause);
+      }
+    }
+    catch (userDefinedException ex) {
+      System.out.println(ex.getMessage());
+    }
+  }
+}
+```
 
 ---
 
