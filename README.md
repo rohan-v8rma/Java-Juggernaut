@@ -108,7 +108,7 @@
   - [if-else statements](#if-else-statements)
   - [`for-each` loop (looping through Array elements)](#for-each-loop-looping-through-array-elements)
   - [switch-case](#switch-case)
-- [Taking Input in Java](#taking-input-in-java)
+- [Taking Input in Java using `Scanner` class](#taking-input-in-java-using-scanner-class)
   - [Taking input of `int`](#taking-input-of-int)
   - [Taking input of `String`](#taking-input-of-string)
     - [Taking input of one word](#taking-input-of-one-word)
@@ -116,6 +116,7 @@
   - [Taking input of one character (`char`)](#taking-input-of-one-character-char)
   - [Checking if input stream still has data left](#checking-if-input-stream-still-has-data-left)
   - [Special cases while taking input shown practically](#special-cases-while-taking-input-shown-practically)
+  - [Discarding input in case of unsuccessful scanning](#discarding-input-in-case-of-unsuccessful-scanning)
 - [Functions in Java](#functions-in-java)
   - [Return values](#return-values)
   - [No pass-by-reference](#no-pass-by-reference)
@@ -132,8 +133,11 @@
     - [Interfaces (100% Abstraction)](#interfaces-100-abstraction)
     - [Multiple Inheritance using Interfaces](#multiple-inheritance-using-interfaces)
 - [Error Handling](#error-handling)
+  - [Advantage of using Exception Handling](#advantage-of-using-exception-handling)
   - [What does JVM do when an exception occurs?](#what-does-jvm-do-when-an-exception-occurs)
+  - [When NOT to use `try-catch` for exception handling](#when-not-to-use-try-catch-for-exception-handling)
   - [Integer division vs. Floating-point division](#integer-division-vs-floating-point-division)
+  - [Mandatory to handle exception EXPLICITLY thrown using `throw` keyword](#mandatory-to-handle-exception-explicitly-thrown-using-throw-keyword)
   - [Types of throwables](#types-of-throwables)
     - [Compile-time `Throwable`s (Checked Exceptions)](#compile-time-throwables-checked-exceptions)
     - [Runtime Throwables](#runtime-throwables)
@@ -142,7 +146,12 @@
   - [`toString()` overloaded definition of `Throwable` class](#tostring-overloaded-definition-of-throwable-class)
   - [More than one exception in `try` block](#more-than-one-exception-in-try-block)
   - [Catching Exceptions](#catching-exceptions)
+  - [Catching exception of `Throwable` sub-classes and super-classes](#catching-exception-of-throwable-sub-classes-and-super-classes)
+  - [`finally` block](#finally-block)
   - [`throws` keyword](#throws-keyword)
+    - [Which exception should be declared?](#which-exception-should-be-declared)
+    - [Practical specialities of declaring an exception](#practical-specialities-of-declaring-an-exception)
+  - [Contexts of Exceptions](#contexts-of-exceptions)
   - [Getting information from `Throwable`s](#getting-information-from-throwables)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
@@ -1868,7 +1877,7 @@ public static void main(String[] args) {
 }
 ```
 
-# Taking Input in Java
+# Taking Input in Java using `Scanner` class
 
 We can make use of the `Scanner` class present in the `java.util` package.
 
@@ -1944,6 +1953,35 @@ scannerObject.hasNext();
 This returns a boolean value of true if this scanner has more data to be read.
 
 ## [Special cases while taking input shown practically](./JavaProjects/MasterProject/src/com/basics/TakingInput.java)
+
+## Discarding input in case of unsuccessful scanning
+
+Consider the following code-snippet, where we give only alphabetical values:
+```java
+Scanner input = new Scanner(System.in);
+boolean continueInput = true;
+do {
+    try {
+        System.out.print("Enter an integer: ");
+        int number = input.nextInt();
+        // Display the result
+        System.out.println("The number entered is " + number);
+        continueInput = false;
+    }
+    catch (InputMismatchException ex) {
+        System.out.println("Try again. (" + "Incorrect input: an integer is required)");
+        input.nextLine(); // Discard input
+    }
+} while (continueInput);
+```
+
+The nextInt(radix) method of `java.util.Scanner` class scans the next token of the input as a Int. 
+
+If the translation is successful, the scanner advances past the input that matched.  
+
+If the translation isn't successful, it will stay on that token, resulting in an endless loop in this case. 
+
+So, instead of `nextInt()`, `nextLine()` in a sense absorbs the input because the translation is successful in the case of `nextLine()`, figuratively discarding the input.
 
 # Functions in Java
 
@@ -2271,6 +2309,7 @@ Java’s exception-handling model is based on three operations: *declaring* an e
 In Java, Errors are THROWN as Exceptions.
 
 The execution of a `throw` statement is called throwing an exception. Take a look at the example below (a `try-throw-catch` block):
+
 ```java
 try {
     Scanner input = new Scanner(System.in);
@@ -2288,19 +2327,63 @@ catch (ArithmeticException xception) {
 }
 ```
 
-The constructor `ArithmeticException(str)` is invoked to construct an exception object, where `str` is a message that describes the exception.
+- The constructor `ArithmeticException(str)` is invoked to construct an exception object, where `str` is a message that describes the exception.
 
-When an exception is thrown, the normal execution flow is interrupted. As the name suggests, to “throw an exception” is to pass the exception from one place to another. The statement for invoking the method is contained in a try block and a catch block. The try block (lines 19–23) contains the code that is executed in normal circumstances. The exception is caught by the catch block. The code in the catch block is executed to handle the exception. Afterward, the statement (line 29) after the catch block is executed.
+- When an exception is thrown, the normal execution flow is interrupted. As the name suggests, to “throw an exception” is to pass the exception from one place to another. 
+  
+  The statement for invoking the method is contained in a `try` block and a `catch` block. 
+  
+  - The `try` block contains the code that is executed in normal circumstances. 
+  - The exception is caught by the `catch` block. The code in the `catch` block is executed to handle the exception. 0 - Afterward, the statement after the `catch` block is executed.
 
-The throw statement is analogous to a method call, but instead of calling a method, it calls a catch block. In this sense, a catch block is like a method definition with a parameter that matches the type of the value being thrown. Unlike a method, however, after the catch block is executed, the program control does not return to the throw statement; instead, it executes the next statement after the catch block.
+- The `throw` statement is analogous to a method call, but instead of calling a method, it calls a `catch` block. In this sense, a `catch` block is like a method definition with a parameter that matches the type of the value being thrown. 
 
-Now you can see the advantage of using exception handling: It enables a method to throw an exception to its caller, enabling the caller to handle the exception. Without this capability, the called method itself must handle the exception or terminate the program. Often the called method does not know what to do in case of error. This is typically the case for the library methods. The library method can detect the error, but only the caller knows what needs to be advantage done when an error occurs.
+  Unlike a method, however, after the catch block is executed, the pr*ogram control does not return to the throw statement; instead, it executes the next statement after the catch block.
 
-The key benefit of exception handling is separating the detection of an error (done in a called method) from the handling of an error (done in the calling method).
+## Advantage of using Exception Handling 
+
+It enables a method to throw an exception to its caller, enabling the caller to handle the exception. 
+
+Without this capability, the called method **itself** must handle the exception or terminate the program. 
+
+Often the called method does not know what to do in case of error. This is typically the case for the library methods. 
+
+The library method can detect the error, but only the caller knows what needs to be advantage done when an error occurs.
+
+The **key benefit** of exception handling is SEPARATING **the detection of an error** (*done in a called method*) from **the handling of an error** (*done in the calling method*).
 
 ## What does JVM do when an exception occurs?
 
 The JVM is responsible for finding an exception handler to process the Exception object. It searches backward through the call stack until it finds a matching exception handler for that particular class of Exception object (in Java term, it is called `catch` the Exception ).
+
+## When NOT to use `try-catch` for exception handling
+
+Exception handling usually requires more time and resources, because it requires instantiating a new exception object, rolling back the call stack, and propagating the exception through the chain of methods invoked to search for the handler.
+
+Simple errors that may occur in individual methods are best handled without throwing exceptions. This can be done by using if statements to check for errors.
+Only use `try-catch` when you have to deal with unexpected error conditions. Do not use a `try-catch` block to deal with simple, expected situations. 
+
+For example, the following code:
+
+```java
+try {
+ System.out.println(refVar.toString());
+}
+catch (NullPointerException ex) {
+ System.out.println("refVar is null");
+}
+```
+
+is better replaced by
+
+```java
+if (refVar != null)
+ System.out.println(refVar.toString());
+else
+ System.out.println("refVar is null")
+```
+
+The point is not to abuse exception handling as a way to deal with a simple logic test.
 
 ## Integer division vs. Floating-point division
 
@@ -2316,6 +2399,24 @@ The second statement won't because type upgradation takes place because of `1.0`
 Though it is impossible for a computer to literally represent the value of infinity in memory, the Java "double" and "float" data-type reserves two slots in its address range that are understood by the computer to refer to positive and negative infinity.
 
 The wrapper class `Double` also has the static members `POSITIVE_INFINITY` and `NEGATIVE_INFINITY` which also point to these addresses.
+
+## Mandatory to handle exception EXPLICITLY thrown using `throw` keyword
+
+Consider the following code-snippet:
+```java
+public void m(int value) {
+  if (value < 40) {
+    throw new Exception("value is too small");
+  }
+}
+```
+
+We will get the following checked exception for this code:
+```
+java: unreported exception java.lang.Exception; must be caught or declared to be thrown
+```
+
+So, if we EXPLICITLY throw an exception using `throw` keyword, we need to keep the statement inside a `try-catch` block.
 
 ## Types of throwables
 
@@ -2360,8 +2461,8 @@ Run-time exceptions are internal to your application but are not typically recov
 - `IndexOutOfBoundsException` : Index to an iterable object is out of range.
   - `ArrayIndexOutOfBoundsException`
   - `StringIndexOutOfBoundsException`
-- `IllegalArgumentException` : An unchecked exception in Java that is thrown to indicate an illegal or unsuitable argument passed to a method. It is one of the most common exceptions that occur in Java
-- InputMismatchException
+- `IllegalArgumentException` : An unchecked exception in Java that is thrown to indicate an illegal or unsuitable argument passed to a method. It is one of the most common exceptions that occur in Java.
+- `InputMismatchException`
 
 > ***NOTE:*** Often, these three categories are broken down into checked and unchecked classifications—error and runtime exceptions are grouped together as unchecked, which, per their name, are not checked at compile time and can result in runtime errors.
 
@@ -2419,10 +2520,120 @@ If no handler is found, Java exits this method, passes the exception to the meth
 
 If no handler is found in the chain of methods being invoked, the program terminates and prints an error message on the console. The process of finding a handler is called *catching an exception*.
 
-> ***NOTE:*** 
-> 1. Various exception classes can be derived from a common superclass. If a `catch` block catches exception objects of a superclass, it can catch all the exception objects of the subclasses of that superclass
->
-> 2. The order in which exceptions are specified in `catch` blocks is important. A ompile error will result if a `catch` block for a superclass type appears before a `catch` block for a subclass type.
+## Catching exception of `Throwable` sub-classes and super-classes
+
+Various exception classes can be derived from a common super-class. For e.g., `ArithmeticException` is a sub-class of `RuntimeException`, which in-turn is a sub-class of `Exception`.
+
+If a `catch` block catches exception objects of a super-class, it can catch all the exception objects of the sub-classes of that super-class, i.e, a `catch` block for `Exception` objects can also handle `RuntimeException` objects.
+
+So, the order in which exceptions are specified in `catch` blocks is important, when we have sub-classes and super-classes of exceptions involved.
+
+A compile error will result if a `catch` block for a super-class type appears before a `catch` block for a sub-class type.
+
+Not allowed (Compile-time/Checked Exception):
+```java
+try {
+  ...
+}
+catch (Exception e){
+  ...
+  ...
+}
+catch (RuntimeException e){
+  ...
+  ...
+}
+catch (ArithmeticException e){
+  ...
+  ...
+}
+```
+
+Allowed:
+```java
+try {
+  ...
+}
+catch (ArithmeticException e){ // sub-class of RuntimeException
+  ... 
+  ...
+}
+catch (RuntimeException e){ // sub-class of Exception
+  ...
+  ...
+}
+catch (Exception e){ // base-class
+  ...
+  ...
+}
+```
+
+---
+
+## `finally` block
+
+- This block executes irrespective of whether exception occurs in `try` block. 
+- The `finally` block executes even if there is a return statement prior to reaching the `finally` block
+- We can omit `catch` block, when we use `finally` block with a `try` block.
+
+Syntax:
+
+```java
+try {
+  System.out.println("inside try block");
+  
+  // This does not throw any exception
+  System.out.println(34 / 2);
+
+  // But, this does
+  System.out.println(1 / 0);
+}
+// Executes because of the second print command
+catch (ArithmeticException e) {
+  System.out.println("Arithmetic Exception");
+}
+// Executes always
+finally {
+  System.out.println("finally : I execute always.");
+}
+System.out.println("Exception handled, so I am executing.");
+
+```
+Output:
+```
+17
+Arithmetic Exception
+finally : I execute always.
+Exception handled, so I am executing.
+```
+
+Even if the exception is not handled, the `finally` block will be executed, but the statements after the `try-catch-finally` won't be.
+
+```java
+try {
+  System.out.println("inside try block");
+
+  // This throws an exception
+  System.out.println(1 / 0);
+}
+// Executes because of the second print command
+catch (IllegalArgumentException e) {
+  System.out.println("Arithmetic Exception");
+}
+// Executes always
+finally {
+  System.out.println("finally : I execute always.");
+}
+
+System.out.println("Exception NOT handled, so I did not execute.");
+```
+
+Output:
+```
+inside try block
+finally : I execute always.
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+```
 
 ---
 
@@ -2430,7 +2641,7 @@ If no handler is found in the chain of methods being invoked, the program termin
 
 The Java `throws` keyword is used to declare an exception. It gives an information to the programmer that there may occur an exception. So, it is better for the programmer to provide the exception handling code so that the normal flow of the program can be maintained.
 
-Exception Handling is mainly used to handle the checked exceptions. If there occurs any unchecked exception such as NullPointerException, it is programmers' fault that he is not checking the code before it being used.
+Exception Handling is mainly used to handle the checked exceptions. If there occurs any unchecked exception such as `NullPointerException`, it is programmer's fault that he is not checking the code before it is being used.
 
 Syntax of Java `throws`
 ```java
@@ -2438,12 +2649,53 @@ return_type method_name() throws exception_class_name {
 //method code  
 }
 ```  
-- Which exception should be declared?
+### Which exception should be declared?
   
-  Checked exception only, because:
+Checked exception only, because:
 
-  unchecked exception: under our control so we can correct our code.
-  error: beyond our control. For example, we are unable to do anything if there occurs VirtualMachineError or StackOverflowError.
+- Unchecked Exception: Under our control so we can correct our code.
+- Error: Beyond our control. For example, we are unable to do anything if there occurs `VirtualMachineError` or `StackOverflowError`.
+
+### Practical specialities of declaring an exception
+
+If we specify that a particular member function `throws` an exception, the compiler just expects a `catch` block.
+
+It doesn't matter whether we are handling the type of the declared exception or not.
+
+For example, this code-snippet is correct:
+```java
+public class Main { 
+  static void method() throws IllegalArgumentException {
+      System.out.println(1 / 0);
+  }
+
+  public static void main(String[] args) {
+    try {
+      method();
+      System.out.println("After the method call");
+    }
+    catch (ArithmeticException ex) {
+      System.out.println("This is an ArithmeticException");
+    }
+  }
+}
+```
+
+Even though we have declared that the method `method` throws `IllegalArgumentException`, we need not handle for that exception. 
+
+In actuality, that block is throwing `ArithmeticException` which we have handled, so the output is:
+```
+This is an ArithmeticException
+```
+
+---
+
+## Contexts of Exceptions
+
+- *Built-in* exception and *built-in* handler: The type of error and the handler for the exxception is already defined.
+- *User-defined* exception and *built-in* handler.
+- *Built-in* exception and *user-defined* handler: This does not occur.
+- *User-defined* exception and *user-defined* handler.
 
 ---
 
