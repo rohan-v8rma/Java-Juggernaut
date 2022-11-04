@@ -165,15 +165,30 @@
     - [Some important characteristics](#some-important-characteristics)
     - [Autoclosing files opened by `PrintWriter` using `try-with-resources` block](#autoclosing-files-opened-by-printwriter-using-try-with-resources-block)
   - [Reading files using `Scanner` class](#reading-files-using-scanner-class)
-- [Binary Files](#binary-files)
+- [Binary Files vs. Text Files](#binary-files-vs-text-files)
+- [Binary I/O Classes](#binary-io-classes)
+  - [`FileInputStream`/`FileOutputStream`](#fileinputstreamfileoutputstream)
+    - [Combining `Scanner`/`PrintWriter` with `FileInputStream`/`FileOutputStream`](#combining-scannerprintwriter-with-fileinputstreamfileoutputstream)
+    - [Using `getBytes()` method with `FileInputStream`/`FileOutputStream`](#using-getbytes-method-with-fileinputstreamfileoutputstream)
+  - [`FilterInputStream`/`FilterOutputStream`](#filterinputstreamfilteroutputstream)
+  - [`DataInputStream`/`DataOutputStream`](#datainputstreamdataoutputstream)
+    - [`DataOutputStream` member functions](#dataoutputstream-member-functions)
+    - [`DataInputStream` member functions](#datainputstream-member-functions)
+  - [`BufferInputStream`/`BufferOutputStream`](#bufferinputstreambufferoutputstream)
+  - [`ObjectInputStream`/`ObjectOutputStream`](#objectinputstreamobjectoutputstream)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
-  - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
-  - [`split()` NON-STATIC method for splitting a string using specific delimiters](#split-non-static-method-for-splitting-a-string-using-specific-delimiters)
-  - [`replace()` NON-STATIC method to replace characters OR sub-strings in a String](#replace-non-static-method-to-replace-characters-or-sub-strings-in-a-string)
-  - [`substring()` NON-STATIC method for obtaining sub-strings restricted by index position inside a String](#substring-non-static-method-for-obtaining-sub-strings-restricted-by-index-position-inside-a-string)
-  - [`indexOf()` NON-STATIC method for obtaining starting index positions of sub-strings OR characters in a String](#indexof-non-static-method-for-obtaining-starting-index-positions-of-sub-strings-or-characters-in-a-string)
-  - [`toCharArray()` NON-STATIC method for obtaining a character array containing all characters of a String](#tochararray-non-static-method-for-obtaining-a-character-array-containing-all-characters-of-a-string)
-  - [`trim()` NON-STATIC method for removing leading and trailing whitespaces from a string](#trim-non-static-method-for-removing-leading-and-trailing-whitespaces-from-a-string)
+  - [For Strings](#for-strings)
+    - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
+    - [`split()` NON-STATIC method for splitting a string using specific delimiters](#split-non-static-method-for-splitting-a-string-using-specific-delimiters)
+    - [`replace()` NON-STATIC method to replace characters OR sub-strings in a String](#replace-non-static-method-to-replace-characters-or-sub-strings-in-a-string)
+    - [`substring()` NON-STATIC method for obtaining sub-strings restricted by index position inside a String](#substring-non-static-method-for-obtaining-sub-strings-restricted-by-index-position-inside-a-string)
+    - [`indexOf()` NON-STATIC method for obtaining starting index positions of sub-strings OR characters in a String](#indexof-non-static-method-for-obtaining-starting-index-positions-of-sub-strings-or-characters-in-a-string)
+    - [`toCharArray()` NON-STATIC method for obtaining a character array containing all characters of a String](#tochararray-non-static-method-for-obtaining-a-character-array-containing-all-characters-of-a-string)
+    - [`trim()` NON-STATIC method for removing leading and trailing whitespaces from a string](#trim-non-static-method-for-removing-leading-and-trailing-whitespaces-from-a-string)
+    - [`getBytes()` NON-STATIC method for obtaining the byte array of a string](#getbytes-non-static-method-for-obtaining-the-byte-array-of-a-string)
+  - [For `Integer`s](#for-integers)
+    - [`Integer.parseInt(String s)` STATIC method](#integerparseintstring-s-static-method)
+    - [`Integer.toString(int a)` STATIC method](#integertostringint-a-static-method)
 - [TODO](#todo)
 
 <!-- TOC -->
@@ -3121,14 +3136,18 @@ while(inputStream.hasNext()) {
 
 ---
 
-# Binary Files
+# Binary Files vs. Text Files
 
 Although it is not technically precise and correct, you can envision a text file as consisting of a sequence of characters and a binary file as consisting of a sequence of bits. 
+
+- Character stream is used for text IO and uses 16 bits at one time.
+- Byte stream is used for binary IO and uses 8 bits at a time.
 
 Characters in a text file are encoded using a character encoding scheme such as ASCII or Unicode. 
 
 For example, the decimal integer 199 is stored as a sequence of three characters 1, 9, 9 in a text file, and the same integer is stored as a byte-type value C7 in a binary file, because decimal 
 199 equals hex C7 (199 = 12 * 161 + 7). 
+
 
 The advantage of binary files is that they are more efficient to process than text files. 
 
@@ -3136,11 +3155,269 @@ There are many I/O classes for various purposes. In general, these can be classi
 - An input class contains the methods to read data. Scanner is an example of an input class.
 - An output class contains the methods to write data. PrintWriter is an example of an output class,
 
+
+# Binary I/O Classes
+
+The design of the Java I/O classes is a good example of applying inheritance, where common operations are generalized in superclasses, and subclasses provide specialized operations.
+
+![](./images/binary-io-classes.png)
+
+- The abstract `InputStream` is the root class for reading binary data.
+  ![](./images/input-stream.png)
+
+- The abstract `OutputStream` is the root class for writing binary data.
+  ![](./images/output-stream.png)
+
+## `FileInputStream`/`FileOutputStream`
+
+`FileInputStream`/`FileOutputStream` is for reading/writing bytes from/to files.
+
+- A `java.io.FileNotFoundException` will occur if you attempt to create a `FileInputStream` with a non-existent file.
+
+  ![](images/file-input-stream.png)
+
+- In case of `FileOutputStream`, if the file does not exist, a new file will be created. 
+
+  If file already exists, the first two constructors listed below will delete the current content of the file.
+
+  To append the data to the existing file, use either of the last 2 constructors, and pass `true` as the `append` parameter.
+
+  ![](images/file-output-stream.png)
+
+Look at the following example of `FileInputStream` and `FileOutputStream`
+
+```java
+try (
+    FileOutputStream output = new FileOutputStream("/home/rohan/txt-files/temp.dat");
+) {
+    for(int index = 1; index <= 10; index++) {
+        output.write(index);
+    }
+}
+
+try (
+    FileInputStream input = new FileInputStream("/home/rohan/txt-files/temp.dat");
+) {
+    int value;
+    while((value = input.read()) != -1) {
+        System.out.println(value + " ");
+    }
+}
+```
+
+- `write(int b)` method writes the specified byte to the `output` object. 
+  
+  The parameter `b` is an `int` value. `(byte)b` is written to the output stream, with an error being thrown if the integer parameter is too large to be converted to `byte`.
+
+- `read()` method reads the next byte of data from the input stream. 
+
+  The value byte is returned as an `int` value in the range 0 to 255. 
+  
+  If no byte is available because the end of the stream has been reached, the value –1 is returned, which is why we are comparing with -1 as the condition for the while-loop.
+
+### Combining `Scanner`/`PrintWriter` with `FileInputStream`/`FileOutputStream`
+
+```java
+try (
+    PrintWriter output = new PrintWriter(new FileOutputStream("/home/rohan/txt-files/temp.dat"));
+) {
+    output.println("Hello");
+    output.println("World");
+}
+
+try (
+    Scanner input = new Scanner(new FileInputStream("/home/rohan/txt-files/temp.dat"));
+) {
+    System.out.println(input.nextLine());
+    System.out.println(input.nextLine());
+}
+```
+
+Output:
+```
+Hello
+World
+```
+
+### Using `getBytes()` method with `FileInputStream`/`FileOutputStream`
+
+```java
+try (
+    FileOutputStream output = new FileOutputStream("/home/rohan/txt-files/hello.txt");
+) {
+    String s = "abcd";
+    int a = 12;
+    
+    output.write(s.getBytes());
+    output.write(Integer(a).toString().getBytes());
+}
+try (
+    FileInputStream input = new FileInputStream("/home/rohan/txt-files/hello.txt");
+) {
+    int value = input.read();
+    while(value != -1) {
+        System.out.println(value);
+        value = input.read();
+    }
+}
+```
+
+## `FilterInputStream`/`FilterOutputStream`
+
+Filter streams are streams that filter bytes for some purpose. 
+
+The basic byte input stream (`InputStream`/`FileInputStream` class) provides a `read` method that can be used only for reading bytes. 
+
+If you want to read integers, doubles, or strings, you need a filter class to wrap the byte input stream. 
+
+Using a filter class enables you to read integers, doubles, and strings instead of bytes and characters. 
+
+`FilterInputStream` and `FilterOutputStream` are the base classes for filtering data. 
+
+When you need to process primitive numeric types, use `DataInputStream` and `DataOutputStream` to filter bytes.
+
+## `DataInputStream`/`DataOutputStream`
+
+Constructors are the following:
+```
+public DataInputStream(InputStream instream)
+public DataOutputStream(OutputStream outstream)
+```
+So, we need to pass `FileInputStream`/`FileOutputStream` objects to the constructor.
+
+Creating objects:
+```java
+DataInputStream input = new DataInputStream(new FileInputStream("in.dat"));
+DataOutputStream output = new DataOutputStream(new FileOutputStream("out.dat"));
+```
+
+`DataInputStream`/`FileInputStream` and `DataOutputStream`/`FileOutputStream` work in a pipe line. So, we have to read data in the same order and format in which they are stored.
+
+![](images/data-pipeline.png)
+
+For example:
+```java
+try {
+  try ( // Create an output stream for file temp.dat
+    DataOutputStream output = new DataOutputStream(new FileOutputStream("temp.dat"));
+  ) {
+  // Write student test scores to the file
+    output.writeUTF("John");
+    output.writeDouble(85.5);
+    output.writeUTF("Jim");
+    output.writeDouble(185.5);
+    output.writeUTF("George");
+    output.writeDouble(105.25);
+  }
+
+  try ( // Create an input stream for file temp.dat
+  DataInputStream input = new DataInputStream(new FileInputStream("temp.dat"));
+  ) {
+  // Read student test scores from the file
+    System.out.println(input.readUTF() + " " + input.readDouble());
+    System.out.println(input.readUTF() + " " + input.readDouble());
+    System.out.println(input.readUTF() + " " + input.readDouble());
+  }
+}
+catch (EOFException ex) {
+  System.out.println("All data were read.");
+}
+```
+
+- For `FileInputStream`/`FileOutputStream` where data is in the form of byte values (0-255), the end-of-file is indicated by -1 value.
+- In this case, we need a try-catch to catch the end-of-file exception because the data can be stored in any form, including negative integers, so -1 CANNOT indicate end-of-file. 
+
+### `DataOutputStream` member functions
+
+![](images/data-output-stream.png)
+
+### `DataInputStream` member functions
+
+![](images/data-input-stream.png)
+
+## `BufferInputStream`/`BufferOutputStream`
+
+`BufferedInputStream`/`BufferedOutputStream` can be used to speed up input and output by reducing the number of disk reads and writes. 
+
+- Using `BufferedInputStream`, the whole block of data on the disk is read into the buffer in the memory once. 
+
+  The individual data are then delivered to your program from the buffer.
+- Using `BufferedOutputStream`, the individual data are first written to the buffer in the memory. 
+ 
+  When the buffer is full, all data in the buffer are written to the disk once.
+
+> ***NOTE:*** If no buffer size is specified, the default size is 512 bytes.
+
+`BufferInputStream`/`BufferOutputStream` inherit the methods of [`FileInputStream`/`FileOutputStream`](#fileinputstreamfileoutputstream), meaning we can only `read()` and `write()` from it, and not `readUTF()`, `writeUTF()`, which is a member function of [`DataInputStream`/`DataOutputStream`](#datainputstreamdataoutputstream).
+
 ---
+
+## `ObjectInputStream`/`ObjectOutputStream`
+
+They can be used to read/write serializable objects.
+
+- `DataInputStream`/`DataOutputStream` enables you to perform I/O for primitive-type values and strings. 
+- ObjectInputStream/ObjectOutputStream enables you to perform I/O 
+for objects in addition to primitive-type values and strings. 
+
+Since `ObjectInputStream`/`ObjectOutputStream` contains all the functions of `DataInputStream`/`DataOutputStream`, you can replace `DataInputStream`/`DataOutputStream` completely 
+with `ObjectInputStream`/`ObjectOutputStream`.
+
+Example code:
+```java
+try (
+    ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream("/home/rohan/txt-files/temp.dat"));
+) {
+    output.writeUTF("John");
+    output.writeUTF("885.5");
+    output.writeObject(new java.util.Date());
+}
+try (
+    ObjectInputStream input = new ObjectInputStream(new FileInputStream("/home/rohan/txt-files/temp.dat"));
+) {
+    System.out.println(input.readUTF());
+    System.out.println(Double.parseDouble(input.readUTF()));
+    System.out.println(input.readObject());
+}
+```
+
+Not every object can be written to an output stream. Objects that can be so written are saidto be **serializable**. A **serializable** object is an instance of the `java.io.Serializable` interface, so the object’s class must implement Serializable.
+
+An array is serializable if all its elements are serializable. An entire array can be saved into a file using `writeObject` and later can be restored using `readObject`.
+
+Static variables are not properties of objects so they don't have to be declared `transient`, as they are not serialized into files.
+
+```java
+import java.io.*;
+public class hello {
+    public static void main(String[] args) throws IOException {
+        try ( 
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream("object.dat")); 
+        ){
+            output.writeObject(new A());
+        }catch(NotSerializableException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+}
+class A implements Serializable {
+    transient B b = new B();
+}
+
+class B{
+}
+```
+
+---
+
+
+1 byte = 8 bits = 0 - 255 = 2 digits of hex
 
 # Important Useful Methods in Java
 
-## `charAt()` NON-STATIC method for selecting a single character in a string
+## For Strings
+
+### `charAt()` NON-STATIC method for selecting a single character in a string
 
 Unlike C++, where we can use regular indexing to access a specific character in a variable of `std::string` type, like this: 
 
@@ -3173,7 +3450,7 @@ h
 104
 ```
 
-## `split()` NON-STATIC method for splitting a string using specific delimiters
+### `split()` NON-STATIC method for splitting a string using specific delimiters
 
 The declaration of the `split` method in the `java.lang.String` class looks like:
 ```java
@@ -3197,7 +3474,7 @@ Output:
 [geekss, for, geekss]
 ```
 
-## `replace()` NON-STATIC method to replace characters OR sub-strings in a String
+### `replace()` NON-STATIC method to replace characters OR sub-strings in a String
 
 The declaration of the `replace()` method in the `java.lang.String` class has 2 overloads:
 
@@ -3210,7 +3487,7 @@ This method returns a new `String` object containing the replacements.
 
 Make sure to assign its output to original string to ensure changes in it.
 
-## `substring()` NON-STATIC method for obtaining sub-strings restricted by index position inside a String
+### `substring()` NON-STATIC method for obtaining sub-strings restricted by index position inside a String
 
 The declaration of the `substring()` method in the `java.lang.String` class has 2 overloads:
 
@@ -3223,7 +3500,7 @@ Parameters:
 - startIndex: inclusive
 - endIndex: exclusive
 
-## `indexOf()` NON-STATIC method for obtaining starting index positions of sub-strings OR characters in a String
+### `indexOf()` NON-STATIC method for obtaining starting index positions of sub-strings OR characters in a String
 
 The declaration of the `indexOf()` method in the `java.lang.String` class has 4 overloads:
 
@@ -3241,7 +3518,7 @@ Parameters:
 
 This method returns an `int` value, representing the index of the first occurrence of the character in the string, or -1 if it never occurs.
 
-## `toCharArray()` NON-STATIC method for obtaining a character array containing all characters of a String
+### `toCharArray()` NON-STATIC method for obtaining a character array containing all characters of a String
 
 There is one declaration of the `toCharArray()` method in the `java.lang.String` class:
 
@@ -3251,7 +3528,7 @@ public char[] toCharArray();
 
 This method returns a newly allocated character array.
 
-## `trim()` NON-STATIC method for removing leading and trailing whitespaces from a string
+### `trim()` NON-STATIC method for removing leading and trailing whitespaces from a string
 
 There is one declaration of the `trim()` method in the `java.lang.String` class:
 
@@ -3260,6 +3537,23 @@ public String trim();
 ```
 
 This method returns the "trimmed" `String`.
+
+### `getBytes()` NON-STATIC method for obtaining the byte array of a string
+
+The declaration of the `getBytes()` method we are concerned with in `java.lang.String` class is:
+
+```java
+public byte[] getBytes();
+```
+
+This method returns a byte array of the `String`.
+
+## For `Integer`s
+
+### `Integer.parseInt(String s)` STATIC method 
+
+### `Integer.toString(int a)` STATIC method
+
 
 # TODO 
 
