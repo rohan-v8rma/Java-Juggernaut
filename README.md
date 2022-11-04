@@ -148,7 +148,7 @@
   - [Catching Exceptions](#catching-exceptions)
   - [Catching exception of `Throwable` sub-classes and super-classes](#catching-exception-of-throwable-sub-classes-and-super-classes)
   - [`finally` block](#finally-block)
-  - [`throws` keyword](#throws-keyword)
+  - [Declaration of exceptions that may be thrown using `throws` keyword](#declaration-of-exceptions-that-may-be-thrown-using-throws-keyword)
     - [Which exception should be declared?](#which-exception-should-be-declared)
     - [Practical specialities of declaring an exception](#practical-specialities-of-declaring-an-exception)
   - [Contexts of Exceptions](#contexts-of-exceptions)
@@ -156,6 +156,16 @@
   - [Rethrowing Exceptions](#rethrowing-exceptions)
   - [Chained Exceptions](#chained-exceptions)
   - [User-defined exceptions](#user-defined-exceptions)
+- [File Handling](#file-handling)
+  - [`File` class of Java](#file-class-of-java)
+    - [Information about a `File` object](#information-about-a-file-object)
+    - [Member functions of `File` class](#member-functions-of-file-class)
+    - [Renaming a file using `renameTo()` NON-static member function](#renaming-a-file-using-renameto-non-static-member-function)
+  - [`PrintWriter` class in Java (for writing text data to a file)](#printwriter-class-in-java-for-writing-text-data-to-a-file)
+    - [Some important characteristics](#some-important-characteristics)
+    - [Autoclosing files opened by `PrintWriter` using `try-with-resources` block](#autoclosing-files-opened-by-printwriter-using-try-with-resources-block)
+  - [Reading files using `Scanner` class](#reading-files-using-scanner-class)
+- [Binary Files](#binary-files)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
   - [`split()` NON-STATIC method for splitting a string using specific delimiters](#split-non-static-method-for-splitting-a-string-using-specific-delimiters)
@@ -163,6 +173,7 @@
   - [`substring()` NON-STATIC method for obtaining sub-strings restricted by index position inside a String](#substring-non-static-method-for-obtaining-sub-strings-restricted-by-index-position-inside-a-string)
   - [`indexOf()` NON-STATIC method for obtaining starting index positions of sub-strings OR characters in a String](#indexof-non-static-method-for-obtaining-starting-index-positions-of-sub-strings-or-characters-in-a-string)
   - [`toCharArray()` NON-STATIC method for obtaining a character array containing all characters of a String](#tochararray-non-static-method-for-obtaining-a-character-array-containing-all-characters-of-a-string)
+  - [`trim()` NON-STATIC method for removing leading and trailing whitespaces from a string](#trim-non-static-method-for-removing-leading-and-trailing-whitespaces-from-a-string)
 - [TODO](#todo)
 
 <!-- TOC -->
@@ -1529,7 +1540,7 @@ Suppose we have a user-defined class `Student`.
   Student[] studentArray; 
   ```
 
-- CREATING the array OBJECT and assigning it to the reference variable `intArray`. All elements are [initialized](#default-initialization-value-for-int-arrays) with value `0`.
+- CREATING the array OBJECT and assigning it to the reference variable `studentArray`. All elements are [initialized](#default-initialization-value-of-objects-or-types-that-are-objects) as `NULL` pointers.
 
   ```java
   studentArray = new Student[5]
@@ -1590,10 +1601,12 @@ If the array contains other arrays as elements, the array is displayed with the 
 
 ```java
 int[] arr = {1, 2, 3};
-System.out.println(Arrays.toString(arr))
+System.out.println(Arrays.toString(arr));
 ```
 
-We use the `toString` method of `Array` class to convert the array into a `String` to print an array because `prinln` method doesn't take arrays as arguments.
+We use the `toString` method of `Array` class to convert the array into a `String` to print an array. 
+
+This is because if try passing the `arr` object to `prinln`, indirectly invoking its `toString` method, we will be shown the [hash-code](#hashcode-of-an-object) of the `arr` object.
 
 #### Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`
 
@@ -2441,7 +2454,12 @@ These are exceptions that are checked by the compiler at compile time. These exc
 - `ArrayIndexOutOfBoundsException`
 
 - `ClassNotFoundException` : Attempt to use a class that does not exist. This exception would occur, for example, if you tried to run a nonexistent class using the java command, or if your program were composed of, say, three class files, only two of which could be found.
-- `IOException` : Related to input/output operations, such as invalid input, reading past the end of a file, and opening a nonexistent file. Examples of subclasses of `IOException` are `InterruptedIOException`, `EOFException` (EOF is short for End of File), and `FileNotFoundException`.
+
+- `IOException` : Related to input/output operations, such as invalid input, reading past the end of a file, and opening a nonexistent file. Examples of subclasses of `IOException` are:
+  - `InterruptedIOException`
+  - `EOFException` (EOF is short for End of File) 
+  - `FileNotFoundException`
+
 - `Unchecked`
 
 ### Runtime Throwables
@@ -2640,9 +2658,9 @@ Exception in thread "main" java.lang.ArithmeticException: / by zero
 
 ---
 
-## `throws` keyword
+## Declaration of exceptions that may be thrown using `throws` keyword
 
-The Java `throws` keyword is used to declare an exception. It gives an information to the programmer that there may occur an exception. So, it is better for the programmer to provide the exception handling code so that the normal flow of the program can be maintained.
+The Java `throws` keyword is used to declare an exception, that may be thrown. It gives an information to the programmer that there may occur an exception, so it must be handled wherever that function is called.
 
 Exception Handling is mainly used to handle the checked exceptions. If there occurs any unchecked exception such as `NullPointerException`, it is programmer's fault that he is not checking the code before it is being used.
 
@@ -2964,6 +2982,162 @@ public class userDefinedException extends Exception {
 
 ---
 
+# File Handling 
+
+## `File` class of Java 
+
+- The `File` class is intended to provide an abstraction that deals with most of the machine-dependent complexities of files and path names in a machine-independent fashion. 
+- It contains the methods for obtaining file and directory properties and for renaming and deleting files and directories.  - However, the `File` class does not contain the methods for reading and writing file contents.
+
+The file name is a string. 
+
+The `File` class is a wrapper class for the file name and its directory path. 
+
+For example, `new File("c:\\book")` creates a `File` object for the directory `c:\book`, and `new File("c:\\book\\test.dat")` creates a File object for the file `c:\book\test.dat`, both on Windows. 
+
+The `File` class’s `isDirectory()` method to check whether the object represents a directory, and the `isFile()` method to 
+check whether the object represents a file.
+
+> ***NOTE:*** The directory separator for Windows is a backslash (`\`). 
+> 
+> The backslash is a special character in Java and should be written as `\\` in a string literal.
+
+### Information about a `File` object
+
+Constructing a `File` class instance does not create a file on the machine. 
+
+A `File` instance can be created for any file name regardless whether it exists or not. 
+
+The `exists()` method can be invoked on a `File` instance to check whether the file exists.
+
+### Member functions of `File` class
+
+![](images/File-class-member-functions.png)
+
+### Renaming a file using `renameTo()` NON-static member function
+
+We can rename a file actually existing in our file system, using `renameTo()` NON-static member function.
+
+If the file is successfully renamed, the function returns `true`.
+
+If there is an error in the renaming of the file, the function returns `false`.
+
+```java
+// create an abstract pathname (File object)
+File f = new File("/home/rohan/not-renamed.txt");
+
+// create the destination file object
+File dest = new File("/home/rohan/has-been-renamed.txt");
+
+// check if the file can be renamed
+// to the abstract path name
+if (f.renameTo(dest)) {
+
+    // display that the file is renamed
+    // to the abstract path name
+    System.out.println("File is renamed");
+}
+else {
+    // display that the file cannot be renamed
+    // to the abstract path name
+    System.out.println("File cannot be renamed");
+}
+System.out.println(f.getName());
+```
+
+There are two important concepts related to this method:
+1. The file which is being renamed actually has to exist in the file system of your machine.
+2. The name of the `File` object `f` is NOT changed. The file is represented by the `File` object `dest` after renaming.
+
+---
+
+## `PrintWriter` class in Java (for writing text data to a file)
+
+The `java.io.PrintWriter` class can be used to create a file and write data to a text file.
+
+The `print`, `println` and `printf` methods can be invoked on the `PrintWriter` object to write data to a file.
+
+![](/images/PrintWriter-class-member-functions.png)
+
+### Some important characteristics
+
+- Unlike the `File` class, where it wasn't mandatory for the file to exist in order to create an object representing it, the constructor of `PrintWriter` class has a declaration of `throws FileNotFoundException`, so we either need to put the call to the constructor within a `try-catch` block, or mention that the function that we call it inside i.e, `psvm` (the main method), also throws `FileNotFoundException`. 
+  
+  In the second case, since the call to `psvm` is done internally by JVM, the error handling becomes the responsibility of JVM, since it is the caller.
+
+- If the file represented by the `File` object doesn't exist, it is created when the `PrintWriter` constructor is called. If the file already exists, the current content of the file will be discarded without verifying with the user.
+
+- It is important to use the `close()` method to close the file, opened using the `PrintWriter` class, so that our changes get saved. Otherwise, our file will be empty upon termination of the program, irrespective of its original contents.
+
+### Autoclosing files opened by `PrintWriter` using `try-with-resources` block
+
+The keyword `try`, followed by creation and declaration of resources. The resources are enclosed in the parentheses. 
+
+> ***NOTE:*** A resource must be declared and created in the same. *Multiple* resources can be declared and created inside the parentheses. 
+
+The resources must be a sub-type of `AutoCloseable` such as a `PrinterWriter` that has the `close()` method. 
+
+The statements in the block immediately following the resource declaration use the resource. 
+
+After the block is finished, the resource’s `close()` method is automatically invoked to close the resource. 
+
+Using `try-with-resources` can not only avoid errors but also make the code simpler.
+
+```java
+public static void main(String[] args) throws FileNotFoundException { 
+  File fileObject = new File("/home/rohan/txt-files/hello.txt");
+
+  if(fileObject.exists()) {
+    System.out.println("File already exists.");
+    System.exit(0);
+  }
+
+  try (
+    PrintWriter outputStream = new PrintWriter(fileObject)
+    ) {
+    outputStream.printf("Hello world, your lucky number is %d\n", 20);
+    outputStream.println("Sorry bruh");
+  }
+
+}
+```
+
+---
+
+## Reading files using `Scanner` class
+
+System.out.println(inputStream.next());
+
+The following code reads the complete file:
+```java
+File fileObject = new File("/home/rohan/txt-files/hello.txt");
+
+Scanner inputStream = new Scanner(fileObject);
+
+while(inputStream.hasNext()) {
+    System.out.println(inputStream.next());
+}
+```
+
+---
+
+# Binary Files
+
+Although it is not technically precise and correct, you can envision a text file as consisting of a sequence of characters and a binary file as consisting of a sequence of bits. 
+
+Characters in a text file are encoded using a character encoding scheme such as ASCII or Unicode. 
+
+For example, the decimal integer 199 is stored as a sequence of three characters 1, 9, 9 in a text file, and the same integer is stored as a byte-type value C7 in a binary file, because decimal 
+199 equals hex C7 (199 = 12 * 161 + 7). 
+
+The advantage of binary files is that they are more efficient to process than text files. 
+
+There are many I/O classes for various purposes. In general, these can be classified as input classes and output classes.
+- An input class contains the methods to read data. Scanner is an example of an input class.
+- An output class contains the methods to write data. PrintWriter is an example of an output class,
+
+---
+
 # Important Useful Methods in Java
 
 ## `charAt()` NON-STATIC method for selecting a single character in a string
@@ -3076,6 +3250,16 @@ public char[] toCharArray();
 ```
 
 This method returns a newly allocated character array.
+
+## `trim()` NON-STATIC method for removing leading and trailing whitespaces from a string
+
+There is one declaration of the `trim()` method in the `java.lang.String` class:
+
+```java
+public String trim();
+```
+
+This method returns the "trimmed" `String`.
 
 # TODO 
 
