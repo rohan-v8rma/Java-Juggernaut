@@ -143,7 +143,7 @@
     - [Runtime Throwables](#runtime-throwables)
       - [Errors at run-time (external)](#errors-at-run-time-external)
       - [Exceptions at run-time (internal)](#exceptions-at-run-time-internal)
-  - [`toString()` overloaded definition of `Throwable` class](#tostring-overloaded-definition-of-throwable-class)
+  - [`toString()` pre-defined overloaded definition of `Throwable` class](#tostring-pre-defined-overloaded-definition-of-throwable-class)
   - [More than one exception in `try` block](#more-than-one-exception-in-try-block)
   - [Catching Exceptions](#catching-exceptions)
   - [Catching exception of `Throwable` sub-classes and super-classes](#catching-exception-of-throwable-sub-classes-and-super-classes)
@@ -165,6 +165,9 @@
     - [Some important characteristics](#some-important-characteristics)
     - [Autoclosing files opened by `PrintWriter` using `try-with-resources` block](#autoclosing-files-opened-by-printwriter-using-try-with-resources-block)
   - [Reading files using `Scanner` class](#reading-files-using-scanner-class)
+  - [`FileReader`/`FileWriter`](#filereaderfilewriter)
+    - [Difference between `FileWriter` and `PrintWriter`](#difference-between-filewriter-and-printwriter)
+    - [Difference between `FileReader` and `Scanner`](#difference-between-filereader-and-scanner)
 - [Binary Files vs. Text Files](#binary-files-vs-text-files)
 - [Binary I/O Classes](#binary-io-classes)
   - [`FileInputStream`/`FileOutputStream`](#fileinputstreamfileoutputstream)
@@ -176,6 +179,8 @@
     - [`DataInputStream` member functions](#datainputstream-member-functions)
   - [`BufferInputStream`/`BufferOutputStream`](#bufferinputstreambufferoutputstream)
   - [`ObjectInputStream`/`ObjectOutputStream`](#objectinputstreamobjectoutputstream)
+- [ArrayLists](#arraylists-1)
+  - [- `size()` : Returns the number of elements in this list.](#--size--returns-the-number-of-elements-in-this-list)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [For Strings](#for-strings)
     - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
@@ -858,6 +863,10 @@ A class declared as `public` has the above characteristics along with the abilit
 
 ### Calling of Parent CONSTRUCTOR upon instantiating child class
 
+The call to `super()` or `this()`, (a call to a constructor of a super-class or an overloaded constructor) has to be the first line of the constructor. 
+
+The compiler implicitly provides a non-argument call to `super` at the first line of your constructor code. The `super()` constructor, (either default or parameterized) must be called to create an object.
+
 Take a look at the following code-snippet, where the class `B` inherits from `A` and both of them have explicitly defined default constructors.
 
 ```java
@@ -897,7 +906,7 @@ Default constructor of B.
 
 As we can see, the default constructor of `B`'s parent `A`, is called as well when `B` is instantiated.
 
-We can change this behavior by ***explicitly*** calling a specific constructor of the parent, inside the child's constructor.
+We can change this behavior by ***explicitly*** calling a specific parameterized `super` constructor of the parent, inside the child's constructor.
 
 ```java
 class A {
@@ -2369,7 +2378,7 @@ catch (ArithmeticException xception) {
 
 - The `throw` statement is analogous to a method call, but instead of calling a method, it calls a `catch` block. In this sense, a `catch` block is like a method definition with a parameter that matches the type of the value being thrown. 
 
-  Unlike a method, however, after the catch block is executed, the pr*ogram control does not return to the throw statement; instead, it executes the next statement after the catch block.
+  Unlike a method, however, after the catch block is executed, the program control does not return to the throw statement; instead, it executes the next statement after the catch block.
 
 ## Advantage of using Exception Handling 
 
@@ -2453,8 +2462,7 @@ So, if we EXPLICITLY throw an exception using `throw` keyword, we need to keep t
 
 ![](images/throwables-in-java.png)
 
-The class names `Error`, `Exception`, and `RuntimeException` are somewhat con-
-fusing. All three of these classes are exceptions, and all of the errors occur at runtime, except `Error` which has some sub-classes that represents exceptions *checked* at run-time.
+The class names `Error`, `Exception`, and `RuntimeException` are somewhat confusing. All three of these classes are exceptions, and all of the errors occur at runtime, except `Error` which has some sub-classes that represents exceptions *checked* at run-time.
 
 `RuntimeException`, `Error`, and their subclasses are known as *unchecked exceptions*.
 
@@ -2464,13 +2472,11 @@ Java exceptions can be broken down into one of three categories:
 
 ### Compile-time `Throwable`s (Checked Exceptions)
 
-These are exceptions that are checked by the compiler at compile time. These exceptions must be caught by a try/catch in the code or noted as thrown by the method. For instance, if a program attempts to access a file that is currently unavailable, the method to access the file must either catch or throw a FileNotFoundException.
+These are exceptions that are checked by the compiler at compile time. These exceptions must be caught by a try/catch in the code or [*declared* as thrown by the method, using [`throws` keyword](#declaration-of-exceptions-that-may-be-thrown-using-throws-keyword). For instance, if a program attempts to access a file that is currently unavailable, the method to access the file must either catch or throw a `FileNotFoundException`.
 
-- `ArrayIndexOutOfBoundsException`
+- `ClassNotFoundException` : Attempt to use a class that does not exist. This exception would occur, for example, if you tried to run a non-existent class using the java command, or if your program were composed of, say, three class files, only two of which could be found.
 
-- `ClassNotFoundException` : Attempt to use a class that does not exist. This exception would occur, for example, if you tried to run a nonexistent class using the java command, or if your program were composed of, say, three class files, only two of which could be found.
-
-- `IOException` : Related to input/output operations, such as invalid input, reading past the end of a file, and opening a nonexistent file. Examples of subclasses of `IOException` are:
+- `IOException` : Related to input/output operations, such as invalid input, reading past the end of a file, and opening a non-existent file. Examples of subclasses of `IOException` are:
   - `InterruptedIOException`
   - `EOFException` (EOF is short for End of File) 
   - `FileNotFoundException`
@@ -2481,16 +2487,14 @@ These are exceptions that are checked by the compiler at compile time. These exc
 
 #### Errors at run-time (external)
 
-Errors are exceptions that happen externally to your Java program. One common example of the error is when the Java virtual machine (JVM) runs out of memory, which will throw an OutOfMemoryError.
+Errors are exceptions that happen externally to your Java program. One common example of the error is when the Java virtual machine (JVM) runs out of memory, which will throw an `OutOfMemoryError`.
 
-- `LinkageError` : A class has some dependency on another class, but the latter class has
-changed incompatibly after the compilation of the former class.
-- `VirtualMachineError` : The JVM is broken or has run out of the resources it needs in order to
-continue operating.
+- `LinkageError` : A class has some dependency on another class, but the latter class has changed incompatibly after the compilation of the former class.
+- `VirtualMachineError` : The JVM is broken or has run out of the resources it needs in order to continue operating.
 
 #### Exceptions at run-time (internal)
 
-Run-time exceptions are internal to your application but are not typically recoverable. For example, an object that is expected to have a value but is actually null. In this case, a NullPointerException exception would be thrown.
+Run-time exceptions are internal to your application but are not typically recoverable. For example, an object that is expected to have a value but is actually null. In this case, a `NullPointerException` exception would be thrown.
 
 - `ArithmeticException` : Dividing an integer by zero. Note that floating-point arithmetic does not throw exceptions.
 - `NullPointerException` : Attempt to access an object through a null reference variable.
@@ -2499,10 +2503,11 @@ Run-time exceptions are internal to your application but are not typically recov
   - `StringIndexOutOfBoundsException`
 - `IllegalArgumentException` : An unchecked exception in Java that is thrown to indicate an illegal or unsuitable argument passed to a method. It is one of the most common exceptions that occur in Java.
 - `InputMismatchException`
+- `ClassCastException` : Occurs when an object of parent class is cast to its child class. It can also occur when casting occurs between two classes that don't have any relationship. 
 
 > ***NOTE:*** Often, these three categories are broken down into checked and unchecked classifications—error and runtime exceptions are grouped together as unchecked, which, per their name, are not checked at compile time and can result in runtime errors.
 
-## `toString()` overloaded definition of `Throwable` class
+## `toString()` pre-defined overloaded definition of `Throwable` class
 
 ```java
 public String toString() {
@@ -2760,7 +2765,7 @@ Checked exception only, because:
 
 ### Practical specialities of declaring an exception
 
-If we specify that a particular member function `throws` an exception, the compiler just expects a `catch` block.
+If we specify that a member function `throws` an exception, the compiler just expects us to enclose any call to that particular member function inside a `try` block, and follow it up with a `catch` block.
 
 It doesn't matter whether we are handling the type of the declared exception or not.
 
@@ -2794,7 +2799,7 @@ This is an ArithmeticException
 
 ## Contexts of Exceptions
 
-- *Built-in* exception and *built-in* handler: The type of error and the handler for the exxception is already defined.
+- *Built-in* exception and *built-in* handler: The type of error and the handler for the exception is already defined.
 - *User-defined* exception and *built-in* handler.
 - *Built-in* exception and *user-defined* handler: This does not occur. TODO: Why?
 - *User-defined* exception and *user-defined* handler.
@@ -2899,7 +2904,7 @@ In the preceding section, the catch block rethrows the original exception.
 
 Sometimes, one may need to throw a new exception (with additional information) along with the original exception. 
 
-This is called chained exceptions. 
+This is referred to as chaining exceptions. 
 
 Constructor syntax for chaining exceptions is as follows. 
 ```java
@@ -2933,7 +2938,8 @@ public class chainedException {
     catch(Exception ex) {
       System.out.println(ex.getMessage());
 
-      // This returns the Throwable which caused the current exception
+      // getCause returns the Throwable which caused the current exception. 
+      // The pre-defined toString function is called over here.
       System.out.println(ex.getCause()); 
 
       // The message of the cause Throwable
@@ -2981,7 +2987,7 @@ public class userDefinedException extends Exception {
   public static void main(String[] args) {
     try {
       try {
-        Exception cause = new Exception("YO wsssup, this is XCEPTTION.");
+        Exception cause = new Exception("YO wsssup, this is an EXCEPTION.");
         throw cause;
       }
       catch (Exception cause) {
@@ -3002,7 +3008,7 @@ public class userDefinedException extends Exception {
 ## `File` class of Java 
 
 - The `File` class is intended to provide an abstraction that deals with most of the machine-dependent complexities of files and path names in a machine-independent fashion. 
-- It contains the methods for obtaining file and directory properties and for renaming and deleting files and directories.  - However, the `File` class does not contain the methods for reading and writing file contents.
+- It contains the methods for obtaining file and directory properties and for renaming and deleting files and directories. However, the `File` class does not contain the methods for reading and writing file contents.
 
 The file name is a string. 
 
@@ -3136,6 +3142,91 @@ while(inputStream.hasNext()) {
 
 ---
 
+## `FileReader`/`FileWriter`
+
+Java `FileWriter` class of java.io package is used to write data in character form to file. 
+
+Java `FileWriter` class is used to write character-oriented data to a file
+
+### Difference between `FileWriter` and `PrintWriter`
+
+1. Methods
+   - `FileWriter` has only a basic set of methods such as:
+     - ```java
+       public void write (int c) throws IOException
+       ```
+       Writes a single character.
+
+     - ```java
+       public void write (char [] charArray) throws IOException 
+        ```
+        Writes an array of characters.
+
+     - ```java
+       public void write(String str) throws IOException
+       ```
+       Writes a string.
+     
+     - ```java
+       public void write(String str, int off, int len)throws IOException 
+       ```
+       Writes a portion of a string. Here `off` is offset from which to start writing characters and `len` is the number of characters to write.
+      
+   - `PrintWriter` has a number of convenient methods such as `print`, `println` and `printf`, that have working similar to java's printing functions.
+2. Exception Handling 
+   - `FileWriter` [throws](#declaration-of-exceptions-that-may-be-thrown-using-throws-keyword) `IOException` in case of any IO failure.
+   - None of the `PrintWriter` methods throws `IOException`, instead they set a boolean flag which can be obtained using `checkError()`.
+3. Overrwriting vs. Appending
+   - With `FileWriter`, you can append text to the end of an existing file, using the following syntax:
+      ```java
+      FileWriter outputStream = new FileWriter("MyFriends.txt", true); 
+      ```
+
+      The second argument is a boolean value which is the "append" parameter. `true` represents appending and `false` represents overrwriting.
+   - With PrintWriter you cannot, unless you wrap a `PrintWriter` over a `FileWriter`, like so:
+      ```java
+      PrintWriter outputStream = new PrintWriter(new FileWriter("in.txt", true));
+      ```
+
+
+### Difference between `FileReader` and `Scanner`
+
+- `FileReader` is just a `Reader` which reads a file, using the platform-default encoding.
+
+  `FileReader`'s `read` method only read's ASCII values of characters and -1 signifies EOF. 
+  
+  It doesn't throw an exception while reading after reaching EOF.
+
+  ```java
+  FileReader inputStream = new FileReader(fileObj);
+
+  int readCharacter = inputStream.read();
+  
+  while(readCharacter != -1) {
+      System.out.println((char)readCharacter);
+      readCharacter = inputStream.read();
+  }
+
+  inputStream.close();
+  ```
+
+
+- `Scanner` reads from a variety of different sources, but is typically used for interactive input.
+
+  All of `Scanner`'s methods throw exceptions if there are no more tokens to read, leading to usage of `hasNext` method being a necessity:
+
+  ```java
+  Scanner inputStream = new Scanner(fileObject);
+
+  while(inputStream.hasNext()) {
+      System.out.print(inputStream.next());
+  }
+
+  inputStream.close();
+  ```
+
+---
+
 # Binary Files vs. Text Files
 
 Although it is not technically precise and correct, you can envision a text file as consisting of a sequence of characters and a binary file as consisting of a sequence of bits. 
@@ -3170,7 +3261,9 @@ The design of the Java I/O classes is a good example of applying inheritance, wh
 
 ## `FileInputStream`/`FileOutputStream`
 
-`FileInputStream`/`FileOutputStream` is for reading/writing bytes from/to files.
+`FileInputStream`/`FileOutputStream` is for reading/writing byte-by-byte from/to files.
+
+> **_NOTE:_** In the case of [`FileReader`/`FileWriter`](#filereaderfilewriter), we read/write character-by-character from/to files, instead of byte-by-byte.
 
 - A `java.io.FileNotFoundException` will occur if you attempt to create a `FileInputStream` with a non-existent file.
 
@@ -3410,6 +3503,13 @@ class B{
 
 ---
 
+# ArrayLists
+
+- `add(int index, Object element)` : This method is used to insert a specific element at a specific position index in a list.
+- `clear()` :	This method is used to remove all the elements from any list.
+- `clone()` :	This method is used to return a shallow copy of an ArrayList.
+- `size()` : Returns the number of elements in this list.
+---
 
 1 byte = 8 bits = 0 - 255 = 2 digits of hex
 
