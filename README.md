@@ -182,6 +182,7 @@
     - [`DataInputStream` member functions](#datainputstream-member-functions)
   - [`BufferInputStream`/`BufferOutputStream`](#bufferinputstreambufferoutputstream)
   - [`ObjectInputStream`/`ObjectOutputStream`](#objectinputstreamobjectoutputstream)
+    - [`transient` keyword](#transient-keyword)
 - [ArrayLists](#arraylists-1)
   - [- `size()` : Returns the number of elements in this list.](#--size--returns-the-number-of-elements-in-this-list)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
@@ -3545,11 +3546,9 @@ Constructors are the following:
 They can be used to read/write serializable objects.
 
 - `DataInputStream`/`DataOutputStream` enables you to perform I/O for primitive-type values and strings. 
-- ObjectInputStream/ObjectOutputStream enables you to perform I/O 
-for objects in addition to primitive-type values and strings. 
+- `ObjectInputStream`/`ObjectOutputStream` enables you to perform I/O for objects in addition to primitive-type values and strings. 
 
-Since `ObjectInputStream`/`ObjectOutputStream` contains all the functions of `DataInputStream`/`DataOutputStream`, you can replace `DataInputStream`/`DataOutputStream` completely 
-with `ObjectInputStream`/`ObjectOutputStream`.
+Since `ObjectInputStream`/`ObjectOutputStream` contains all the functions of `DataInputStream`/`DataOutputStream`, you can replace `DataInputStream`/`DataOutputStream` completely with `ObjectInputStream`/`ObjectOutputStream`.
 
 Example code:
 ```java
@@ -3574,6 +3573,12 @@ Not every object can be written to an output stream. Objects that can be so writ
 
 An array is serializable if all its elements are serializable. An entire array can be saved into a file using `writeObject` and later can be restored using `readObject`.
 
+### `transient` keyword
+
+If an object is an instance of `Serializable` but contains non0serializable instance data fields, it cannot be serialize. 
+
+To enable the object to be serialized, these data fields can be marked with the `transient` keyword to tell the JVM to ignore them when writing the object to an object stream.
+
 Static variables are not properties of objects so they don't have to be declared `transient`, as they are not serialized into files.
 
 ```java
@@ -3584,7 +3589,7 @@ public class hello {
             ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream("object.dat")); 
         ){
             output.writeObject(new A());
-        }catch(NotSerializableException ex){
+        } catch(NotSerializableException ex) {
             System.out.println(ex.getMessage());
         }
     }
