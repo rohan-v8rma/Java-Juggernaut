@@ -175,6 +175,7 @@
     - [Using `getBytes()` method with `FileInputStream`/`FileOutputStream`](#using-getbytes-method-with-fileinputstreamfileoutputstream)
   - [`FilterInputStream`/`FilterOutputStream`](#filterinputstreamfilteroutputstream)
   - [`DataInputStream`/`DataOutputStream`](#datainputstreamdataoutputstream)
+    - [`available()` method of `DataInputStream` class vs. catching `EOFException`](#available-method-of-datainputstream-class-vs-catching-eofexception)
     - [`DataOutputStream` member functions](#dataoutputstream-member-functions)
     - [`DataInputStream` member functions](#datainputstream-member-functions)
   - [`BufferInputStream`/`BufferOutputStream`](#bufferinputstreambufferoutputstream)
@@ -3372,7 +3373,7 @@ When you need to process primitive numeric types, use `DataInputStream` and `Dat
 ## `DataInputStream`/`DataOutputStream`
 
 Constructors are the following:
-```
+```java
 public DataInputStream(InputStream instream)
 public DataOutputStream(OutputStream outstream)
 ```
@@ -3388,37 +3389,60 @@ DataOutputStream output = new DataOutputStream(new FileOutputStream("out.dat"));
 
 ![](images/data-pipeline.png)
 
-For example:
-```java
-try {
-  try ( // Create an output stream for file temp.dat
-    DataOutputStream output = new DataOutputStream(new FileOutputStream("temp.dat"));
-  ) {
-  // Write student test scores to the file
-    output.writeUTF("John");
-    output.writeDouble(85.5);
-    output.writeUTF("Jim");
-    output.writeDouble(185.5);
-    output.writeUTF("George");
-    output.writeDouble(105.25);
-  }
-
-  try ( // Create an input stream for file temp.dat
-  DataInputStream input = new DataInputStream(new FileInputStream("temp.dat"));
-  ) {
-  // Read student test scores from the file
-    System.out.println(input.readUTF() + " " + input.readDouble());
-    System.out.println(input.readUTF() + " " + input.readDouble());
-    System.out.println(input.readUTF() + " " + input.readDouble());
-  }
-}
-catch (EOFException ex) {
-  System.out.println("All data were read.");
-}
-```
+### `available()` method of `DataInputStream` class vs. catching `EOFException`
 
 - For `FileInputStream`/`FileOutputStream` where data is in the form of byte values (0-255), the end-of-file is indicated by -1 value.
 - In this case, we need a try-catch to catch the end-of-file exception because the data can be stored in any form, including negative integers, so -1 CANNOT indicate end-of-file. 
+- OR, we can use the `available()` method which returns the number of bytes that can be read from the input stream. When this method returns 0, we can stop reading.
+
+```java
+try {
+    try ( // Create an output stream for file temp.dat
+          DataOutputStream output = new DataOutputStream(new FileOutputStream("temp.dat"));
+    ) {
+        // Write student test scores to the file
+        output.writeUTF("John");
+        output.writeDouble(85.5);
+        output.writeUTF("Jim");
+        output.writeDouble(185.5);
+        output.writeUTF("George");
+        output.writeDouble(105.25);
+    }
+
+    try ( // Create an input stream for file temp.dat
+          DataInputStream input = new DataInputStream(new FileInputStream("temp.dat"));
+    ) {
+        // Read student test scores from the file
+        while(input.available() != 0) {
+            System.out.println(input.readUTF() + " " + input.readDouble());
+        }
+        System.out.println();
+    }
+    
+    try ( // Create an input stream for file temp.dat
+          DataInputStream input = new DataInputStream(new FileInputStream("temp.dat"));
+    ) {
+        while(true) {
+            System.out.println(input.readUTF() + " " + input.readDouble());
+        }
+    }
+}
+catch (EOFException ex) {
+    System.out.println("All data was read.");
+}
+```
+
+Output:
+```
+John 85.5
+Jim 185.5
+George 105.25
+
+John 85.5
+Jim 185.5
+George 105.25
+All data was read.
+```
 
 ### `DataOutputStream` member functions
 
@@ -3465,6 +3489,7 @@ try (
     output.writeUTF("885.5");
     output.writeObject(new java.util.Date());
 }
+
 try (
     ObjectInputStream input = new ObjectInputStream(new FileInputStream("/home/rohan/txt-files/temp.dat"));
 ) {
@@ -3474,7 +3499,7 @@ try (
 }
 ```
 
-Not every object can be written to an output stream. Objects that can be so written are saidto be **serializable**. A **serializable** object is an instance of the `java.io.Serializable` interface, so the object’s class must implement Serializable.
+Not every object can be written to an output stream. Objects that can be so written are said to be **serializable**. A **serializable** object is an instance of the `java.io.Serializable` interface, so the object’s class must implement Serializable.
 
 An array is serializable if all its elements are serializable. An entire array can be saved into a file using `writeObject` and later can be restored using `readObject`.
 
