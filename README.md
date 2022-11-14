@@ -168,6 +168,8 @@
   - [`FileReader`/`FileWriter`](#filereaderfilewriter)
     - [Difference between `FileWriter` and `PrintWriter`](#difference-between-filewriter-and-printwriter)
     - [Difference between `FileReader` and `Scanner`](#difference-between-filereader-and-scanner)
+  - [`BufferedReader`/`BufferedWriter`](#bufferedreaderbufferedwriter)
+    - [`BufferedWriter` vs. `FileWriter`](#bufferedwriter-vs-filewriter)
 - [Binary Files vs. Text Files](#binary-files-vs-text-files)
 - [Binary I/O Classes](#binary-io-classes)
   - [`FileInputStream`/`FileOutputStream`](#fileinputstreamfileoutputstream)
@@ -3226,6 +3228,46 @@ Java `FileWriter` class is used to write character-oriented data to a file
   inputStream.close();
   ```
 
+## `BufferedReader`/`BufferedWriter`
+
+Constructors are the following:
+- `BufferedReader` 
+  - ```java
+    public BufferedReader(Reader in)
+    ```
+    Creates a buffering character-input stream that uses a default-sized input buffer.
+
+  - ```java
+    public BufferedReader(Reader in, int sz)
+    ```
+    Creates a buffering character-input stream that uses an input buffer of `sz` characters.
+
+- `BufferedWriter` 
+  - ```java
+    public BufferedWriter(Writer in)
+    ```
+    Creates a buffering character-output stream that uses a default-sized output buffer.
+
+  - ```java
+    public BufferedWriter(Writer in, int sz)
+    ```
+    Creates a buffering character-output stream that uses an output buffer of `sz` characters.
+
+> **_NOTE:_** In case of `BufferedReader`/`BufferedWriter`, buffer size is specified in terms of **characters**. 
+> 
+> Whereas, in the case of [`BufferedInputStream`/`BufferedOutputStream`](#bufferinputstreambufferoutputstream), buffer size is specified in terms of **bytes**.
+
+Methods of `BufferedReader` & `BufferedWriter` are same as `FileReader` & `FileWriter`.
+
+### `BufferedWriter` vs. `FileWriter`
+
+`BufferedWriter` is more efficient. 
+
+- It saves up small writes and writes in one larger chunk. 
+- If one has to do lots of small writes, it would be better to use `BufferedWriter`. 
+- Calling write calls to the OS which is slow so having as few writes as possible is usually desirable.
+
+
 ---
 
 # Binary Files vs. Text Files
@@ -3453,6 +3495,35 @@ All data was read.
 ![](images/data-input-stream.png)
 
 ## `BufferInputStream`/`BufferOutputStream`
+
+Constructors are the following:
+- `BufferedInputStream` 
+  - ```java
+    public BufferedInputStream(InputStream in)
+    ```
+    Creates a buffering byte-input stream that uses a default-sized input buffer.
+
+  - ```java
+    public BufferedInputStream(InputStream in, int sz)
+    ```
+    Creates a buffering byte-input stream that uses an input buffer of `sz` bytes.
+
+- `BufferedOutputStream` 
+  - ```java
+    public BufferedOutputStream(OutputStream in)
+    ```
+    Creates a buffering byte-output stream that uses a default-sized output buffer.
+
+  - ```java
+    public BufferedOutputStream(OutputStream in, int sz)
+    ```
+    Creates a buffering byte-output stream that uses an output buffer of `sz` bytes.
+
+> **_NOTE:_** In case of `BufferedInputStream`/`BufferedOutputStream`, buffer size is specified in terms of **bytes**.
+> 
+> Whereas, in the case of [`BufferedReader`/`BufferedWriter`](#bufferedreaderbufferedwriter), buffer size is specified in terms of **characters**. 
+> 
+> 
 
 `BufferedInputStream`/`BufferedOutputStream` can be used to speed up input and output by reducing the number of disk reads and writes. 
 
