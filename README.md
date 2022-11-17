@@ -92,7 +92,6 @@
     - [`java.util.Arrays`:](#javautilarrays)
       - [Printing an Array `java.util.Arrays.toString(Object[] arr)`](#printing-an-array-javautilarraystostringobject-arr)
       - [Copying a portion of an Array `java.util.Arrays.copyOfRange(Object[] arr, int from, int to)`](#copying-a-portion-of-an-array-javautilarrayscopyofrangeobject-arr-int-from-int-to)
-  - [ArrayLists](#arraylists)
   - [Objects](#objects)
     - [Default Initialization value of Objects or types that are Objects](#default-initialization-value-of-objects-or-types-that-are-objects)
     - [Hashcode of an Object](#hashcode-of-an-object)
@@ -183,8 +182,9 @@
   - [`BufferInputStream`/`BufferOutputStream`](#bufferinputstreambufferoutputstream)
   - [`ObjectInputStream`/`ObjectOutputStream`](#objectinputstreamobjectoutputstream)
     - [`transient` keyword](#transient-keyword)
-- [ArrayLists](#arraylists-1)
-  - [- `size()` : Returns the number of elements in this list.](#--size--returns-the-number-of-elements-in-this-list)
+- [Generics (similar to templates in C++)](#generics-similar-to-templates-in-c)
+- [ArrayLists](#arraylists)
+  - [Code-snippet demonstrating ArrayList methods:](#code-snippet-demonstrating-arraylist-methods)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [For Strings](#for-strings)
     - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
@@ -1644,61 +1644,6 @@ The parameters of this method are:
 - Original array (`Object[] arr`) from which a range is to be copied
 - Initial index (`int from`) of the range to be copied
 - Final index (`int to`) of the range to be copied, **EXCLUSIVE**.
-
----
-
-## ArrayLists
-
-Code-snippet demonstrating ArrayList methods:
-
-```java
-import java.util.ArrayList;
-
-public class Main {
-    public static void main(String[] args) {
-        ArrayList<Integer> intArrayList = new ArrayList<Integer>();
-        ArrayList<String> stringArrayList = new ArrayList<String>();
-        ArrayList<Character> characterArrayList = new ArrayList<Character>();
-
-        System.out.println(intArrayList);
-
-        // Adding an element
-        intArrayList.add(13);
-        intArrayList.add(23);
-        intArrayList.add(33);
-        intArrayList.add(43);
-        System.out.println(intArrayList);
-
-        // Loop through an array list
-        for(int index = 0; index < intArrayList.size(); index++) {
-            System.out.println(intArrayList.get(index));
-        }
-
-        // Adding an element at a specific index
-        intArrayList.add(1, 5);
-        System.out.println(intArrayList);
-
-        // Getting the number at a specific index position
-        System.out.println(intArrayList.get(0));
-
-        // Setting the value of a specific index position (replacing, not adding)
-        intArrayList.set(0, 4);
-        System.out.println(intArrayList);
-
-        // Removing the value at a specific index position
-        intArrayList.remove(1);
-        System.out.println(intArrayList);
-
-        // Clearing the ArrayList
-        intArrayList.clear();
-        System.out.println(intArrayList);
-    
-    }
-
-}
-
-```
-
 
 ---
 
@@ -3604,12 +3549,67 @@ class B{
 
 ---
 
+# Generics (similar to templates in C++)
+
+
+
+
+---
+
 # ArrayLists
 
 - `add(int index, Object element)` : This method is used to insert a specific element at a specific position index in a list.
 - `clear()` :	This method is used to remove all the elements from any list.
 - `clone()` :	This method is used to return a shallow copy of an ArrayList.
 - `size()` : Returns the number of elements in this list.
+
+## Code-snippet demonstrating ArrayList methods:
+
+```java
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Integer> intArrayList = new ArrayList<Integer>();
+        ArrayList<String> stringArrayList = new ArrayList<String>();
+        ArrayList<Character> characterArrayList = new ArrayList<Character>();
+
+        System.out.println(intArrayList);
+
+        // Adding an element
+        intArrayList.add(13);
+        intArrayList.add(23);
+        intArrayList.add(33);
+        intArrayList.add(43);
+        System.out.println(intArrayList);
+
+        // Loop through an array list
+        for(int index = 0; index < intArrayList.size(); index++) {
+            System.out.println(intArrayList.get(index));
+        }
+
+        // Adding an element at a specific index
+        intArrayList.add(1, 5);
+        System.out.println(intArrayList);
+
+        // Getting the number at a specific index position
+        System.out.println(intArrayList.get(0));
+
+        // Setting the value of a specific index position (replacing, not adding)
+        intArrayList.set(0, 4);
+        System.out.println(intArrayList);
+
+        // Removing the value at a specific index position
+        intArrayList.remove(1);
+        System.out.println(intArrayList);
+
+        // Clearing the ArrayList
+        intArrayList.clear();
+        System.out.println(intArrayList);
+    }
+}
+```
+
 ---
 
 1 byte = 8 bits = 0 - 255 = 2 digits of hex
