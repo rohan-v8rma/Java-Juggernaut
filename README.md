@@ -212,7 +212,7 @@ Java is partially modeled on C++, but greatly simplified and improved.
 
 For instance, pointers and multiple inheritance often make programming complicated. Java replaces the multiple inheritance in C++ with a simple language construct called an interface, and eliminates pointers. 
 
-> **_NOTE_**: Although Java doesn't provide the facility of pointer mutation to programmers, it does use pointer internally (in the form of [hashcodes](#hashcode-of-an-object)), as suggested by [this](https://www.javadude.com/articles/passbyvalue.htm) article.
+> ***Note***: Although Java doesn't provide the facility of pointer mutation to programmers, it does use pointer internally (in the form of [hashcodes](#hashcode-of-an-object)), as suggested by [this](https://www.javadude.com/articles/passbyvalue.htm) article.
 
 Java uses automatic memory allocation and [garbage collection](#garbage-collector), whereas C++ requires the programmer to allocate memory and collect garbage. 
 
@@ -266,7 +266,7 @@ But this cannot be done in Java.
 
   This process is known as Finalization in Java.
   
-  > **_NOTE_**: Clean-up activity means closing the resources associated with that object like Database Connection, Network Connection, or we can say resource de-allocation. 
+  > ***Note***: Clean-up activity means closing the resources associated with that object like Database Connection, Network Connection, or we can say resource de-allocation. 
   
   Once the `finalize()` method completes, the Garbage Collector immediately destroys that object. 
 
@@ -322,7 +322,7 @@ Multiple inheritance is the capability of creating a single class with multiple 
 
 Unlike C++, java doesn't provide support for multiple inheritance in classes because it makes the rules about function overloads and virtual dispatch decidedly more tricky, as well as the language implementation around object layouts. 
 
-> **_NOTE_**: Multiple Inheritance would mean one class would extend one or more classes.
+> ***Note***: Multiple Inheritance would mean one class would extend one or more classes.
 
 These impact language designers/implementors quite a bit, and raise the already high bar to get a language done, stable and adopted.
 
@@ -651,7 +651,7 @@ For attributes, methods and constructors, you can use the one of the following:
 | `protected` |	The code is accessible in the same package and sub-classes (derived classes). If you do not make a sub-class inside another package, it cannot be accessed from outside the package. |
 
 
-> **_NOTE_**: There can be only one public class in a single java file. 
+> ***Note***: There can be only one public class in a single java file. 
 >
 > Let's take an example to understand this. A and B are public classes defined in the same file, and the file name say `A.java`.
 >
@@ -695,7 +695,7 @@ Suppose we have a class `Base` and a class `Sub` that derives from it.
 
 As shown in the example under the previous heading, we can assign the object of a class to the reference variable of its ***superclass***.
 
-> **_NOTE_**: This can be done because the constructor of the class implicitly calls the constructor of its ***superclass***.
+> ***Note***: This can be done because the constructor of the class implicitly calls the constructor of its ***superclass***.
 
 ### Downcasting in Java (NOT possible directly)
 
@@ -787,7 +787,7 @@ The `final` keyword in Java, has 3 purposes:
   }
   ```
 
-> **_NOTE_**: If a [non-primitive](#non-primitive-data-types-in-java) variable is kept as final, the [hashcode](#hashcode-of-an-object) stored in it will stay constant, but the value of the variable, stored in the heap may be changed.
+> ***Note***: If a [non-primitive](#non-primitive-data-types-in-java) variable is kept as final, the [hashcode](#hashcode-of-an-object) stored in it will stay constant, but the value of the variable, stored in the heap may be changed.
 
 #### `final` method
 
@@ -819,7 +819,7 @@ In Java, as in other object-oriented programming languages, classes can be deriv
  
 In fact, in Java, all classes must be derived from some class. 
 
-> **_NOTE_**: If a class doesn't have a parent defined *explicitly*, [`java.lang.Object`](#javalangobject-class) class is implicitly defined as its superclass.
+> ***Note***: If a class doesn't have a parent defined *explicitly*, [`java.lang.Object`](#javalangobject-class) class is implicitly defined as its superclass.
 
 ### `java.lang.Object` class
 
@@ -1040,7 +1040,7 @@ class Student {
 }  
 ```
 
-> **_Note_**: Call to `this()` must be the first statement in constructor.
+> ***Note***: Call to `this()` must be the first statement in constructor.
 >
 > Otherwise, we would get the following error:
 > ```
@@ -1139,7 +1139,7 @@ When we create an object of a wrapper class, it contains a field and in this fie
 
 In other words, we can wrap a primitive value using a wrapper class object built for that specific primitive data type.
 
-> **_NOTE_**: All primitive wrapper classes (`Integer`, `Byte`, `Long`, `Float`, `Double`, `Character`, `Boolean` and `Short`) are **IMMUTABLE**, because they are [`final`](#final-keyword) classes. 
+> ***Note***: All primitive wrapper classes (`Integer`, `Byte`, `Long`, `Float`, `Double`, `Character`, `Boolean` and `Short`) are **IMMUTABLE**, because they are [`final`](#final-keyword) classes. 
 >
 > They replicate the behaviour of primitives. 
 > 
@@ -1151,7 +1151,7 @@ In other words, we can wrap a primitive value using a wrapper class object built
 
 - They convert primitive data types into objects.   
   
-  > **_NOTE_**: However, we cannot change the value of the primitive wrapped by the Wrapper Class object, once the Wrapper Class object has been created.
+  > ***Note***: However, we cannot change the value of the primitive wrapped by the Wrapper Class object, once the Wrapper Class object has been created.
   >
   > This is unlike regular Objects, whose members can be modified after their creation.
 
@@ -1369,7 +1369,7 @@ When another reference variable is assigned the same string value during the sam
 
 This is verified by doing equality comparison between the [hashcodes](#hashcode-of-an-object) of the strings below.
 
-> **_Note_**: As mentioned below, under [Hashcode of an Object](#hashcode-of-an-object), `Object`s are uniquely identified by hashcodes, pointed to by their reference variables. 
+> ***Note***: As mentioned below, under [Hashcode of an Object](#hashcode-of-an-object), `Object`s are uniquely identified by hashcodes, pointed to by their reference variables. 
 > 
 > Two reference variables point to the same object only when they store the same hashcodes.
 
@@ -1576,7 +1576,7 @@ Suppose we have a user-defined class `Student`.
   // where it signifies that it is an array of 5 `Student` reference variables.
   ```
 
-  > **_Note_**: This array OBJECT (`Student[5]`) contains a reference variable at its each index position, which can point to objects of `Student` class. 
+  > ***Note***: This array OBJECT (`Student[5]`) contains a reference variable at its each index position, which can point to objects of `Student` class. 
   >
   > THESE reference variables don't point to any objects YET. 
   >
@@ -1666,7 +1666,7 @@ Upon the creation of a new object, the java compiler gives it a unique code know
 
 It is a numeric representation of an object's contents so as to provide an alternate mechanism to loosely identify it.
 
-> **_Note_**: The object's values are not represented by the hashcode, only the storage location is.
+> ***Note***: The object's values are not represented by the hashcode, only the storage location is.
 > 
 > What that means is when the values of the object's data members are changed, the hashcode remains the same.
 
@@ -2085,7 +2085,7 @@ Dynamic Method Dispatch is based on the concept of [***upcasting***](#upcasting-
 
 When an overridden method is called through a superclass reference, Java determines which version(superclass/subclasses) of that method is to be executed based upon the type of the object being referred to (not the type of the reference variable) at the time the call occurs. 
 
-> **_NOTE_**: It is not possible to use Dynamic Method Dispatch without the superclass having a definition of the method.
+> ***Note***: It is not possible to use Dynamic Method Dispatch without the superclass having a definition of the method.
 
 Thus, this determination is made at run-time.
 
@@ -2142,7 +2142,7 @@ Inside B's display() method.
 Inside C's display() method.
 ```
 
-> **_NOTE_**: The `@Override` annotation assures that the subclass method is overriding the parent class method. 
+> ***Note***: The `@Override` annotation assures that the subclass method is overriding the parent class method. 
 > 
 > If it is not so, compile time error occurs.
 >
@@ -2454,7 +2454,7 @@ Run-time exceptions are internal to your application but are not typically recov
 - `InputMismatchException`
 - `ClassCastException` : Occurs when an object of parent class is cast to its child class. It can also occur when casting occurs between two classes that don't have any relationship. 
 
-> **_NOTE_**: Often, these three categories are broken down into checked and unchecked classifications—error and runtime exceptions are grouped together as unchecked, which, per their name, are not checked at compile time and can result in runtime errors.
+> ***Note***: Often, these three categories are broken down into checked and unchecked classifications—error and runtime exceptions are grouped together as unchecked, which, per their name, are not checked at compile time and can result in runtime errors.
 
 ## `toString()` pre-defined overloaded definition of `Throwable` class
 
@@ -2640,7 +2640,7 @@ return_type method_name() throws exception_class_name {
 }
 ```  
 
-> **_NOTE_**: When we declare that a certain function throws an error, we CANNOT handle the error within the function body.
+> ***Note***: When we declare that a certain function throws an error, we CANNOT handle the error within the function body.
 >
 > Won't work:
 > ```java
@@ -2776,7 +2776,7 @@ throw ex;
 ```
 The statement `throw ex` rethrows the exception to the caller so that other handlers in the caller get a chance to process the exception `ex`.
 
-> **_NOTE_**: Rethrowing the exception doesn't mean that the next `catch` block, with the superclass of the current exception, would be executed.
+> ***Note***: Rethrowing the exception doesn't mean that the next `catch` block, with the superclass of the current exception, would be executed.
 > 
 > ![](images/flow-of-try-catch.png)
 >
@@ -2862,7 +2862,7 @@ public Exception(String message, Throwable cause) {
 }
 ```
 
-> **_NOTE_**: This example shows `Exception` class but this type of constructor is defined for other `Throwable` sub-classes as well, like `RuntimeException`, `ArithmeticException`, etcetera.
+> ***Note***: This example shows `Exception` class but this type of constructor is defined for other `Throwable` sub-classes as well, like `RuntimeException`, `ArithmeticException`, etcetera.
 
 ```java
 public class chainedException {
@@ -2968,7 +2968,7 @@ For example, `new File("c:\\book")` creates a `File` object for the directory `c
 The `File` class’s `isDirectory()` method to check whether the object represents a directory, and the `isFile()` method to 
 check whether the object represents a file.
 
-> **_NOTE_**: The directory separator for Windows is a backslash (`\`). 
+> ***Note***: The directory separator for Windows is a backslash (`\`). 
 > 
 > The backslash is a special character in Java and should be written as `\\` in a string literal.
 
@@ -3043,7 +3043,7 @@ The `print`, `println` and `printf` methods can be invoked on the `PrintWriter` 
 
 The keyword `try`, followed by creation and declaration of resources. The resources are enclosed in the parentheses. 
 
-> **_NOTE_**: A resource must be declared and created in the same. *Multiple* resources can be declared and created inside the parentheses. 
+> ***Note***: A resource must be declared and created in the same. *Multiple* resources can be declared and created inside the parentheses. 
 
 The resources must be a sub-type of `AutoCloseable` such as a `PrinterWriter` that has the `close()` method. 
 
@@ -3199,7 +3199,7 @@ Constructors are the following:
     ```
     Creates a buffering character-output stream that uses an output buffer of `sz` characters.
 
-> **_NOTE_**: In case of `BufferedReader`/`BufferedWriter`, buffer size is specified in terms of **characters**. 
+> ***Note***: In case of `BufferedReader`/`BufferedWriter`, buffer size is specified in terms of **characters**. 
 > 
 > Whereas, in the case of [`BufferedInputStream`/`BufferedOutputStream`](#bufferinputstreambufferoutputstream), buffer size is specified in terms of **bytes**.
 
@@ -3252,7 +3252,7 @@ The design of the Java I/O classes is a good example of applying inheritance, wh
 
 `FileInputStream`/`FileOutputStream` is for reading/writing byte-by-byte from/to files.
 
-> **_NOTE_**: In the case of [`FileReader`/`FileWriter`](#filereaderfilewriter), we read/write character-by-character from/to files, instead of byte-by-byte.
+> ***Note***: In the case of [`FileReader`/`FileWriter`](#filereaderfilewriter), we read/write character-by-character from/to files, instead of byte-by-byte.
 
 - A `java.io.FileNotFoundException` will occur if you attempt to create a `FileInputStream` with a non-existent file.
 
@@ -3465,7 +3465,7 @@ Constructors are the following:
     ```
     Creates a buffering byte-output stream that uses an output buffer of `sz` bytes.
 
-> **_NOTE_**: In case of `BufferedInputStream`/`BufferedOutputStream`, buffer size is specified in terms of **bytes**.
+> ***Note***: In case of `BufferedInputStream`/`BufferedOutputStream`, buffer size is specified in terms of **bytes**.
 > 
 > Whereas, in the case of [`BufferedReader`/`BufferedWriter`](#bufferedreaderbufferedwriter), buffer size is specified in terms of **characters**. 
 > 
@@ -3480,7 +3480,7 @@ Constructors are the following:
  
   When the buffer is full, all data in the buffer are written to the disk once.
 
-> **_NOTE_**: If no buffer size is specified, the default size is 512 bytes.
+> ***Note***: If no buffer size is specified, the default size is 512 bytes.
 
 `BufferInputStream`/`BufferOutputStream` inherit the methods of [`FileInputStream`/`FileOutputStream`](#fileinputstreamfileoutputstream), meaning we can only `read()` and `write()` from it, and not `readUTF()`, `writeUTF()`, which is a member function of [`DataInputStream`/`DataOutputStream`](#datainputstreamdataoutputstream).
 
