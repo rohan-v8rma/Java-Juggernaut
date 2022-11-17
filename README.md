@@ -3317,7 +3317,7 @@ The design of the Java I/O classes is a good example of applying inheritance, wh
 
   If file already exists, the first two constructors listed below will delete the current content of the file.
 
-  To append the data to the existing file, use either of the last 2 constructors, and pass `true` as the `append` parameter.
+  To append the data to the existing file, use either of the last 2 constructors, and pass `true` as the `append` parameter, just like [`FileWriter`](#filereaderfilewriter) (used for character-by-character writing).
 
   ![](images/file-output-stream.png)
 
@@ -3548,7 +3548,7 @@ They can be used to read/write serializable objects.
 - `DataInputStream`/`DataOutputStream` enables you to perform I/O for primitive-type values and strings. 
 - `ObjectInputStream`/`ObjectOutputStream` enables you to perform I/O for objects in addition to primitive-type values and strings. 
 
-Since `ObjectInputStream`/`ObjectOutputStream` contains all the functions of `DataInputStream`/`DataOutputStream`, you can replace `DataInputStream`/`DataOutputStream` completely with `ObjectInputStream`/`ObjectOutputStream`.
+Since `ObjectInputStream`/`ObjectOutputStream` contains all the functions of [`DataInputStream`/`DataOutputStream`](#datainputstreamdataoutputstream), you can replace `DataInputStream`/`DataOutputStream` completely with `ObjectInputStream`/`ObjectOutputStream`.
 
 Example code:
 ```java
@@ -3575,7 +3575,7 @@ An array is serializable if all its elements are serializable. An entire array c
 
 ### `transient` keyword
 
-If an object is an instance of `Serializable` but contains non0serializable instance data fields, it cannot be serialize. 
+If an object is an instance of `Serializable` but contains non-serializable instance data fields, it cannot be serialized. 
 
 To enable the object to be serialized, these data fields can be marked with the `transient` keyword to tell the JVM to ignore them when writing the object to an object stream.
 
