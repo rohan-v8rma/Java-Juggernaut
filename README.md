@@ -197,8 +197,11 @@
     - [`ListIterator`](#listiterator)
   - [List](#list)
     - [Methods of List interface](#methods-of-list-interface)
-- [ArrayLists](#arraylists)
-  - [Code-snippet demonstrating ArrayList methods:](#code-snippet-demonstrating-arraylist-methods)
+    - [ArrayLists](#arraylists)
+      - [Code-snippet demonstrating ArrayList methods:](#code-snippet-demonstrating-arraylist-methods)
+- [Maps](#maps)
+  - [Map Interface Methods](#map-interface-methods)
+  - [`HashMap`, `LinkedHashMap` and `TreeMap` methods](#hashmap-linkedhashmap-and-treemap-methods)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [For Strings](#for-strings)
     - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
@@ -3824,18 +3827,18 @@ To create a list, use one of its two concrete classes: `ArrayList` or `LinkedLis
 
 ### Methods of List interface
 
+These methods are common for both `ArrayList` and `LinkedList`.
+
 ![](images/list-methods.png)
 
---- 
-
-# ArrayLists
+### ArrayLists
 
 - `add(int index, Object element)` : This method is used to insert a specific element at a specific position index in a list.
 - `clear()` :	This method is used to remove all the elements from any list.
 - `clone()` :	This method is used to return a shallow copy of an ArrayList.
 - `size()` : Returns the number of elements in this list.
 
-## Code-snippet demonstrating ArrayList methods:
+#### Code-snippet demonstrating ArrayList methods:
 
 ```java
 import java.util.ArrayList;
@@ -3881,6 +3884,34 @@ public class Main {
     }
 }
 ```
+
+---
+
+# Maps
+
+- A map is a container object that stores a collection of key/value pairs. 
+- It enables fast retrieval, deletion, and updating of the value through the key. A map stores the values along with the keys. 
+- The keys are like indexes. In List, the indexes are integers. In Map, the keys can be any objects. 
+- A map cannot contain duplicate keys. Each key maps to one value.
+
+![](images/map-subclasses.png)
+
+You can create a map using one of its three concrete classes: `HashMap`, `LinkedHashMap`, or `TreeMap`.
+
+## Map Interface Methods
+
+These are the methods that are common for `HashMap`, `LinkedHashMap` and `TreeMap`.
+
+![](images/map-interface-methods.png)
+
+## `HashMap`, `LinkedHashMap` and `TreeMap` methods
+
+![](images/map-concrete-classes-methods.png)
+
+- `HashMap` class is efficient for locating a value, inserting an entry, and deleting an entry. The entries in a `HashMap` are not ordered.
+- `LinkedHashMap` extends `HashMap` with a linked-list implementation that supports an ordering of the entries in the map. The entries in a `LinkedHashMap` can be retrieved in: 
+  - *Insertion Order* : The order in which the elements were inserted into the map.
+  - *Access Order* : The order in which they were last accessed, from least recently accessed to most recently accessed.
 
 ---
 
