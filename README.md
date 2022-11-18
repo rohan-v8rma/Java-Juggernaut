@@ -3910,7 +3910,7 @@ These are the methods that are common for `HashMap`, `LinkedHashMap` and `TreeMa
 
 - `HashMap` class is efficient for locating a value, inserting an entry, and deleting an entry. The entries in a `HashMap` are not ordered.
 - `LinkedHashMap` extends `HashMap` with a linked-list implementation that supports an ordering of the entries in the map. The entries in a `LinkedHashMap` can be retrieved in: 
-  - *Insertion Order* : The order in which the elements were inserted into the map.
+  - *Insertion Order* : The order in which the elements were inserted into the map, from inserted first to inserted last.
   - *Access Order* : The order in which they were last accessed, from least recently accessed to most recently accessed.
 
 ---
