@@ -182,7 +182,7 @@
     - [`available()` method of `DataInputStream` class vs. catching `EOFException`](#available-method-of-datainputstream-class-vs-catching-eofexception)
     - [`DataOutputStream` member functions](#dataoutputstream-member-functions)
     - [`DataInputStream` member functions](#datainputstream-member-functions)
-  - [`BufferInputStream`/`BufferOutputStream`](#bufferinputstreambufferoutputstream)
+  - [`BufferedInputStream`/`BufferedOutputStream`](#bufferedinputstreambufferedoutputstream)
   - [`ObjectInputStream`/`ObjectOutputStream`](#objectinputstreamobjectoutputstream)
     - [`transient` keyword](#transient-keyword)
 - [`Comparable` interface](#comparable-interface)
@@ -2619,7 +2619,8 @@ catch (Exception e){ // base-class
 ## `finally` block
 
 - This block executes irrespective of whether exception occurs in `try` block. 
-- The `finally` block executes even if there is a return statement prior to reaching the `finally` block
+- The `finally` block executes even if there is a return statement prior to reaching the `finally` block.
+- It executed even if the exception is not handled by the `catch` blocks.
 - We can omit `catch` block, when we use `finally` block with a `try` block.
 
 Syntax:
@@ -3257,9 +3258,9 @@ Constructors are the following:
 
 > ***Note***: In case of `BufferedReader`/`BufferedWriter`, buffer size is specified in terms of **characters**. 
 > 
-> Whereas, in the case of [`BufferedInputStream`/`BufferedOutputStream`](#bufferinputstreambufferoutputstream), buffer size is specified in terms of **bytes**.
+> Whereas, in the case of [`BufferedInputStream`/`BufferedOutpuedtStream`](#bufferinputstreambufferoutputstream), buffer size is specified in terms of **bytes**.
 
-Methods of `BufferedReader` & `BufferedWriter` are same as `FileReader` & `FileWriter`.
+Medethods of `BufferedReader` & `BufferedWriter` are same as `FileReader` & `FileWriter`.
 
 ### `BufferedWriter` vs. `FileWriter`
 
@@ -3436,7 +3437,7 @@ DataOutputStream output = new DataOutputStream(new FileOutputStream("out.dat"));
 ### `available()` method of `DataInputStream` class vs. catching `EOFException`
 
 - For `FileInputStream`/`FileOutputStream` where data is in the form of byte values (0-255), the end-of-file is indicated by -1 value.
-- In this case, we need a try-catch to catch the end-of-file exception because the data can be stored in any form, including negative integers, so -1 CANNOT indicate end-of-file. 
+- In the case of `DataInputStream`/`FileInputStream`, we need a try-catch to catch the end-of-file exception because the data can be stored in any form, including negative integers, so -1 CANNOT indicate end-of-file. 
 - OR, we can use the `available()` method which returns the number of bytes that can be read from the input stream. When this method returns 0, we can stop reading.
 
 ```java
@@ -3496,7 +3497,7 @@ All data was read.
 
 ![](images/data-input-stream.png)
 
-## `BufferInputStream`/`BufferOutputStream`
+## `BufferedInputStream`/`BufferedOutputStream`
 
 Constructors are the following:
 - `BufferedInputStream` 
@@ -3538,7 +3539,7 @@ Constructors are the following:
 
 > ***Note***: If no buffer size is specified, the default size is 512 bytes.
 
-`BufferInputStream`/`BufferOutputStream` inherit the methods of [`FileInputStream`/`FileOutputStream`](#fileinputstreamfileoutputstream), meaning we can only `read()` and `write()` from it, and not `readUTF()`, `writeUTF()`, which is a member function of [`DataInputStream`/`DataOutputStream`](#datainputstreamdataoutputstream).
+`BufferedInputStream`/`BufferOutputStream` inherit the methods of [`FileInputStream`/`FileOutputStream`](#fileinputstreamfileoutputstream), meaning we can only `read()` and `write()` from it, and not `readUTF()`, `writeUedTF()`, which is a member function of [`DataInputStream`/`DataOutputStream`](#datainputstreamdataoutputstream).
 
 ---
 
