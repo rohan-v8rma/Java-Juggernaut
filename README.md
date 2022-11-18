@@ -74,6 +74,8 @@
     - [Difference between ASCII and Unicode](#difference-between-ascii-and-unicode)
 - [Non-Primitive data types in Java](#non-primitive-data-types-in-java)
   - [`java.lang.String` (Strings in Java)](#javalangstring-strings-in-java)
+    - [Comparing `String` objects in Java](#comparing-string-objects-in-java)
+    - [Methods for comparing strings by-value](#methods-for-comparing-strings-by-value)
     - [Strings support concatenation](#strings-support-concatenation)
   - [`java.lang.Character` (Wrapper class for `char` primitive)](#javalangcharacter-wrapper-class-for-char-primitive)
   - [`java.lang.Double`](#javalangdouble)
@@ -95,6 +97,7 @@
   - [Objects](#objects)
     - [Default Initialization value of Objects or types that are Objects](#default-initialization-value-of-objects-or-types-that-are-objects)
     - [Hashcode of an Object](#hashcode-of-an-object)
+    - [Collisions in HashCode](#collisions-in-hashcode)
     - [Displaying an Object](#displaying-an-object)
     - [Overriding the `toString()` method of global class `Object`](#overriding-the-tostring-method-of-global-class-object)
   - [Streams (`java.util.stream`)](#streams-javautilstream)
@@ -182,12 +185,20 @@
   - [`BufferInputStream`/`BufferOutputStream`](#bufferinputstreambufferoutputstream)
   - [`ObjectInputStream`/`ObjectOutputStream`](#objectinputstreamobjectoutputstream)
     - [`transient` keyword](#transient-keyword)
+- [`Comparable` interface](#comparable-interface)
 - [Generics (similar to templates in C++)](#generics-similar-to-templates-in-c)
+  - [Placing the formal generic type(s) (`<T>` or `<T1, T2, T3>`)](#placing-the-formal-generic-types-t-or-t1-t2-t3)
+  - [Example usage of Generics](#example-usage-of-generics)
+    - [Generic methods](#generic-methods)
+    - [Generic Methods with Multiple type parameters](#generic-methods-with-multiple-type-parameters)
+    - [Generic Classes](#generic-classes)
+- [`Collections` Interface](#collections-interface)
 - [ArrayLists](#arraylists)
   - [Code-snippet demonstrating ArrayList methods:](#code-snippet-demonstrating-arraylist-methods)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [For Strings](#for-strings)
     - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
+    - [`equals()` NON-STATIC method for comparing the values of two strings, instead of their storage locations (*collision resolved hash codes*)](#equals-non-static-method-for-comparing-the-values-of-two-strings-instead-of-their-storage-locations-collision-resolved-hash-codes)
     - [`split()` NON-STATIC method for splitting a string using specific delimiters](#split-non-static-method-for-splitting-a-string-using-specific-delimiters)
     - [`replace()` NON-STATIC method to replace characters OR sub-strings in a String](#replace-non-static-method-to-replace-characters-or-sub-strings-in-a-string)
     - [`substring()` NON-STATIC method for obtaining sub-strings restricted by index position inside a String](#substring-non-static-method-for-obtaining-sub-strings-restricted-by-index-position-inside-a-string)
@@ -198,6 +209,8 @@
   - [For `Integer`s](#for-integers)
     - [`Integer.parseInt(String s)` STATIC method](#integerparseintstring-s-static-method)
     - [`Integer.toString(int a)` STATIC method](#integertostringint-a-static-method)
+  - [For all datatypes](#for-all-datatypes)
+    - [compareTo : TODO](#compareto--todo)
 - [TODO](#todo)
 
 <!-- TOC -->
@@ -1365,33 +1378,48 @@ In java, strings are also Objects (read the information on [Objects](#objects) b
 
 Also here, strings are immutable, which saves memory. 
 
+### Comparing `String` objects in Java
+
 When another reference variable is assigned the same string value during the same runtime, it will point to the same string object, which can be seen below.
 
-This is verified by doing equality comparison between the [hashcodes](#hashcode-of-an-object) of the strings below.
+As we know, objects that return `true` from the `equals()` method necessarily have the same hash code. 
 
-> ***Note***: As mentioned below, under [Hashcode of an Object](#hashcode-of-an-object), `Object`s are uniquely identified by hashcodes, pointed to by their reference variables. 
-> 
-> Two reference variables point to the same object only when they store the same hashcodes.
+But having the same hash code, does not imply that they point to the same memory locations, as discussed under [Collisions in HashCode](#collisions-in-hashcode).
+
 
 ```java
-String str1 = "hello";
-String str2 = "hello";
-String str3 = new String("hello");
-if(str1 == str2) {
-    System.out.println("foo");
-}
-if (str2 != str3) {
-    System.out.println("bar");
+String string1 = "hello"; 
+// String object created by Java
+
+String string2 = "hello"; 
+// This reference variable also points to the same String object as the above reference variable.
+String string3 = new String("hello"); 
+// user created string object
+
+System.out.println("Hashcode of string1 : " + string1.hashCode());
+System.out.println("Hashcode of string2 : " + string2.hashCode());
+System.out.println("Hashcode of string3 : " + string2.hashCode());
+
+if( (string2 != string3) && (string2.equals(string3))) {
+  System.out.println("\nHash code of string2 and string3 are equal, but they point to different memory locations due hash collision resolution.");
 }
 ```
 
 Output:
 ```
-foo
-bar
+Hashcode of string1 : 99162322
+Hashcode of string2 : 99162322
+Hashcode of string3 : 99162322
+
+Hash code of string2 and string3 are equal, but they point to different memory locations due hash collision resolution.
 ```
 
-`str1` and `str2` store the same hashcodes, but `str3` is a different object (having a different hashcode) which is why the inequality check operation between `str2` and `str3` returns true.
+`str1`, `str2` and `str3` store the same hashcodes, but `str3` points to a different memory location, since the hash collision is resolved internally, which is why the inequality check operation between `str2` and `str3` returns true.
+
+### Methods for comparing strings by-value
+
+- [`equals()` NON-STATIC method](#equals-non-static-method-for-comparing-the-values-of-two-strings-instead-of-their-storage-locations-collision-resolved-hash-codes)
+- [`compareTo` NON-STATIC method](#compareto)
 
 ### Strings support concatenation
 
@@ -1669,6 +1697,27 @@ It is a numeric representation of an object's contents so as to provide an alter
 > ***Note***: The object's values are not represented by the hashcode, only the storage location is.
 > 
 > What that means is when the values of the object's data members are changed, the hashcode remains the same.
+
+### Collisions in HashCode
+
+Note that there can be collisions in the hash codes of objects, but they still might not return `true` in `==` check, as they are pointing to different objects in memory.
+
+These objects may be stored close by in memory, but collision resolution of hashing helps in determining the different storage location of both these objects.
+
+```java
+String string1 = "hello"; 
+// String object created by Java
+
+String string2 = new String("hello"); 
+// user created string object
+
+System.out.println("Hashcode of string1 : " + string1.hashCode());
+System.out.println("Hashcode of string2 : " + string2.hashCode());
+
+if(string1 != string2) {
+  System.out.println("Storage locations of string1 and string2 are not exactly same.");
+}
+```
 
 ### Displaying an Object
 
@@ -3549,15 +3598,197 @@ class B{
 
 ---
 
+# `Comparable` interface
+
+The `Comparable` [interface](#interfaces-100-abstraction) in java is used to order the objects of the user-defined class. 
+
+- This interface is found in `java.lang` package and contains only ONE method named `compareTo(Object)`. 
+
+- It provides a single sorting sequence only, i.e., you can sort the elements on the basis of a single data member only. 
+  
+  For example, it may be rollno, name, age or anything else.
+
+- Function definition of `compareTo()` method:
+    ```java
+    public int compareTo(Object obj)
+    ```
+
+  It is used to compare the current object with the specified object. It returns:
+    - *positive integer*, if the current object is greater than the specified object.
+    - *negative integer*, if the current object is less than the specified object.
+    - *zero*, if the current object is equal to the specified object.
+
+- Using the `compareTo()` method, we can sort the elements of:
+    - String objects
+    - Wrapper class objects
+    - User-defined class objects
+
+---
+
 # Generics (similar to templates in C++)
 
 Generics means parameterized types. 
 
 - The idea is to allow type (`Integer`, `String`, … etc., and user-defined types) to be a parameter to methods, classes, and interfaces. This way, it is possible to create classes that work with different data types. 
 - An entity such as class, interface, or method that operates on a parameterized type is a generic entity or a Generic.
+- The key benefit of generics is to enable errors to be detected at compile time rather than at runtime. 
 
+  A generic class or method permits you to specify allowable types of objects that the class or method can work with. 
+  
+  If you attempt to use an incompatible object, the compiler will detect that error.
+  
+Here, `<T>` represents a formal generic type, which can be replaced later with an actual
+concrete type. 
+
+Replacing a generic type is called a *generic instantiation*. 
+
+By convention, a single capital letter such as `E` or `T` is used to denote a formal generic type.
+
+## Placing the formal generic type(s) (`<T>` or `<T1, T2, T3>`)
+
+- In the case of generic methods, we place the formal generic type(s) just before the return type of the method:
+    ```java
+    public static <T> T genericMethod(T var1, T var2, T var3) {
+      ...
+      ...
+    }
+    ```
+
+- In the case of generic classes, we place the formal generic type(s) just after the class name:
+    ```java
+    class genericClass <T> {
+      ...
+      ...
+    }
+    ```
+
+## Example usage of Generics
+
+### Generic methods
+
+
+Look at the first code-snippet. These are 3 methods that do exactly the same thing, just for different datatypes:
+```java
+public static int integerCompare(int int1, int int2, int int3) {
+    int max = int1;
+    if(int2 > max) {
+        max = int2;
+    }
+    if(int3 > max) {
+        max = int3;
+    }
+    return max;
+}
+
+public static double doubleCompare(double dble1, double dble2, double dble3) {
+    double max = dble1;
+    if(dble2 > max) {
+        max = dble2;
+    }
+    if(dble3 > max) {
+        max = dble3;
+    }
+    return max;
+}
+
+public static String stringCompare(String str1, String str2, String str3) {
+    String max = str1;
+    if(str2.compareTo(max) > 0) {
+        max = str2;
+    }
+    if(str3.compareTo(max) > 0) {
+        max = str3;
+    }
+    return max;
+}
+```
+
+The following code-snippet uses Generics to unify all the above methods into one:
+```java
+public static <T extends Comparable<T>> T getMax(T var1, T var2, T var3) {
+    T max = var1;
+    if(var2.compareTo(max) > 0) {
+        max = var2;
+    }
+    if(var3.compareTo(max) > 0) {
+        max = var3;
+    }
+    return max;
+}
+```
+
+- The *type* of the objects passed to this function, has to extend the [`Comparable` interface](#comparable-interface). 
+
+- This means that the type overrides the `compareTo` method (a comparison operation is defined between two instances of that particular type), allowing for comparison between instances of that particular datatype.
+
+- If we try to pass objects of a type that does not extend the [`Comparable` interface](#comparable-interface), we will get an error.
+
+- Since the in-built classes of Java like `String` and wrapper classes like `Integer` and `Double` extend the `Comparable` interface; this `getMax` function can be used for all of them. 
+
+### Generic Methods with Multiple type parameters
+
+In the above code, all of the arguments to `getMax()` must be the same type.
+
+Optionally, a template can have more type options, and the syntax is pretty simple.
+
+For a template with three types, called T1 , T2 and T3, we have:
+
+```JAVA
+public static < T1, T2, T3 > void temp(T1 x, T2 y, T3 z) {
+  System.out.println("This is x = " + x);
+  System.out.println("This is y = " + y);
+  System.out.println("This is z = " + z);
+}
+```
+
+### Generic Classes
+
+Generic class is a type of class that can have members of the **generic** type.
+
+
+```java
+public class genericClass<T> {
+
+    T obj; // An object of type T is declared
+
+    genericClass(T obj) { // Parameterized Constructor
+        this.obj = obj;
+    }
+
+    public T getObject() { // get method
+        return this.obj;
+    }
+
+    public static void main(String[] args) {
+        // Creating an instance of the generic class
+        genericClass<Integer> instance = new genericClass<Integer>(2); 
+    }
+}
+```
 
 ---
+
+# `Collections` Interface
+
+The Collection interface defines the common operations for lists, vectors, stacks, queues, priority queues, and sets.
+
+![](images/collections-subclasses.png)
+
+It provides the basic operations for adding and removing elements in a collection, such as:
+
+![](images/collections-methods.png)
+
+- The methods `addAll()`, `removeAll()`, and `retainAll()` are similar to the set union, difference, and intersection operations.
+- Notice that in the `addAll()` method, the collection passed as an argument should be of the same class or a subclass.
+- Also, mostly all methods have `boolean` return type except `clear()`, `hashCode()`, `size()` and `toArray()`.
+
+
+The Collections Framework supports two types of containers:
+- One for storing a collection of elements is simply called a *collection*.
+  - Lists store an ordered collection of elements.
+- The other, for storing key/value pairs, is called a *map*. Maps are efficient data structures for quickly searching an element using a key. 
+
+--- 
 
 # ArrayLists
 
@@ -3653,6 +3884,38 @@ Output:
 h
 104
 ```
+
+### `equals()` NON-STATIC method for comparing the values of two strings, instead of their storage locations (*collision resolved hash codes*)
+
+It returns a boolean value, either **true** (when values of both strings are exactly equal) or **false** (when they are not).
+
+Consider the following code-snippet:
+```java
+String string1 = "hello"; // String object created by Java
+String string2 = new String("hello"); // user created String object
+
+if(string1 == string2) {
+    System.out.println("Storage location of string1 is EXACTLY same as storage location of string2");
+}
+else { 
+    System.out.println("Storage location of string1 is NOT EXACTLY same as storage location of string2");
+}
+
+if(string1.equals(string2)) {
+    System.out.println("string1 is equal to string2");
+}
+else {
+    System.out.println("string1 is NOT equal to string2");
+}
+```
+
+Output:
+```
+Storage location of string1 is NOT EXACTLY same as storage location of string2
+string1 is equal to string2
+```
+
+Although the objects here would be having same hash code, because objects returning `true` from the `equals()` method always have the same hash code; their storage locations would be different after resolving their hash code, due to collision resolution of hashing.
 
 ### `split()` NON-STATIC method for splitting a string using specific delimiters
 
@@ -3757,6 +4020,10 @@ This method returns a byte array of the `String`.
 ### `Integer.parseInt(String s)` STATIC method 
 
 ### `Integer.toString(int a)` STATIC method
+
+## For all datatypes
+
+### compareTo : TODO
 
 
 # TODO 
