@@ -193,6 +193,10 @@
     - [Generic Methods with Multiple type parameters](#generic-methods-with-multiple-type-parameters)
     - [Generic Classes](#generic-classes)
 - [`Collections` Interface](#collections-interface)
+  - [`Iterator`s](#iterators)
+    - [`ListIterator`](#listiterator)
+  - [List](#list)
+    - [Methods of List interface](#methods-of-list-interface)
 - [ArrayLists](#arraylists)
   - [Code-snippet demonstrating ArrayList methods:](#code-snippet-demonstrating-arraylist-methods)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
@@ -3778,15 +3782,49 @@ It provides the basic operations for adding and removing elements in a collectio
 
 ![](images/collections-methods.png)
 
-- The methods `addAll()`, `removeAll()`, and `retainAll()` are similar to the set union, difference, and intersection operations.
+- The methods `addAll()`, `removeAll()`, and `retainAll()` are similar to the set union, difference, and intersection operations. 
+
+  But, `addAll()` does add duplicate elements.
+
+  Also, `removeAll()` does remove all duplicate instances.
+
 - Notice that in the `addAll()` method, the collection passed as an argument should be of the same class or a subclass.
 - Also, mostly all methods have `boolean` return type except `clear()`, `hashCode()`, `size()` and `toArray()`.
 
 
 The Collections Framework supports two types of containers:
 - One for storing a collection of elements is simply called a *collection*.
-  - Lists store an ordered collection of elements.
 - The other, for storing key/value pairs, is called a *map*. Maps are efficient data structures for quickly searching an element using a key. 
+
+## `Iterator`s
+
+- Each collection is `Iterable`, since the `Collection` interface extends the `Iterable` interface. 
+
+  The `Iterable` interface defines the iterator method, which returns an iterator.
+
+- The `Iterator` object of a `Collection` can be used to traverse all the elements in the collection.
+
+  `Iterator` is a classic design pattern for walking through a data structure without having to expose the details of how data is stored in the data structure.
+
+![](images/iterator-methods.png)
+
+### `ListIterator`
+
+The `listIterator()` or `listIterator(startIndex)` method returns an instance of `ListIterator`. 
+
+The `ListIterator` interface extends the `Iterator` interface to add bi-directional traversal of the list.
+
+![](images/list-iterator-methods.png)
+
+## List
+
+The List interface extends the `Collection` interface and defines a collection for storing elements in a sequential order, with duplicates allowed. It adds *position-oriented* operations.
+
+To create a list, use one of its two concrete classes: `ArrayList` or `LinkedList`.
+
+### Methods of List interface
+
+![](images/list-methods.png)
 
 --- 
 
