@@ -81,14 +81,15 @@
   - [`java.lang.Double`](#javalangdouble)
     - [Infinity in Java](#infinity-in-java)
   - [Arrays](#arrays)
-    - [Declaring, Creating & Initializing an Array of PRIMITIVES](#declaring-creating--initializing-an-array-of-primitives)
+    - [Declaring, Creating \& Initializing an Array of PRIMITIVES](#declaring-creating--initializing-an-array-of-primitives)
     - [Default Initialization Value for `int` arrays](#default-initialization-value-for-int-arrays)
     - [Default Initialization Value for `char` Arrays](#default-initialization-value-for-char-arrays)
     - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
     - [Creating a copy of an Array](#creating-a-copy-of-an-array)
       - [**Assigning the SAME object to a different reference variable**](#assigning-the-same-object-to-a-different-reference-variable)
       - [**Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different reference variable**](#creating-a-new-object-using-clone-non-static-method-and-assigning-it-to-a-different-reference-variable)
-    - [Declaring, Creating & Initializing an Array of NON-Primitives (`Objects`, other `Arrays`, etcetera)](#declaring-creating--initializing-an-array-of-non-primitives-objects-other-arrays-etcetera)
+    - [Declaring, Creating \& Initializing an Array of NON-Primitives (`Objects`, other `Arrays`, etcetera)](#declaring-creating--initializing-an-array-of-non-primitives-objects-other-arrays-etcetera)
+    - [Max size of arrays in Java](#max-size-of-arrays-in-java)
   - [`java.lang.reflect.Array` vs. `java.util.Arrays`](#javalangreflectarray-vs-javautilarrays)
     - [`java.lang.reflect.Array`:](#javalangreflectarray)
     - [`java.util.Arrays`:](#javautilarrays)
@@ -105,7 +106,7 @@
 - [Information related to Data-types](#information-related-to-data-types)
   - [Type-casting in Java (Forcing Lossy Conversions)](#type-casting-in-java-forcing-lossy-conversions)
   - [Automatic Type Conversion in Expressions in Java](#automatic-type-conversion-in-expressions-in-java)
-  - [Brackets & Operator Precedence](#brackets--operator-precedence)
+  - [Brackets \& Operator Precedence](#brackets--operator-precedence)
 - [Conditional and Looping Statements](#conditional-and-looping-statements)
   - [if-else statements](#if-else-statements)
   - [`for-each` loop (looping through Array elements)](#for-each-loop-looping-through-array-elements)
@@ -125,7 +126,7 @@
   - [References in Modern Languages](#references-in-modern-languages)
   - [Java NOT having pointers](#java-not-having-pointers)
 - [Types of Polymorphism in Java](#types-of-polymorphism-in-java)
-  - [Compile-time Polymorphism (Method & Operator Overloading)](#compile-time-polymorphism-method--operator-overloading)
+  - [Compile-time Polymorphism (Method \& Operator Overloading)](#compile-time-polymorphism-method--operator-overloading)
   - [Run-time Polymorphism (Method Overriding)](#run-time-polymorphism-method-overriding)
     - [Dynamic Method Dispatch](#dynamic-method-dispatch)
     - [Overriding Static Methods (NOT POSSIBLE)](#overriding-static-methods-not-possible)
@@ -167,23 +168,23 @@
     - [Some important characteristics](#some-important-characteristics)
     - [Autoclosing files opened by `PrintWriter` using `try-with-resources` block](#autoclosing-files-opened-by-printwriter-using-try-with-resources-block)
   - [Reading files using `Scanner` class](#reading-files-using-scanner-class)
-  - [`FileReader`/`FileWriter`](#filereaderfilewriter)
+  - [`FileReader` and `FileWriter`](#filereader-and-filewriter)
     - [Difference between `FileWriter` and `PrintWriter`](#difference-between-filewriter-and-printwriter)
     - [Difference between `FileReader` and `Scanner`](#difference-between-filereader-and-scanner)
-  - [`BufferedReader`/`BufferedWriter`](#bufferedreaderbufferedwriter)
+  - [`BufferedReader` and `BufferedWriter`](#bufferedreader-and-bufferedwriter)
     - [`BufferedWriter` vs. `FileWriter`](#bufferedwriter-vs-filewriter)
 - [Binary Files vs. Text Files](#binary-files-vs-text-files)
 - [Binary I/O Classes](#binary-io-classes)
-  - [`FileInputStream`/`FileOutputStream`](#fileinputstreamfileoutputstream)
-    - [Combining `Scanner`/`PrintWriter` with `FileInputStream`/`FileOutputStream`](#combining-scannerprintwriter-with-fileinputstreamfileoutputstream)
-    - [Using `getBytes()` method with `FileInputStream`/`FileOutputStream`](#using-getbytes-method-with-fileinputstreamfileoutputstream)
-  - [`FilterInputStream`/`FilterOutputStream`](#filterinputstreamfilteroutputstream)
-  - [`DataInputStream`/`DataOutputStream`](#datainputstreamdataoutputstream)
+  - [`FileInputStream` and `FileOutputStream`](#fileinputstream-and-fileoutputstream)
+    - [Combining `Scanner` and `PrintWriter` with `FileInputStream` and `FileOutputStream`](#combining-scanner-and-printwriter-with-fileinputstream-and-fileoutputstream)
+    - [Using `getBytes()` method with `FileInputStream` and `FileOutputStream`](#using-getbytes-method-with-fileinputstream-and-fileoutputstream)
+  - [`FilterInputStream` and `FilterOutputStream`](#filterinputstream-and-filteroutputstream)
+  - [`DataInputStream` and `DataOutputStream`](#datainputstream-and-dataoutputstream)
     - [`available()` method of `DataInputStream` class vs. catching `EOFException`](#available-method-of-datainputstream-class-vs-catching-eofexception)
     - [`DataOutputStream` member functions](#dataoutputstream-member-functions)
     - [`DataInputStream` member functions](#datainputstream-member-functions)
-  - [`BufferedInputStream`/`BufferedOutputStream`](#bufferedinputstreambufferedoutputstream)
-  - [`ObjectInputStream`/`ObjectOutputStream`](#objectinputstreamobjectoutputstream)
+  - [`BufferedInputStream` and `BufferedOutputStream`](#bufferedinputstream-and-bufferedoutputstream)
+  - [`ObjectInputStream` and `ObjectOutputStream`](#objectinputstream-and-objectoutputstream)
     - [`transient` keyword](#transient-keyword)
 - [`Comparable` interface](#comparable-interface)
 - [Generics (similar to templates in C++)](#generics-similar-to-templates-in-c)
@@ -202,6 +203,9 @@
 - [Maps](#maps)
   - [Map Interface Methods](#map-interface-methods)
   - [`HashMap`, `LinkedHashMap` and `TreeMap` methods](#hashmap-linkedhashmap-and-treemap-methods)
+  - [If I store an `<ArrayList>` in `<HashSet>`, how will it identify if an `<ArrayList>` is unique or not, during insertion?](#if-i-store-an-arraylist-in-hashset-how-will-it-identify-if-an-arraylist-is-unique-or-not-during-insertion)
+  - [Does Collections just have more optimized algorithms for the same methods OR does it make use of low level APIs to further optimize for performance?](#does-collections-just-have-more-optimized-algorithms-for-the-same-methods-or-does-it-make-use-of-low-level-apis-to-further-optimize-for-performance)
+  - [Does collections framework do implicit lossy conversions without warning?](#does-collections-framework-do-implicit-lossy-conversions-without-warning)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [For Strings](#for-strings)
     - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
@@ -529,9 +533,20 @@ The problem with the interpreter is that it interprets every time, even the same
 
 #### `JIT` (Just-In-Time) compiler
 
-- JIT compiler counterbalances the interpreter’s disadvantage of slow execution and improves the performance.
-- It aids in improving the performance of Java programs by compiling bytecode into native machine code at run time.
-- It is ENABLED throughout, while it gets ACTIVATED when a method is invoked. For a compiled method, the JVM directly calls the compiled code, instead of interpreting it.
+- Instead of interpreting bytecode instructions one at a time, the JVM can dynamically compile frequently executed sections of bytecode into native machine code.
+- When a Java program is executed, the JVM initially interprets the bytecode instructions. This interpretation process involves analyzing each bytecode instruction and executing it using the JVM's internal interpreter. 
+
+  Interpreting bytecode allows for platform independence but can be slower compared to executing native machine code directly.
+- However, the JVM doesn't interpret the entire program from start to finish. It monitors the execution of the program and identifies "hot spots" – sections of the code that are executed frequently. These hot spots typically contain loops or frequently called methods.
+
+  Once a hot spot is identified, the JVM applies JIT compilation to that portion of the bytecode. JIT compilation involves translating the bytecode into native machine code specific to the underlying hardware architecture. This native machine code is then executed directly by the CPU, bypassing the interpretation step.
+- By dynamically compiling hot spots into native machine code, the JVM can achieve significant performance improvements. 
+  
+  The compiled code runs faster than interpreted bytecode because it can take advantage of specific optimizations provided by the hardware, such as instruction pipelining and CPU registers.
+- It's important to note that not all bytecode is compiled with JIT. The JVM uses profiling techniques to determine which sections of code should be optimized through JIT compilation. 
+  
+  If a certain section of code is not executed frequently or does not exhibit performance bottlenecks, the JVM may choose not to compile it, thus avoiding the overhead of compilation.
+
 - Since the compilation takes place in run time, a JIT compiler has access to **dynamic runtime information**, enabling it to make better optimizations (such as inlining functions).
 
 #### Garbage Collector
@@ -1633,6 +1648,29 @@ Suppose we have a user-defined class `Student`.
       studentArray[index].setData();
   }
   ```
+
+### Max size of arrays in Java
+
+The size of the array and `<ArrayList>` data types in java are constrained by the max value of the `int` data type.
+
+So, `long` cannot be used as indices in these data types. Even if we try to use `long` numbers, we will get error of implicit lossy conversion from long to int.
+
+The following code:
+```java
+public static void main(String[] args) {
+    ArrayList<Integer> basicallyAnArray = new ArrayList<>();
+    
+    long incompatibleIndex = 1L;
+    
+    basicallyAnArray.add(incompatibleIndex, 1);
+}
+```
+will give this error:
+```
+error: incompatible types: possible lossy conversion from long to int
+```
+
+Since `.add` method also has the type of the index argument set as `int`.
 
 ---
 
@@ -3148,7 +3186,7 @@ while(inputStream.hasNext()) {
 
 ---
 
-## `FileReader`/`FileWriter`
+## `FileReader` and `FileWriter`
 
 Java `FileWriter` class of java.io package is used to write data in character form to file. 
 
@@ -3231,7 +3269,7 @@ Java `FileWriter` class is used to write character-oriented data to a file
   inputStream.close();
   ```
 
-## `BufferedReader`/`BufferedWriter`
+## `BufferedReader` and `BufferedWriter`
 
 Constructors are the following:
 - `BufferedReader` 
@@ -3305,7 +3343,7 @@ The design of the Java I/O classes is a good example of applying inheritance, wh
 - The abstract `OutputStream` is the root class for writing binary data.
   ![](./images/output-stream.png)
 
-## `FileInputStream`/`FileOutputStream`
+## `FileInputStream` and `FileOutputStream`
 
 `FileInputStream`/`FileOutputStream` is for reading/writing byte-by-byte from/to files.
 
@@ -3354,7 +3392,7 @@ try (
   
   If no byte is available because the end of the stream has been reached, the value –1 is returned, which is why we are comparing with -1 as the condition for the while-loop.
 
-### Combining `Scanner`/`PrintWriter` with `FileInputStream`/`FileOutputStream`
+### Combining `Scanner` and `PrintWriter` with `FileInputStream` and `FileOutputStream`
 
 ```java
 try (
@@ -3378,7 +3416,7 @@ Hello
 World
 ```
 
-### Using `getBytes()` method with `FileInputStream`/`FileOutputStream`
+### Using `getBytes()` method with `FileInputStream` and `FileOutputStream`
 
 ```java
 try (
@@ -3401,7 +3439,7 @@ try (
 }
 ```
 
-## `FilterInputStream`/`FilterOutputStream`
+## `FilterInputStream` and `FilterOutputStream`
 
 Filter streams are streams that filter bytes for some purpose. 
 
@@ -3415,7 +3453,7 @@ Using a filter class enables you to read integers, doubles, and strings instead 
 
 When you need to process primitive numeric types, use `DataInputStream` and `DataOutputStream` to filter bytes.
 
-## `DataInputStream`/`DataOutputStream`
+## `DataInputStream` and `DataOutputStream`
 
 Constructors are the following:
 ```java
@@ -3497,7 +3535,7 @@ All data was read.
 
 ![](images/data-input-stream.png)
 
-## `BufferedInputStream`/`BufferedOutputStream`
+## `BufferedInputStream` and `BufferedOutputStream`
 
 Constructors are the following:
 - `BufferedInputStream` 
@@ -3543,7 +3581,7 @@ Constructors are the following:
 
 ---
 
-## `ObjectInputStream`/`ObjectOutputStream`
+## `ObjectInputStream` and `ObjectOutputStream`
 
 They can be used to read/write serializable objects.
 
@@ -3913,6 +3951,46 @@ These are the methods that are common for `HashMap`, `LinkedHashMap` and `TreeMa
 - `LinkedHashMap` extends `HashMap` with a linked-list implementation that supports an ordering of the entries in the map. The entries in a `LinkedHashMap` can be retrieved in: 
   - *Insertion Order* : The order in which the elements were inserted into the map, from inserted first to inserted last.
   - *Access Order* : The order in which they were last accessed, from least recently accessed to most recently accessed.
+
+## If I store an `<ArrayList>` in `<HashSet>`, how will it identify if an `<ArrayList>` is unique or not, during insertion?
+
+When you store an `ArrayList` in a `HashSet` in Java, the uniqueness of the `ArrayList` is determined based on the behavior of the `hashCode()` and `equals()` methods.
+
+In order to determine if an `ArrayList` is unique within a `HashSet`, the `HashSet` uses the following steps:
+
+1. The `ArrayList`'s `hashCode()` method is called to obtain its hash code. The hash code is an integer value calculated based on the contents of the `ArrayList`.
+
+2. The `HashSet` then checks if there is already an element with the same hash code in the set. If there isn't, it assumes the `ArrayList` is unique and adds it to the set.
+
+3. If there is already an element with the same hash code, the `HashSet` calls the `equals()` method of that element and compares it with the `ArrayList`. The `equals()` method determines whether the two `ArrayLists` are considered equal based on their content.
+
+4. If the `equals()` method returns `true`, the `HashSet` considers the `ArrayList` as a duplicate and does not add it to the set. If `equals()` returns `false`, the `HashSet` assumes the `ArrayList` is unique and adds it to the set.
+
+It's important to note that for the `HashSet` to work correctly, the `hashCode()` and `equals()` methods of the `ArrayList` class must be properly overridden. By default, `ArrayList` uses the implementation of these methods inherited from the `Object` class, which considers two objects as equal only if they are the same instance (reference equality). If you want to compare `ArrayLists` based on their content, you need to override the `hashCode()` and `equals()` methods accordingly.
+
+In summary, the `HashSet` determines the uniqueness of an `ArrayList` based on the combination of its hash code and the `equals()` method, allowing it to identify and reject duplicate `ArrayLists`.
+
+## Does Collections just have more optimized algorithms for the same methods OR does it make use of low level APIs to further optimize for performance? 
+
+The Java Collections Framework, which includes classes like `ArrayList`, `HashSet`, and `HashMap`, provides a set of high-level data structures and algorithms for managing and manipulating collections of objects. The primary focus of the Collections Framework is to provide a convenient and standardized way to work with collections in Java.
+
+The Collections Framework itself does not directly make use of low-level APIs or provide low-level optimizations. Instead, it leverages fundamental data structures and algorithms to provide efficient and optimized implementations of various collection types. These implementations are designed to offer good performance characteristics in terms of time and space complexity.
+
+The Java Collections Framework is built on top of basic data structures, such as arrays, linked lists, trees, and hash tables. It utilizes these underlying data structures and algorithms to provide efficient operations like adding, removing, searching, and iterating over elements in collections.
+
+However, it's worth noting that the Collections Framework is designed to be flexible and extensible. It provides interfaces that allow developers to create custom implementations or extend existing ones to suit specific needs. In some cases, developers may choose to optimize the performance of collections by implementing lower-level data structures or algorithms directly.
+
+## Does collections framework do implicit lossy conversions without warning?
+
+No, the Java Collections Framework does not perform implicit lossy conversions without warning. In Java, the compiler is responsible for type checking and ensuring type safety. If there is a possibility of a lossy conversion or incompatible types, the compiler will generate a warning or an error.
+
+When working with collections such as `List`, `Set`, or `Map` in the Java Collections Framework, you are expected to provide the appropriate generic type arguments to ensure type safety. 
+
+For example, if you have an `ArrayList` that is supposed to store `Integer` objects, you would declare it as `ArrayList<Integer>`. This helps the compiler enforce type checking and prevents implicit conversions or type mismatches.
+
+> ***Note***: Take a look at proof of this under [Max size of arrays in Java](#max-size-of-arrays-in-java).
+
+If you attempt to add an element of an incompatible type to a collection without proper type checking, the compiler will generate a warning or an error, indicating the potential loss of data or type safety. It is good practice to pay attention to compiler warnings and ensure that your code is free from type-related issues to maintain program correctness and prevent unexpected behavior.
 
 ---
 
