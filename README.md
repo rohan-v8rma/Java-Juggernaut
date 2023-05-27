@@ -98,6 +98,8 @@
   - [Objects](#objects)
     - [Default Initialization value of Objects or types that are Objects](#default-initialization-value-of-objects-or-types-that-are-objects)
     - [Hashcode of an Object](#hashcode-of-an-object)
+    - [`hashCode()` method For `Integer` class objects](#hashcode-method-for-integer-class-objects)
+    - [`hashCode()` method for `String` class objects](#hashcode-method-for-string-class-objects)
     - [Collisions in HashCode](#collisions-in-hashcode)
     - [Displaying an Object](#displaying-an-object)
     - [Overriding the `toString()` method of global class `Object`](#overriding-the-tostring-method-of-global-class-object)
@@ -206,6 +208,7 @@
   - [If I store an `<ArrayList>` in `<HashSet>`, how will it identify if an `<ArrayList>` is unique or not, during insertion?](#if-i-store-an-arraylist-in-hashset-how-will-it-identify-if-an-arraylist-is-unique-or-not-during-insertion)
   - [Does Collections just have more optimized algorithms for the same methods OR does it make use of low level APIs to further optimize for performance?](#does-collections-just-have-more-optimized-algorithms-for-the-same-methods-or-does-it-make-use-of-low-level-apis-to-further-optimize-for-performance)
   - [Does collections framework do implicit lossy conversions without warning?](#does-collections-framework-do-implicit-lossy-conversions-without-warning)
+  - [Hashcodes of `<Set>` data structures in Java are dynamic](#hashcodes-of-set-data-structures-in-java-are-dynamic)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [For Strings](#for-strings)
     - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
@@ -1742,6 +1745,18 @@ It is a numeric representation of an object's contents so as to provide an alter
 > ***Note***: The object's values are not represented by the hashcode, only the storage location is.
 > 
 > What that means is when the values of the object's data members are changed, the hashcode remains the same.
+
+### `hashCode()` method For `Integer` class objects
+
+The overridden `hashCode()` method originally derived from the `Object` class, returns the `int` value in the case of `Integer` class objects.
+
+### `hashCode()` method for `String` class objects
+
+The overridden `hashCode()` method originally derived from the `Object` class, returns:  
+
+s<sub>0</sub> * 31<sup>(n-1)</sup> + s<sub>1</sub> * 31<sup>(n-2)</sup> + ... + s<sub>n-1</sub>, where s<sub>i</sub> is `s.charAt(i)`. 
+
+This is in the case of `String` class objects, which is basically all strings in java.
 
 ### Collisions in HashCode
 
@@ -3970,6 +3985,52 @@ It's important to note that for the `HashSet` to work correctly, the `hashCode()
 
 In summary, the `HashSet` determines the uniqueness of an `ArrayList` based on the combination of its hash code and the `equals()` method, allowing it to identify and reject duplicate `ArrayLists`.
 
+> ***Note***: But, in the case of regular arrays, only hash code comparison is done, resulting in arrays with same elements entering the set. See the output of the folollowing code:
+>
+> ```java
+> public static void main(String[] args) {
+>   Set<int[]> arraySet = new HashSet<>();   
+>
+>   arraySet.add(new int[]{1, 2});
+>   arraySet.add(new int[]{1, 2});
+>
+>   System.out.println("Regular Arrays added to the set:");
+>   
+>   for(int[] array: arraySet) {
+>     for(int element: array) {
+>         System.out.printf("%d,", element);
+>     }
+>     System.out.println();
+>   }
+> 
+>   Set<ArrayList<Integer>> arraySet1 = new HashSet<>();
+> 
+>   arraySet1.add(new ArrayList<Integer>(
+>     Arrays.asList(1, 2)
+>   ));
+>   arraySet1.add(new ArrayList<Integer>(
+>     Arrays.asList(1, 2)
+>   ));
+>
+>   System.out.println("ArrayLists added to the set:");
+>
+>   for(ArrayList<Integer> array: arraySet1) {
+>     for(int element: array) {
+>       System.out.printf("%d,", element);
+>     }
+>       System.out.println();
+>   }
+> } 
+> ```
+> Output:
+> ```
+> Regular Arrays added to the set:
+> 1,2,
+> 1,2, <--- Duplicate array added due to hash codes being different.
+> ArrayLists added to the set:
+> 1,2,
+> ```
+
 ## Does Collections just have more optimized algorithms for the same methods OR does it make use of low level APIs to further optimize for performance? 
 
 The Java Collections Framework, which includes classes like `ArrayList`, `HashSet`, and `HashMap`, provides a set of high-level data structures and algorithms for managing and manipulating collections of objects. The primary focus of the Collections Framework is to provide a convenient and standardized way to work with collections in Java.
@@ -3991,6 +4052,37 @@ For example, if you have an `ArrayList` that is supposed to store `Integer` obje
 > ***Note***: Take a look at proof of this under [Max size of arrays in Java](#max-size-of-arrays-in-java).
 
 If you attempt to add an element of an incompatible type to a collection without proper type checking, the compiler will generate a warning or an error, indicating the potential loss of data or type safety. It is good practice to pay attention to compiler warnings and ensure that your code is free from type-related issues to maintain program correctness and prevent unexpected behavior.
+
+## Hashcodes of `<Set>` data structures in Java are dynamic
+
+- The hashcode of a set is the sum of the hash codes of all the elements in the set. 
+
+> ***Note***: Due to this, the hashcode of every empty set is 0.
+
+- This characteristic can be leveraged to see whether a set changed or not because the probability that an element gets added or removed, and the hashcode of the set comes back to the same point is extremely low.
+
+- To verify this, take a look at the output of the following code:
+```java
+public static void main(String[] args) {
+    Set<int[]> arraySet = new HashSet<>();
+    
+    System.out.println(arraySet.hashCode());
+    
+    arraySet.add(new int[]{1, 2});
+    
+    System.out.println(arraySet.hashCode());
+    
+    arraySet.add(new int[]{1, 2});
+    System.out.println(arraySet.hashCode());
+}
+```
+
+Output:
+```
+0
+1510467688 <-- hashcode changing after every addition
+-789234288
+```
 
 ---
 
