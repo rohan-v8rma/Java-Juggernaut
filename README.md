@@ -85,6 +85,7 @@
     - [Default Initialization Value for `int` arrays](#default-initialization-value-for-int-arrays)
     - [Default Initialization Value for `char` Arrays](#default-initialization-value-for-char-arrays)
     - [Specifying the number of elements in an Array](#specifying-the-number-of-elements-in-an-array)
+    - [Dynamically allocating memory for a 2-d array](#dynamically-allocating-memory-for-a-2-d-array)
     - [Creating a copy of an Array](#creating-a-copy-of-an-array)
       - [**Assigning the SAME object to a different reference variable**](#assigning-the-same-object-to-a-different-reference-variable)
       - [**Creating a NEW object using `clone()` NON-STATIC method and assigning it to a different reference variable**](#creating-a-new-object-using-clone-non-static-method-and-assigning-it-to-a-different-reference-variable)
@@ -209,6 +210,40 @@
   - [Does Collections just have more optimized algorithms for the same methods OR does it make use of low level APIs to further optimize for performance?](#does-collections-just-have-more-optimized-algorithms-for-the-same-methods-or-does-it-make-use-of-low-level-apis-to-further-optimize-for-performance)
   - [Does collections framework do implicit lossy conversions without warning?](#does-collections-framework-do-implicit-lossy-conversions-without-warning)
   - [Hashcodes of `<Set>` data structures in Java are dynamic](#hashcodes-of-set-data-structures-in-java-are-dynamic)
+- [Questions to quickly revise `Collections` framework](#questions-to-quickly-revise-collections-framework)
+  - [1. What is a collection?](#1-what-is-a-collection)
+  - [2. `collection` vs. `Collection` vs. `Collections`](#2-collection-vs-collection-vs-collections)
+    - [`collection`](#collection)
+    - [`Collection` (with a capital 'C')](#collection-with-a-capital-c)
+    - [`Collections`](#collections)
+  - [3. Interfaces that extend `Collection`](#3-interfaces-that-extend-collection)
+  - [4. Explain the `List` interface and methods specific to it](#4-explain-the-list-interface-and-methods-specific-to-it)
+  - [5. Implementations of `List` interface](#5-implementations-of-list-interface)
+  - [6. What is `ArrayList` and how is it different from a primitive array?](#6-what-is-arraylist-and-how-is-it-different-from-a-primitive-array)
+  - [7. What is a `Vector` and how is it different from `ArrayList`?](#7-what-is-a-vector-and-how-is-it-different-from-arraylist)
+  - [8. Describe `LinkedList` implementation of `List` interface](#8-describe-linkedlist-implementation-of-list-interface)
+  - [9.  Define `Iterator` and methods within it](#9--define-iterator-and-methods-within-it)
+  - [10. In what order does an `Iterator` iterate over a `Collection`?](#10-in-what-order-does-an-iterator-iterate-over-a-collection)
+  - [11. Elaborate on `ListIterator` and methods within it.](#11-elaborate-on-listiterator-and-methods-within-it)
+  - [12. `Set` interface in Java](#12-set-interface-in-java)
+  - [13. Implementations of `Set` Interface](#13-implementations-of-set-interface)
+  - [14. Elaborate on `HashSet` and its features](#14-elaborate-on-hashset-and-its-features)
+  - [15. Elaborate on `TreeSet` and its features](#15-elaborate-on-treeset-and-its-features)
+  - [16. Use-cases of `HashSet` vs. `TreeSet`](#16-use-cases-of-hashset-vs-treeset)
+  - [17. Elaborate on `LinkedHashSet` and its features](#17-elaborate-on-linkedhashset-and-its-features)
+  - [18. Explain about the `Map` Interface](#18-explain-about-the-map-interface)
+  - [19. Elaborate on `LinkedHashMap` and its features](#19-elaborate-on-linkedhashmap-and-its-features)
+  - [20. Explain about the `SortedMap` Interface](#20-explain-about-the-sortedmap-interface)
+  - [21. Elaborate on `Hashtable` and its features](#21-elaborate-on-hashtable-and-its-features)
+  - [22. Difference between `HashMap` and `Hashtable`](#22-difference-between-hashmap-and-hashtable)
+  - [23. Difference between `ArrayList` and `LinkedList`](#23-difference-between-arraylist-and-linkedlist)
+  - [24.  `Comparator` vs. `Comparable`](#24--comparator-vs-comparable)
+  - [25. Elaborate on `ConcurrentHashMap` and its features](#25-elaborate-on-concurrenthashmap-and-its-features)
+  - [26. Difference between `ConcurrentHashMap`, `Hashtable`, and `Collections.synchronizedMap`](#26-difference-between-concurrenthashmap-hashtable-and-collectionssynchronizedmap)
+  - [27. Elaborate on `CopyOnWriteArrayList` and its use cases](#27-elaborate-on-copyonwritearraylist-and-its-use-cases)
+  - [28. What are Fail-Fast Iterators?](#28-what-are-fail-fast-iterators)
+  - [29. What are Fail-Safe Iterators?](#29-what-are-fail-safe-iterators)
+- [Bit Manipulation](#bit-manipulation)
 - [Important Useful Methods in Java](#important-useful-methods-in-java)
   - [For Strings](#for-strings)
     - [`charAt()` NON-STATIC method for selecting a single character in a string](#charat-non-static-method-for-selecting-a-single-character-in-a-string)
@@ -1575,6 +1610,18 @@ data = new double[10];
 Or instead of explicitly allocating memory for an array, we can also assign the array a value.
 ```java
 double[] data = {1, 2, 3, 4};
+```
+
+### Dynamically allocating memory for a 2-d array
+
+```java
+int[][] adj = new int[N][];
+for(int index = 0; index < N; index++) {
+    adj[index] = new int[N];
+}
+for(int[] pair: prerequisites) {
+    adj[pair[1]][pair[0]] = 1;
+}
 ```
 
 ### Creating a copy of an Array
@@ -3831,7 +3878,7 @@ public class genericClass<T> {
 
 # `Collections` Interface
 
-The Collection interface defines the common operations for lists, vectors, stacks, queues, priority queues, and sets.
+The Collections interface defines the common operations for lists, vectors, stacks, queues, priority queues, and sets.
 
 ![](images/collections-subclasses.png)
 
@@ -3899,7 +3946,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<Integer> intArrayList = new ArrayList<Integer>();
+      ArrayList<Integer> intArrayList = new ArrayList<Integer>();
         ArrayList<String> stringArrayList = new ArrayList<String>();
         ArrayList<Character> characterArrayList = new ArrayList<Character>();
 
@@ -4064,7 +4111,7 @@ If you attempt to add an element of an incompatible type to a collection without
 - To verify this, take a look at the output of the following code:
 ```java
 public static void main(String[] args) {
-    Set<int[]> arraySet = new HashSet<>();
+  Set<int[]> arraySet = new HashSet<>();
     
     System.out.println(arraySet.hashCode());
     
@@ -4087,6 +4134,262 @@ Output:
 ---
 
 1 byte = 8 bits = 0 - 255 = 2 digits of hex
+
+# Questions to quickly revise `Collections` framework
+
+## 1. What is a collection?
+
+In Java, a `Collection` is a framework provided by the Java API to represent and manipulate a group of objects. It's a higher-level concept that abstracts the idea of a group or collection of elements.
+
+It provides a set of interfaces and classes to work with different types of collections, such as lists, sets, and maps.
+
+## 2. `collection` vs. `Collection` vs. `Collections`
+
+### `collection`
+
+This refers to the root interface in the Java Collections Framework. 
+
+It defines the basic methods and contracts that all collection types must adhere to. Some of these operations include `add`, `remove`, `contains`, `size`, `isEmpty`, and more. 
+
+It provides a common set of methods for working with collections regardless of their specific implementations.
+
+### `Collection` (with a capital 'C')
+
+This is the name of the interface. For example, `List` is a subtype of the `Collection` interface.
+
+### `Collections`
+
+This is a utility class in the Java API that provides various static methods to operate on or return collections, like sorting, searching, and synchronization. E.g.: `Collections.sort()`
+
+---
+
+## 3. Interfaces that extend `Collection`
+
+Several interfaces extend the `Collection` interface:
+
+- `List`: Ordered collection that allows duplicates.
+- `Set`: Unordered collection that does not allow duplicates.
+- `Queue`: A collection designed for holding elements prior to processing.
+- `Deque`: A double-ended queue, which allows elements to be added or removed from both ends.
+
+## 4. Explain the `List` interface and methods specific to it
+
+- The `List` interface extends the `Collection` interface and represents an ordered collection of elements, allowing duplicate values. 
+  
+  It defines methods to access, insert, and remove elements based on their indices.
+
+- Some methods specific to the `List` interface include:
+  - `get(int index)`: Returns the element at the specified position in the list.
+  - `set(int index, E element)`: Replaces the element at the specified position with the specified element.
+  - `add(int index, E element)`: Inserts the specified element at the specified position.
+  - `remove(int index)`: Removes the element at the specified position.
+  - `indexOf(Object o)`: Returns the index of the first occurrence of the specified element.
+- `lastIndexOf(Object o)`: Returns the index of the last occurrence of the specified element.
+
+## 5. Implementations of `List` interface
+
+Some implementations of the `List` interface are:
+
+- `ArrayList`: Resizable array-based implementation.
+- `LinkedList`: Doubly-linked list implementation.
+- `Vector`: Similar to `ArrayList` but synchronized.
+
+## 6. What is `ArrayList` and how is it different from a primitive array?
+
+- `ArrayList` is a dynamic array-based implementation of the `List` interface. 
+- It provides fast random access and is suitable for scenarios where elements are frequently accessed by index. 
+- It dynamically resizes itself as elements are added or removed.
+
+- **Difference between Array and ArrayList:**
+    - Arrays have a fixed size, while `ArrayList` can dynamically resize.
+    - Arrays can hold primitive types directly, whereas `ArrayList` only holds objects.
+    - Arrays require manual memory management, while `ArrayList` handles memory management internally.
+    - `ArrayList` provides built-in methods for common operations like adding, removing, and searching.
+
+## 7. What is a `Vector` and how is it different from `ArrayList`?
+
+- `Vector` is similar to `ArrayList` but is synchronized, making it thread-safe. However, this synchronization comes at a performance cost compared to `ArrayList`.
+
+- **Difference between ArrayList and Vector:**
+    - `ArrayList` is not synchronized, while `Vector` is synchronized.
+    - Due to synchronization, `ArrayList` is generally faster in single-threaded scenarios.
+    - `ArrayList` is more memory-efficient than `Vector` in most cases.
+    - `Vector` is legacy and less commonly used in modern Java applications.
+
+## 8. Describe `LinkedList` implementation of `List` interface
+
+- A linked list is a data structure where each element (node) contains both data and a reference (link) to the next element. 
+- It allows for efficient insertions and deletions, especially when elements are frequently added or removed from the middle of the list.
+
+## 9.  Define `Iterator` and methods within it
+
+An `Iterator` is an interface in Java that provides a way to iterate over elements in a collection. 
+
+It has methods like `hasNext()` to check if there's another element, and `next()` to retrieve the next element. The `remove()` method is used to remove the current element.
+
+## 10. In what order does an `Iterator` iterate over a `Collection`?
+
+The order in which an `Iterator` iterates over a collection depends on the collection's specific implementation. 
+
+For example, an `ArrayList` iterator would follow the order of insertion, while a `HashSet` iterator doesn't guarantee a specific order.
+
+## 11. Elaborate on `ListIterator` and methods within it.
+
+`ListIterator` is a subinterface of `Iterator` that allows bidirectional iteration (both forward and backward) over a list. 
+
+It includes additional methods like `hasPrevious()`, `previous()`, `nextIndex()`, `previousIndex()`, and `set(E element)` to modify elements during iteration. It is specific to list-like collections.
+
+## 12. `Set` interface in Java
+
+A Set is a collection in Java that does not allow duplicate elements. It models the mathematical set abstraction and is part of the Java Collections Framework. 
+
+Sets are unordered collections, meaning they do not maintain any specific order of elements.
+
+## 13. Implementations of `Set` Interface
+
+Some implementations of the `Set` interface are:
+
+- `HashSet`: Implements a hash table to store elements.
+- `TreeSet`: Implements a self-balancing binary search tree to store elements.
+- `LinkedHashSet`: Maintains insertion order using a hash table with linked list.
+
+## 14. Elaborate on `HashSet` and its features
+
+`HashSet` is an implementation of the `Set` interface. 
+
+It uses a hash table to store elements and provides constant-time average complexity for basic operations like `add`, `remove`, and `contains`. 
+
+It does not guarantee any specific order of elements.
+
+## 15. Elaborate on `TreeSet` and its features
+
+`TreeSet` is an implementation of the `Set` interface that uses a self-balancing binary search tree (usually a Red-Black Tree) to store elements. 
+
+It maintains elements in sorted order and provides logarithmic time complexity for basic operations. 
+
+It's useful when elements need to be stored in a sorted manner.
+
+## 16. Use-cases of `HashSet` vs. `TreeSet`
+
+- Use `HashSet` when you need a fast and unordered collection that prevents duplicates.
+- Use `TreeSet` when you need a sorted collection that prevents duplicates.
+
+## 17. Elaborate on `LinkedHashSet` and its features
+
+`LinkedHashSet` is an implementation of the `Set` interface that combines the features of a hash table and a linked list. 
+
+It maintains the order of elements as they were inserted while still providing fast access times for basic operations.
+
+## 18. Explain about the `Map` Interface
+
+The `Map` interface represents a collection of key-value pairs, where each key is associated with a value. 
+
+It does not allow duplicate keys and each key maps to at most one value. Maps are often used to store and retrieve data based on keys.
+
+## 19. Elaborate on `LinkedHashMap` and its features
+
+`LinkedHashMap` is an implementation of the `Map` interface that maintains insertion order of elements. 
+
+It uses a hash table for storing key-value pairs and a linked list for maintaining the order of insertion.
+
+## 20. Explain about the `SortedMap` Interface
+
+The `SortedMap` interface extends the `Map` interface and provides a sorted view of the map's keys. 
+
+It ensures that the keys are maintained in ascending order based on their natural ordering or a specified comparator.
+
+## 21. Elaborate on `Hashtable` and its features
+
+`Hashtable` is a legacy implementation of the `Map` interface. It is similar to `HashMap` but is synchronized, making it thread-safe. 
+
+It is not recommended for modern applications due to its synchronization overhead.
+
+## 22. Difference between `HashMap` and `Hashtable`
+
+- `HashMap` is not synchronized and is preferred for most scenarios.
+- `Hashtable` is synchronized and less efficient in single-threaded scenarios.
+- `HashMap` allows `null` values and one `null` key, while `Hashtable` does not allow `null` keys or values.
+
+## 23. Difference between `ArrayList` and `LinkedList`
+
+- `ArrayList` uses a dynamic array to store elements, while `LinkedList` uses a doubly-linked list.
+- `ArrayList` provides fast random access, while `LinkedList` provides efficient insertions and deletions.
+
+## 24.  `Comparator` vs. `Comparable`
+
+- `Comparable`: An interface that allows an object to define its natural ordering. Objects implementing `Comparable` can be sorted using `Arrays.sort()` or `Collections.sort()`.
+
+- `Comparator`: An interface used to define custom comparison logic for objects that do not implement `Comparable`. It allows sorting objects based on different criteria.
+
+## 25. Elaborate on `ConcurrentHashMap` and its features
+
+`ConcurrentHashMap` is a highly concurrent implementation of the `Map` interface. 
+
+It is designed for high-concurrency scenarios and provides better scalability for read and write operations compared to `Hashtable` or synchronized `HashMap`.
+
+## 26. Difference between `ConcurrentHashMap`, `Hashtable`, and `Collections.synchronizedMap`    
+
+- `ConcurrentHashMap` offers better concurrency and performance compared to `Hashtable` and `Collections.synchronizedMap`.
+- `ConcurrentHashMap` allows multiple threads to perform updates concurrently, while in the other options, only one thread can update at a time.
+
+## 27. Elaborate on `CopyOnWriteArrayList` and its use cases
+
+`CopyOnWriteArrayList` is a concurrent implementation of the `List` interface. 
+
+It uses a copy-on-write strategy, where a new copy of the list is created every time a modification is made. 
+
+It is useful when there are frequent reads and infrequent writes.
+
+## 28. What are Fail-Fast Iterators?
+
+Fail-fast iterators detect concurrent modification of a collection during iteration and immediately throw a `ConcurrentModificationException`. 
+
+They are designed to catch cases where the collection is modified while being iterated.
+
+## 29. What are Fail-Safe Iterators?
+Fail-safe iterators make a copy of the collection before iterating over it. 
+
+They work on the original collection and are not affected by modifications made to the collection after iteration has started. 
+
+These iterators do not throw `ConcurrentModificationException`.
+
+---
+
+# Bit Manipulation
+
+```java
+class HelloWorld {
+  public static void main(String[] args) {
+        
+    // In memory this is 01010. First bit 0 indicates positive number
+        int x = 10;
+        
+        // This gives us the twos complement of x. x complement + 1. Inverts the sign of x
+        int twosCompOfX = (~x) + 1;
+        System.out.println(twosCompOfX);
+        
+        // Adding 1 to X. Understand logic using twos complement above.
+        int add1ToX = (-(~x));
+        System.out.println(add1ToX);
+        
+        // Left Shift
+        int multiplyXby2 = x<<1;
+        System.out.println(multiplyXby2);
+        
+        // Right shift
+        int divideXby2 = x>>1;
+        System.out.println(divideXby2);
+    }
+}
+```
+
+Output:
+```
+-10
+11
+20
+5
+```
 
 # Important Useful Methods in Java
 
