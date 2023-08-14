@@ -128,6 +128,10 @@
   - [No pass-by-reference](#no-pass-by-reference)
   - [References in Modern Languages](#references-in-modern-languages)
   - [Java NOT having pointers](#java-not-having-pointers)
+- [Functional Interfaces and Lambda Expressions](#functional-interfaces-and-lambda-expressions)
+  - [1. Functional Interfaces](#1-functional-interfaces)
+  - [2. Lambda Expressions (preceded by Anonymous Inner Classes)](#2-lambda-expressions-preceded-by-anonymous-inner-classes)
+  - [Significance of lambda expressions and functional interfaces](#significance-of-lambda-expressions-and-functional-interfaces)
 - [Types of Polymorphism in Java](#types-of-polymorphism-in-java)
   - [Compile-time Polymorphism (Method \& Operator Overloading)](#compile-time-polymorphism-method--operator-overloading)
   - [Run-time Polymorphism (Method Overriding)](#run-time-polymorphism-method-overriding)
@@ -1615,13 +1619,23 @@ double[] data = {1, 2, 3, 4};
 ### Dynamically allocating memory for a 2-d array
 
 ```java
-int[][] adj = new int[N][];
-for(int index = 0; index < N; index++) {
-    adj[index] = new int[N];
-}
-for(int[] pair: prerequisites) {
-    adj[pair[1]][pair[0]] = 1;
-}
+Scanner s = new Scanner(System.in);
+        
+System.out.println("Enter N: ");
+int N = s.nextInt();
+
+
+int[][] x = new int[N][N];
+
+System.out.println(Arrays.deepToString(x));
+```
+
+Output:
+
+```
+Enter N: 
+3
+[[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 ```
 
 ### Creating a copy of an Array
@@ -2216,6 +2230,137 @@ Internally computers use pages of memory, which are quite large. If a sparsely u
 This increases the density of data to memory, improving cache performance. Sometimes this translates into performance improvements that can be quite dramatic.
 
 Java's Garbage Collector takes advantage of the use of references by temporarily blocking access to the data for a set of references. During that blockage of access, it moves the data around (to compact it). After the blockage, the reference to address table has the new memory addresses. Since the "functional" layer of the code never knew the addresses in the first place, this operation will not break a running Java program.
+
+---
+
+# Functional Interfaces and Lambda Expressions
+
+See this video for a quick refresher: https://www.youtube.com/watch?v=4HC_WyBSDGA
+
+Functional interfaces and lambda expressions are key features introduced in Java to support functional programming paradigms. They provide a concise and expressive way to write code, enhance readability, and enable the use of more streamlined and functional programming styles.
+
+## 1. Functional Interfaces
+
+A functional interface is an interface that has exactly one abstract method. These interfaces are also known as SAM (Single Abstract Method) interfaces.
+
+```java
+@FunctionalInterface
+interface A {
+  void showA();
+}
+```
+
+> ***Note***: The `@FunctionalInterface` annotation allows the compiler to check if the interface has more than one non-overriding abstract method, and throw an error if yes.
+>
+> The meaning of an overriding method is that the method has to be present in the parent class that the child class inherits from.
+>
+> For example, it is ok for the interface to have a `toString` method because all classes/interfaces are derived from the `Object` class, which contains many methods along with a `toString` method.
+>
+> ```java
+> @FunctionalInterface
+> interface A {
+>   void showA();
+>   @Override
+>   String toString();
+> }
+> ```
+
+Functional interfaces serve as the foundation for working with lambda expressions. Java provides several built-in functional interfaces, such as `Runnable`, `Callable`, `Comparator`, and `Function`, among others. You can also create your own functional interfaces.
+
+## 2. Lambda Expressions (preceded by Anonymous Inner Classes)
+
+A lambda expression is a compact way to represent an anonymous function (a function without a name) that can be used as an argument to a method or be assigned to a variable. 
+
+Lambda expressions enable you to write instances of functional interfaces in a more concise manner. 
+
+For example, this code:
+```java
+@FunctionalInterface
+interface A {
+  void showA();
+}
+
+class B implements A {
+  void showA() {
+    System.out.println("hi");
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+    A obj = new B();
+    obj.showA();
+  }
+}
+```
+
+...can be replaced by this concise syntax that involving lambda expressions:
+
+```java
+@FunctionalInterface
+interface A {
+  void showA();
+}
+
+
+class Main {
+  public static void main(String[] args) {
+    A obj = () -> System.out.println("hi from lambda expression");
+    obj.showA();
+  }
+}
+```
+
+They are particularly useful for defining simple operations or behaviors, such as predicates, comparators, and mapping functions.
+
+> ***Note***: Before lambda expressions were introduced (before Java 8), we used anonymous inner classes to provide implementations for the Single Abstract Method within a Functional Interface:
+>
+> ```java
+> @FunctionalInterface
+> interface A {
+>   void showA();
+> }
+> 
+> class Main {
+>   public static void main(String[] args) {
+>     // Anonymous Inner Class
+>     A obj = new A() {
+>       void showA() {
+>         System.out.println("hi from anonymous inner class");
+>       }
+>     };
+> 
+>     obj.showA();
+>   }
+> }
+> ```
+>
+> Lambda expressions serve as a replacement for this syntax by inferring that since there is only 1 abstract method, the definition being provided belongs to that method only. 
+> 
+> Also, if the reference variable is of type `A`, we know that `new A()` is the only possibility.
+
+## Significance of lambda expressions and functional interfaces
+
+1. **Conciseness and Readability:** Lambda expressions reduce boilerplate code by eliminating the need to define separate anonymous inner classes for small tasks. This makes the code more readable and less cluttered.
+
+2. **Improved APIs:** Functional interfaces and lambda expressions enhance the design of APIs. They allow you to pass behavior as arguments to methods, enabling more flexible and customizable functionality.
+
+3. **Enhanced Parallelism:** Java's Stream API, which heavily utilizes functional interfaces and lambda expressions, makes it easier to perform parallel processing on collections. The declarative nature of lambda expressions facilitates concurrent execution of tasks.
+
+4. **Functional Programming:** Java becomes more suitable for functional programming paradigms. You can write code in a more functional style, emphasizing immutability, higher-order functions, and composition.
+
+5. **Improved Callbacks:** Functional interfaces and lambda expressions are particularly useful for event-driven programming and asynchronous programming, where callbacks are needed to respond to events or execute tasks concurrently.
+
+Example of a Lambda Expression:
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+numbers.forEach(number -> System.out.println(number * 2));
+```
+
+In the above example, `forEach` is a method that accepts a functional interface (`Consumer`). The lambda expression `(number -> System.out.println(number * 2))` defines the behavior to be applied to each element in the list.
+
+---
 
 # Types of Polymorphism in Java
 
