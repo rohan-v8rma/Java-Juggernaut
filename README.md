@@ -158,7 +158,7 @@
 - [Types of Polymorphism in Java](#types-of-polymorphism-in-java)
   - [Compile-time Polymorphism (Method \& Operator Overloading)](#compile-time-polymorphism-method--operator-overloading)
   - [Run-time Polymorphism (Method Overriding)](#run-time-polymorphism-method-overriding)
-    - [Dynamic Method Dispatch](#dynamic-method-dispatch)
+    - [Late binding using Dynamic Method Dispatch](#late-binding-using-dynamic-method-dispatch)
     - [Overriding Static Methods (NOT POSSIBLE)](#overriding-static-methods-not-possible)
     - [Run-time Polymorphism with Data Members (NOT POSSIBLE)](#run-time-polymorphism-with-data-members-not-possible)
   - [Abstraction in Java](#abstraction-in-java)
@@ -2689,7 +2689,7 @@ Read [this](https://www.geeksforgeeks.org/compile-time-polymorphism-in-java/#:~:
 
 ## Run-time Polymorphism (Method Overriding)
 
-### Dynamic Method Dispatch
+### Late binding using Dynamic Method Dispatch
 
 Dynamic Method Dispatch is the process through which a call to an overridden method is resolved at runtime by compiler of JAVA.
 
