@@ -104,8 +104,6 @@
     - [Collisions in HashCode](#collisions-in-hashcode)
     - [Displaying an Object](#displaying-an-object)
     - [Overriding the `toString()` method of global class `Object`](#overriding-the-tostring-method-of-global-class-object)
-  - [Streams (`java.util.stream`)](#streams-javautilstream)
-    - [Converting Streams to Arrays : `toArray()`](#converting-streams-to-arrays--toarray)
 - [Information related to Data-types](#information-related-to-data-types)
   - [Type-casting in Java (Forcing Lossy Conversions)](#type-casting-in-java-forcing-lossy-conversions)
   - [Automatic Type Conversion in Expressions in Java](#automatic-type-conversion-in-expressions-in-java)
@@ -128,10 +126,24 @@
   - [No pass-by-reference](#no-pass-by-reference)
   - [References in Modern Languages](#references-in-modern-languages)
   - [Java NOT having pointers](#java-not-having-pointers)
-- [Functional Interfaces and Lambda Expressions](#functional-interfaces-and-lambda-expressions)
-  - [1. Functional Interfaces](#1-functional-interfaces)
-  - [2. Lambda Expressions (preceded by Anonymous Inner Classes)](#2-lambda-expressions-preceded-by-anonymous-inner-classes)
-  - [Significance of lambda expressions and functional interfaces](#significance-of-lambda-expressions-and-functional-interfaces)
+- [Stream API](#stream-api)
+  - [About streams (`java.util.stream.*`)](#about-streams-javautilstream)
+  - [Functional Interfaces and Lambda Expressions](#functional-interfaces-and-lambda-expressions)
+    - [1. Functional Interfaces](#1-functional-interfaces)
+    - [2. Lambda Expressions (preceded by Anonymous Inner Classes)](#2-lambda-expressions-preceded-by-anonymous-inner-classes)
+    - [Significance of lambda expressions and functional interfaces](#significance-of-lambda-expressions-and-functional-interfaces)
+    - [Consumer Functional Interface and `forEach` method](#consumer-functional-interface-and-foreach-method)
+  - [Examples involving the Stream API](#examples-involving-the-stream-api)
+  - [1](#1)
+  - [Functional Interfaces and Lambda Expressions](#functional-interfaces-and-lambda-expressions-1)
+    - [1. Functional Interfaces](#1-functional-interfaces-1)
+    - [2. Lambda Expressions (preceded by Anonymous Inner Classes)](#2-lambda-expressions-preceded-by-anonymous-inner-classes-1)
+    - [Significance of lambda expressions and functional interfaces](#significance-of-lambda-expressions-and-functional-interfaces-1)
+    - [Consumer Functional Interface and `forEach` method](#consumer-functional-interface-and-foreach-method-1)
+  - [Examples involving the Stream API](#examples-involving-the-stream-api-1)
+    - [Example 1 (uses method references)](#example-1-uses-method-references)
+    - [Example 2](#example-2)
+  - [Converting Streams to Arrays : `toArray()`](#converting-streams-to-arrays--toarray)
 - [Types of Polymorphism in Java](#types-of-polymorphism-in-java)
   - [Compile-time Polymorphism (Method \& Operator Overloading)](#compile-time-polymorphism-method--operator-overloading)
   - [Run-time Polymorphism (Method Overriding)](#run-time-polymorphism-method-overriding)
@@ -1908,29 +1920,6 @@ class Student {
 
 ---
 
-## Streams (`java.util.stream`)
-
-A stream is a sequence of objects that supports various methods which can be pipelined to produce the desired result.
-
-The features of Java stream are –
-
-- A stream is not a data structure instead it takes input from the Collections, Arrays or I/O channels.
-- Streams don’t change the original data structure, they only provide the result as per the pipelined methods.
-- Each intermediate operation is lazily executed and returns a stream as a result, hence various intermediate operations can be pipelined. Terminal operations mark the end of the stream and return the result.
-
-### Converting Streams to Arrays : `toArray()`
-
-`Stream` provides `toArray()` method that returns an array containing the elements of the stream in the form of Object array.
-
-Syntax:
-```java
-
-int[] integer = randomObject.ints(2, 56, 74).toArray();
-
-```
-
-The [`ints()`](#doubles-ints-and-longs--method) method returns an `IntStream` containing a stream of random integers, depending upon the arguments provided to [`ints()`](#doubles-ints-and-longs--method).
-
 # Information related to Data-types
 
 ## Type-casting in Java (Forcing Lossy Conversions)
@@ -2233,13 +2222,24 @@ Java's Garbage Collector takes advantage of the use of references by temporarily
 
 ---
 
-# Functional Interfaces and Lambda Expressions
+# Stream API
+
+## About streams (`java.util.stream.*`)
+
+A stream is a sequence of objects that supports various methods which can be pipelined to produce the desired result.
+
+The features of Java stream are –
+- A stream is not a data structure instead it takes input from the Collections, Arrays or I/O channels.
+- Streams don’t change the original data structure, they only provide the result as per the pipelined methods.
+- Each intermediate operation is lazily executed and returns a stream as a result, hence various intermediate operations can be pipelined. Terminal operations mark the end of the stream and return the result.
+
+## Functional Interfaces and Lambda Expressions
 
 See this video for a quick refresher: https://www.youtube.com/watch?v=4HC_WyBSDGA
 
 Functional interfaces and lambda expressions are key features introduced in Java to support functional programming paradigms. They provide a concise and expressive way to write code, enhance readability, and enable the use of more streamlined and functional programming styles.
 
-## 1. Functional Interfaces
+### 1. Functional Interfaces
 
 A functional interface is an interface that has exactly one abstract method. These interfaces are also known as SAM (Single Abstract Method) interfaces.
 
@@ -2267,7 +2267,7 @@ interface A {
 
 Functional interfaces serve as the foundation for working with lambda expressions. Java provides several built-in functional interfaces, such as `Runnable`, `Callable`, `Comparator`, and `Function`, among others. You can also create your own functional interfaces.
 
-## 2. Lambda Expressions (preceded by Anonymous Inner Classes)
+### 2. Lambda Expressions (preceded by Anonymous Inner Classes)
 
 A lambda expression is a compact way to represent an anonymous function (a function without a name) that can be used as an argument to a method or be assigned to a variable. 
 
@@ -2339,7 +2339,7 @@ They are particularly useful for defining simple operations or behaviors, such a
 > 
 > Also, if the reference variable is of type `A`, we know that `new A()` is the only possibility.
 
-## Significance of lambda expressions and functional interfaces
+### Significance of lambda expressions and functional interfaces
 
 1. **Conciseness and Readability:** Lambda expressions reduce boilerplate code by eliminating the need to define separate anonymous inner classes for small tasks. This makes the code more readable and less cluttered.
 
@@ -2351,14 +2351,215 @@ They are particularly useful for defining simple operations or behaviors, such a
 
 5. **Improved Callbacks:** Functional interfaces and lambda expressions are particularly useful for event-driven programming and asynchronous programming, where callbacks are needed to respond to events or execute tasks concurrently.
 
-Example of a Lambda Expression:
+### Consumer Functional Interface and `forEach` method
+
+Watch this video for more info on the topic: https://www.youtube.com/watch?v=Wggc6Ziy8X8
+
 ```java
 List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
 
 numbers.forEach(number -> System.out.println(number * 2));
 ```
 
-In the above example, `forEach` is a method that accepts a functional interface (`Consumer`). The lambda expression `(number -> System.out.println(number * 2))` defines the behavior to be applied to each element in the list.
+In the above example, `forEach` is a method that accepts a functional interface (`forEach` is a `Consumer`). The lambda expression `(number -> System.out.println(number * 2))` defines the behavior to be applied to each element in the list.
+
+
+## Examples involving the Stream API
+
+## 1
+## Functional Interfaces and Lambda Expressions
+
+See this video for a quick refresher: https://www.youtube.com/watch?v=4HC_WyBSDGA
+
+Functional interfaces and lambda expressions are key features introduced in Java to support functional programming paradigms. They provide a concise and expressive way to write code, enhance readability, and enable the use of more streamlined and functional programming styles.
+
+### 1. Functional Interfaces
+
+A functional interface is an interface that has exactly one abstract method. These interfaces are also known as SAM (Single Abstract Method) interfaces.
+
+```java
+@FunctionalInterface
+interface A {
+  void showA();
+}
+```
+
+> ***Note***: The `@FunctionalInterface` annotation allows the compiler to check if the interface has more than one non-overriding abstract method, and throw an error if yes.
+>
+> The meaning of an overriding method is that the method has to be present in the parent class that the child class inherits from.
+>
+> For example, it is ok for the interface to have a `toString` method because all classes/interfaces are derived from the `Object` class, which contains many methods along with a `toString` method.
+>
+> ```java
+> @FunctionalInterface
+> interface A {
+>   void showA();
+>   @Override
+>   String toString();
+> }
+> ```
+
+Functional interfaces serve as the foundation for working with lambda expressions. Java provides several built-in functional interfaces, such as `Runnable`, `Callable`, `Comparator`, and `Function`, among others. You can also create your own functional interfaces.
+
+### 2. Lambda Expressions (preceded by Anonymous Inner Classes)
+
+A lambda expression is a compact way to represent an anonymous function (a function without a name) that can be used as an argument to a method or be assigned to a variable. 
+
+Lambda expressions enable you to write instances of functional interfaces in a more concise manner. 
+
+For example, this code:
+```java
+@FunctionalInterface
+interface A {
+  void showA();
+}
+
+class B implements A {
+  void showA() {
+    System.out.println("hi");
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+    A obj = new B();
+    obj.showA();
+  }
+}
+```
+
+...can be replaced by this concise syntax that involving lambda expressions:
+
+```java
+@FunctionalInterface
+interface A {
+  void showA();
+}
+
+
+class Main {
+  public static void main(String[] args) {
+    A obj = () -> System.out.println("hi from lambda expression");
+    obj.showA();
+  }
+}
+```
+
+They are particularly useful for defining simple operations or behaviors, such as predicates, comparators, and mapping functions.
+
+> ***Note***: Before lambda expressions were introduced (before Java 8), we used anonymous inner classes to provide implementations for the Single Abstract Method within a Functional Interface:
+>
+> ```java
+> @FunctionalInterface
+> interface A {
+>   void showA();
+> }
+> 
+> class Main {
+>   public static void main(String[] args) {
+>     // Anonymous Inner Class
+>     A obj = new A() {
+>       void showA() {
+>         System.out.println("hi from anonymous inner class");
+>       }
+>     };
+> 
+>     obj.showA();
+>   }
+> }
+> ```
+>
+> Lambda expressions serve as a replacement for this syntax by inferring that since there is only 1 abstract method, the definition being provided belongs to that method only. 
+> 
+> Also, if the reference variable is of type `A`, we know that `new A()` is the only possibility.
+
+### Significance of lambda expressions and functional interfaces
+
+1. **Conciseness and Readability:** Lambda expressions reduce boilerplate code by eliminating the need to define separate anonymous inner classes for small tasks. This makes the code more readable and less cluttered.
+
+2. **Improved APIs:** Functional interfaces and lambda expressions enhance the design of APIs. They allow you to pass behavior as arguments to methods, enabling more flexible and customizable functionality.
+
+3. **Enhanced Parallelism:** Java's Stream API, which heavily utilizes functional interfaces and lambda expressions, makes it easier to perform parallel processing on collections. The declarative nature of lambda expressions facilitates concurrent execution of tasks.
+
+4. **Functional Programming:** Java becomes more suitable for functional programming paradigms. You can write code in a more functional style, emphasizing immutability, higher-order functions, and composition.
+
+5. **Improved Callbacks:** Functional interfaces and lambda expressions are particularly useful for event-driven programming and asynchronous programming, where callbacks are needed to respond to events or execute tasks concurrently.
+
+### Consumer Functional Interface and `forEach` method
+
+Watch this video for more info on the topic: https://www.youtube.com/watch?v=Wggc6Ziy8X8
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+numbers.forEach(number -> System.out.println(number * 2));
+```
+
+In the above example, `forEach` is a method that accepts a functional interface (`forEach` is a `Consumer`). The lambda expression `(number -> System.out.println(number * 2))` defines the behavior to be applied to each element in the list.
+
+## Examples involving the Stream API
+
+### Example 1 (uses method references)
+
+```java
+class B {
+    static int multiplyBy2(int n) {
+        return n*2;
+    }
+}
+
+List<Integer> data = Arrays.asList(11, 2, 13, 4, 5);
+
+data
+  .stream()
+  .filter(n -> n % 2 == 1)
+  .sorted()
+  .map(B::multiplyBy2)
+  .forEach(mappedItem -> System.out.println(mappedItem));
+```
+
+Output:
+```
+10
+22
+26
+```
+
+### Example 2
+
+```java
+List<List<String>> list = Arrays.asList(
+    Arrays.asList("A", "B", "C"),
+    Arrays.asList("B", "D"),
+    Arrays.asList("E", "F")
+);
+
+String[][] arr = list
+                .stream()
+                .map(l -> l.toArray(String[]::new))
+                .toArray(String[][]::new);
+
+System.out.println(Arrays.deepToString(arr));
+```
+
+Output:
+```
+[[A, B, C], [B, D], [E, F]]
+```
+
+## Converting Streams to Arrays : `toArray()`
+
+`Stream` provides `toArray()` method that returns an array containing the elements of the stream in the form of Object array.
+
+Syntax:
+```java
+
+int[] integer = randomObject.ints(2, 56, 74).toArray();
+
+```
+
+The [`ints()`](#doubles-ints-and-longs--method) method returns an `IntStream` containing a stream of random integers, depending upon the arguments provided to [`ints()`](#doubles-ints-and-longs--method).
+
 
 ---
 
