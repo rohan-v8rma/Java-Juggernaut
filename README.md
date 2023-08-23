@@ -107,6 +107,17 @@
 - [Information related to Data-types](#information-related-to-data-types)
   - [Type-casting in Java (Forcing Lossy Conversions)](#type-casting-in-java-forcing-lossy-conversions)
   - [Automatic Type Conversion in Expressions in Java](#automatic-type-conversion-in-expressions-in-java)
+  - [Scenarios involving Type Checking in Java](#scenarios-involving-type-checking-in-java)
+    - [1. Compile-time Type Checking](#1-compile-time-type-checking)
+    - [2. Run-time Type Checking (`InstanceOf` Operator)](#2-run-time-type-checking-instanceof-operator)
+    - [3. Generics Type Checking](#3-generics-type-checking)
+      - [a. Compile-Time Type Checking](#a-compile-time-type-checking)
+      - [b. Compile-Time Type Inference](#b-compile-time-type-inference)
+    - [4. Casting and Type Conversion](#4-casting-and-type-conversion)
+    - [5. Autoboxing and Unboxing](#5-autoboxing-and-unboxing)
+    - [6. Type Checking in Method Overloading](#6-type-checking-in-method-overloading)
+    - [7. Type Checking with Interfaces and Inheritance](#7-type-checking-with-interfaces-and-inheritance)
+    - [8. Type Checking with Arrays](#8-type-checking-with-arrays)
   - [Brackets \& Operator Precedence](#brackets--operator-precedence)
 - [Conditional and Looping Statements](#conditional-and-looping-statements)
   - [if-else statements](#if-else-statements)
@@ -1951,6 +1962,107 @@ double c = 10.0 + a / b;
 Here, each `byte` is automatically promoted to `int` during the evaluation of this expression. 
 
 If we had tried a similar operation in C/CPP, we would have to type-cast each value into an `int` before performing the operation.
+
+## Scenarios involving Type Checking in Java
+
+Type checking in Java is a fundamental process that ensures the compatibility and safety of data types during program execution. It ensures that the operations performed on variables are valid based on their data types. Type checking takes place at various stages of Java code execution.
+
+### 1. Compile-time Type Checking
+
+- This occurs during the compilation phase before the program is executed.
+- The Java compiler performs static type checking to ensure that the declared data types are used consistently and correctly throughout the program.
+- Syntax errors related to data types are caught during this phase, preventing many runtime errors.
+- Examples include checking the compatibility of operands in expressions, verifying method calls based on parameter types, and ensuring that variable assignments are consistent with their declared types.
+
+### 2. Run-time Type Checking (`InstanceOf` Operator)
+
+- The `instanceof` operator is used to check if an object is an instance of a particular class or interface.
+- This operator allows you to check the type of an object at runtime and take appropriate actions based on it.
+- It is commonly used in cases where you need to perform different operations based on the actual type of an object.
+
+### 3. Generics Type Checking
+
+Generics in Java allow you to define classes, interfaces, and methods that operate on parameters with specified data types. 
+
+For example, consider a generic class `Box<T>` that represents a container for an object of any type `T`. Here's how generics ensure type safety:
+
+#### a. Compile-Time Type Checking
+
+- When you create an instance of a generic class like `Box<Integer>`, the compiler verifies that you're using the correct type.
+- It ensures that only objects of the specified type (`Integer` in this case) can be added to or retrieved from the `Box`.
+- This prevents adding elements of the wrong type and reduces the risk of runtime errors.
+
+- Take a look at this example to understand better:
+  ```java
+  class Box<T> {
+      private T value;
+
+      public void setValue(T value) {
+          this.value = value;
+      }
+
+      public T getValue() {
+          return value;
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Box<Integer> intBox = new Box<>();
+          intBox.setValue(42);
+
+          // Compile-time error: incompatible types
+          intBox.setValue("Hello");
+      }
+  }
+  ```
+  
+  Output:
+  ```
+  error: incompatible types: String cannot be converted to Integer
+  intBox.setValue("Hello");
+                  ^
+  ```
+
+  In this example, the `Box` class is parameterized with a type `T`. When you create a `Box<Integer>`, the compiler ensures that only integers are added to it and retrieved from it. 
+  
+  If you try to add a `String`, you'll get a compile-time error.
+
+#### b. Compile-Time Type Inference
+
+- Generics allow you to omit type arguments in certain situations, thanks to type inference.
+- For example, when you create an instance of a generic class using the diamond operator (`Box<Integer> box = new Box<>();`), the compiler infers the type based on the variable's declaration.
+- This helps reduce code verbosity while maintaining type safety.
+
+---
+
+### 4. Casting and Type Conversion
+
+- Casting is a way to explicitly convert between different data types, often between related classes or interfaces.
+- Casting from a superclass to a subclass requires explicit type casting to access subclass-specific members.
+- Casting from one primitive type to another may result in loss of precision or truncation if the conversion is not compatible.
+
+### 5. Autoboxing and Unboxing
+
+- Autoboxing is the automatic conversion of primitive types to their corresponding wrapper classes, and unboxing is the reverse process.
+- Type checking in autoboxing/unboxing ensures that the conversions are safe and valid, preventing errors when dealing with wrapper classes and primitives.
+
+### 6. Type Checking in Method Overloading
+
+- In method overloading, type checking is essential to determine the correct method to call based on the argument types.
+- The Java compiler resolves the method call during compilation by choosing the most specific method that matches the provided arguments.
+
+### 7. Type Checking with Interfaces and Inheritance
+
+- In cases of interface implementation and class inheritance, type checking ensures that methods are correctly overridden and implemented.
+- The compiler checks if the overriding methods have the same method signature and compatible return types.
+
+### 8. Type Checking with Arrays
+
+- Java arrays are homogeneous, meaning they can only store elements of the same data type.
+- Type checking ensures that array elements match the declared type of the array, preventing type-related errors when accessing array elements.
+
+---
 
 ## Brackets & Operator Precedence
 
