@@ -242,6 +242,7 @@
   - [@Autowired](#autowired)
     - [Key Points:](#key-points-2)
     - [Example:](#example-2)
+    - [Instance Sharing: When Multiple Classes `@Autowired` the Same Bean Type](#instance-sharing-when-multiple-classes-autowired-the-same-bean-type)
   - [Detailed Analysis](#detailed-analysis)
     - [@Configuration](#configuration-1)
     - [@Bean](#bean-1)
@@ -4484,6 +4485,98 @@ public class PersonService {
 ```
 
 In this example, `PersonService` has a dependency on `PetService`, and Spring automatically injects an instance of `PetService` into `PersonService` via the constructor.
+
+### Instance Sharing: When Multiple Classes `@Autowired` the Same Bean Type
+
+By default, Spring creates beans as Singleton scope, meaning the same instance will be shared across all autowired locations. However, this can be modified using scope annotations.
+
+Here's an example to illustrate:
+
+```java
+@Component
+public class User {
+    private String name;
+    
+    public User() {
+        System.out.println("Creating new User instance: " + this.hashCode());
+    }
+}
+
+@Service
+public class AppA {
+    @Autowired
+    private User user;  // Will get same User instance as AppB
+    
+    public void printUser() {
+        System.out.println("AppA User instance: " + user.hashCode());
+    }
+}
+
+@Service
+public class AppB {
+    @Autowired
+    private User user;  // Will get same User instance as AppA
+    
+    public void printUser() {
+        System.out.println("AppB User instance: " + user.hashCode());
+    }
+}
+```
+
+However, if you want different instances, you can change the scope:
+
+```java
+@Component
+@Scope("prototype")  // Creates new instance for each injection
+public class User {
+    private String name;
+    
+    public User() {
+        System.out.println("Creating new User instance: " + this.hashCode());
+    }
+}
+```
+
+Common Spring bean scopes:
+
+1. singleton (default)
+   - One instance shared across entire application
+   - Same object reference everywhere
+
+2. prototype
+   - New instance created for each injection/request
+   - Different object references in different places
+
+3. request
+   - New instance per HTTP request
+   - Used in web applications
+
+4. session
+   - New instance per HTTP session
+   - Used in web applications
+
+You can verify the behavior with:
+
+```java
+@SpringBootApplication
+public class DemoApplication {
+    @Autowired
+    private AppA appA;
+    
+    @Autowired
+    private AppB appB;
+    
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+    
+    @PostConstruct
+    public void checkInstances() {
+        appA.printUser();  // Will print same hashcode as AppB if singleton
+        appB.printUser();  // Will print different hashcode if prototype
+    }
+}
+```
 
 ## Detailed Analysis
 
